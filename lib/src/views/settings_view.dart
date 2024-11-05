@@ -37,10 +37,12 @@ class _SettingsViewState extends State<SettingsView> {
   }
 
   String colorSchemeValue = 'Material You';
+  bool isPureBlackEnabledValue = false;
 
   getPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? scheme = prefs.getString('schemeMode');
+    bool? isPureBlackEnabled = prefs.getBool('isPureBlackEnabled');
 
     setState(() {
       if (scheme == null || scheme == 'material_you') {
@@ -57,6 +59,12 @@ class _SettingsViewState extends State<SettingsView> {
         colorSchemeValue = 'Purble Scheme';
       } else if (scheme == 'red') {
         colorSchemeValue = 'Red Scheme';
+      }
+
+      if (isPureBlackEnabled == null || isPureBlackEnabled == false) {
+        isPureBlackEnabledValue = false;
+      } else if (isPureBlackEnabled == true) {
+        isPureBlackEnabledValue = true;
       }
     });
   }
@@ -242,7 +250,7 @@ class _SettingsViewState extends State<SettingsView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'General theme',
+                    'General Theme',
                     style: TextStyle(fontSize: 18),
                   ),
                   ElevatedButton(
@@ -259,7 +267,7 @@ class _SettingsViewState extends State<SettingsView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Color scheme',
+                    'Color Scheme',
                     style: TextStyle(fontSize: 18),
                   ),
                   ElevatedButton(
@@ -275,6 +283,36 @@ class _SettingsViewState extends State<SettingsView> {
                                     : colorSchemeValue == 'Material You'
                                         ? 'Material You'
                                         : ''),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Pure Black',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Switch(
+                    value: isPureBlackEnabledValue == true,
+                    onChanged: (newValue) async {
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      bool isPureBlackEnabled;
+                      if (newValue) {
+                        isPureBlackEnabled = true;
+                      } else {
+                        isPureBlackEnabled = false;
+                      }
+                      await prefs.setBool(
+                          'isPureBlackEnabled', isPureBlackEnabled);
+                      setState(() {
+                        isPureBlackEnabledValue = isPureBlackEnabled;
+                      });
+                    },
                   ),
                 ],
               ),

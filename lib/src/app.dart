@@ -22,11 +22,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Color appColorSchemeSeed = Colors.blue;
-  Color primaryContainerBackgroundColorDark =
-      const Color.fromARGB(255, 32, 36, 39);
-  Color? appBackgroundColorDark;
+  Color? appColorSchemeSeed = Colors.blue;
   bool isAndroid12OrHigherValue = true;
+  bool isPureBlackEnabled = false;
 
   Future isAndroid12OrHigher() async {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -45,62 +43,45 @@ class _MyAppState extends State<MyApp> {
   Future getPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? schemeModePref = prefs.getString('schemeMode');
-    String? darkThemePref = prefs.getString('darkTheme');
+    bool? isPureBlackEnabledPref = prefs.getBool('isPureBlackEnabled');
     await isAndroid12OrHigher();
-    if (isAndroid12OrHigherValue == true) {
+    if (isAndroid12OrHigherValue) {
       schemeModePref ??= 'material_you';
     } else {
       schemeModePref ??= 'blue';
     }
 
-    darkThemePref ??= 'Dim';
+    isPureBlackEnabledPref ??= false;
+
+    if (isPureBlackEnabledPref) {
+      setState(() {
+        isPureBlackEnabled = true;
+      });
+    } else {
+      setState(() {
+        isPureBlackEnabled = false;
+      });
+    }
+
     if (schemeModePref == 'material_you') {
       setState(() {
-        appColorSchemeSeed = const Color.fromARGB(777, 777, 777, 777);
+        appColorSchemeSeed = null;
       });
     } else if (schemeModePref == 'blue') {
       setState(() {
         appColorSchemeSeed = Colors.blue;
-
-        appBackgroundColorDark = darkThemePref == 'Dim'
-            ? const Color.fromARGB(255, 26, 29, 31)
-            : Colors.black;
-        primaryContainerBackgroundColorDark = darkThemePref == 'Dim'
-            ? const Color.fromARGB(255, 32, 36, 39)
-            : const Color.fromARGB(255, 16, 16, 20);
       });
     } else if (schemeModePref == 'green') {
       setState(() {
         appColorSchemeSeed = Colors.green;
-
-        appBackgroundColorDark = darkThemePref == 'Dim'
-            ? const Color.fromARGB(255, 18, 23, 19)
-            : Colors.black;
-        primaryContainerBackgroundColorDark = darkThemePref == 'Dim'
-            ? const Color.fromARGB(255, 29, 37, 29)
-            : const Color.fromARGB(255, 16, 20, 16);
       });
     } else if (schemeModePref == 'purble') {
       setState(() {
         appColorSchemeSeed = Colors.purple;
-
-        appBackgroundColorDark = darkThemePref == 'Dim'
-            ? const Color.fromARGB(255, 31, 26, 32)
-            : Colors.black;
-        primaryContainerBackgroundColorDark = darkThemePref == 'Dim'
-            ? const Color.fromARGB(255, 37, 29, 36)
-            : const Color.fromARGB(255, 20, 16, 19);
       });
     } else if (schemeModePref == 'red') {
       setState(() {
         appColorSchemeSeed = Colors.red;
-
-        appBackgroundColorDark = darkThemePref == 'Dim'
-            ? const Color.fromARGB(255, 32, 26, 26)
-            : Colors.black;
-        primaryContainerBackgroundColorDark = darkThemePref == 'Dim'
-            ? const Color.fromARGB(255, 45, 35, 35)
-            : const Color.fromARGB(255, 20, 16, 16);
       });
     }
   }
@@ -149,26 +130,29 @@ class _MyAppState extends State<MyApp> {
               // Define a light and dark color theme. Then, read the user's
               // preferred ThemeMode (light, dark, or system default) from the
               // SettingsController to display the correct theme.
-              theme:
-                  appColorSchemeSeed == const Color.fromARGB(777, 777, 777, 777)
-                      ? ThemeData(
-                          brightness: Brightness.light,
-                          colorScheme: lightColorScheme,
-                        )
-                      : ThemeData(
-                          brightness: Brightness.light,
-                          colorSchemeSeed: appColorSchemeSeed,
-                        ),
-              darkTheme:
-                  appColorSchemeSeed == const Color.fromARGB(777, 777, 777, 777)
-                      ? ThemeData(
-                          brightness: Brightness.dark,
-                          colorScheme: darkColorScheme,
-                        )
-                      : ThemeData(
-                          brightness: Brightness.dark,
-                          colorSchemeSeed: appColorSchemeSeed,
-                        ),
+              theme: appColorSchemeSeed == null
+                  ? ThemeData(
+                      brightness: Brightness.light,
+                      colorScheme: lightColorScheme,
+                    )
+                  : ThemeData(
+                      brightness: Brightness.light,
+                      colorSchemeSeed: appColorSchemeSeed,
+                    ),
+              darkTheme: appColorSchemeSeed == null
+                  ? ThemeData(
+                      brightness: Brightness.dark,
+                      colorScheme: darkColorScheme!.copyWith(
+                          surface: isPureBlackEnabled ? Colors.black : null),
+                    )
+                  : ThemeData(
+                      colorScheme: ColorScheme.fromSeed(
+                        seedColor: appColorSchemeSeed!,
+                        brightness: Brightness.dark,
+                      ).copyWith(
+                        surface: isPureBlackEnabled ? Colors.black : null,
+                      ),
+                    ),
               themeMode: widget.settingsController.themeMode,
 
               // Define a function to handle named routes in order to support
