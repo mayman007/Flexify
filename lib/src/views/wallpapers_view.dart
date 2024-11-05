@@ -1,6 +1,7 @@
 import 'package:flexify/src/settings/settings_controller.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class WallpapersView extends StatefulWidget {
   const WallpapersView({super.key, required this.settingsController});
@@ -14,6 +15,13 @@ class WallpapersView extends StatefulWidget {
 }
 
 class _WallpapersViewState extends State<WallpapersView> {
+  @override
+  void initState() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top]);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
