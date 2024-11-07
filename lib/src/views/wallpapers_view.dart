@@ -2,7 +2,9 @@ import 'package:flexify/src/settings/settings_controller.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import '../provider/wallpaper_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -36,6 +38,12 @@ class _WallpapersViewState extends State<WallpapersView> {
     super.initState();
   }
 
+  Future fetchWallpapers() async {
+    final wallpaperProvider =
+        Provider.of<WallpaperProvider>(context, listen: false);
+    wallpaperProvider.fetchWallpaperNames();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,26 +58,27 @@ class _WallpapersViewState extends State<WallpapersView> {
           if (provider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (provider.wallpaperNames.isEmpty) {
-            return const Center(child: Text('No wallpapers found'));
+            return const Center(child: Text('Fetching Wallpapers...'));
           } else {
-            return GridView.builder(
-              padding: const EdgeInsets.all(10),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemCount: provider.wallpaperNames.length,
-              itemBuilder: (context, index) {
-                final wallpaperUrl =
-                    '${provider.baseUrl}/${provider.wallpaperNames[index]}';
-                final wallpaperName =
-                    provider.wallpaperNames[index].split(".")[0];
+            return LiquidPullToRefresh(
+              onRefresh: fetchWallpapers,
+              showChildOpacityTransition: false,
+              color: Theme.of(context).colorScheme.inversePrimary,
+              child: GridView.builder(
+                padding: const EdgeInsets.all(10),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemCount: provider.wallpaperNames.length,
+                itemBuilder: (context, index) {
+                  final wallpaperUrl =
+                      '${provider.baseUrl}/${provider.wallpaperNames[index]}';
+                  final wallpaperName =
+                      provider.wallpaperNames[index].split(".")[0];
 
-                return SizedBox(
-                  height: 500,
-                  width: 5000,
-                  child: Card(
+                  return Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -79,8 +88,14 @@ class _WallpapersViewState extends State<WallpapersView> {
                       children: [
                         CachedNetworkImage(
                           imageUrl: wallpaperUrl,
-                          placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator(),
+                          placeholder: (context, url) => Center(
+                            child: Shimmer.fromColors(
+                              baseColor: Theme.of(context).colorScheme.surface,
+                              highlightColor: Colors.grey,
+                              child: Container(
+                                color: Colors.red,
+                              ),
+                            ),
                           ),
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.error),
@@ -107,9 +122,9 @@ class _WallpapersViewState extends State<WallpapersView> {
                         ),
                       ],
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             );
           }
         },

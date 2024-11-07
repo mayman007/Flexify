@@ -23,6 +23,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Color? appColorSchemeSeed = Colors.blue;
+  ThemeMode? appThemeMode = ThemeMode.system;
   bool isAndroid12OrHigherValue = true;
   bool isPureBlackEnabled = false;
 
@@ -43,6 +44,7 @@ class _MyAppState extends State<MyApp> {
   Future getPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? schemeModePref = prefs.getString('schemeMode');
+    String? themeModePref = prefs.getString('themeMode');
     bool? isPureBlackEnabledPref = prefs.getBool('isPureBlackEnabled');
     await isAndroid12OrHigher();
     if (isAndroid12OrHigherValue) {
@@ -51,17 +53,9 @@ class _MyAppState extends State<MyApp> {
       schemeModePref ??= 'blue';
     }
 
-    isPureBlackEnabledPref ??= false;
+    themeModePref ??= 'system';
 
-    if (isPureBlackEnabledPref) {
-      setState(() {
-        isPureBlackEnabled = true;
-      });
-    } else {
-      setState(() {
-        isPureBlackEnabled = false;
-      });
-    }
+    isPureBlackEnabledPref ??= false;
 
     if (schemeModePref == 'material_you') {
       setState(() {
@@ -82,6 +76,30 @@ class _MyAppState extends State<MyApp> {
     } else if (schemeModePref == 'red') {
       setState(() {
         appColorSchemeSeed = Colors.red;
+      });
+    }
+
+    if (themeModePref == 'system') {
+      setState(() {
+        appThemeMode = ThemeMode.system;
+      });
+    } else if (themeModePref == 'light') {
+      setState(() {
+        appThemeMode = ThemeMode.light;
+      });
+    } else if (themeModePref == 'dark') {
+      setState(() {
+        appThemeMode = ThemeMode.dark;
+      });
+    }
+
+    if (isPureBlackEnabledPref) {
+      setState(() {
+        isPureBlackEnabled = true;
+      });
+    } else {
+      setState(() {
+        isPureBlackEnabled = false;
       });
     }
   }
@@ -154,7 +172,7 @@ class _MyAppState extends State<MyApp> {
                         surface: isPureBlackEnabled ? Colors.black : null,
                       ),
                     ),
-              themeMode: widget.settingsController.themeMode,
+              themeMode: appThemeMode,
 
               // Define a function to handle named routes in order to support
               // Flutter web url navigation and deep linking.
