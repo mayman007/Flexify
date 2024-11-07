@@ -1,4 +1,3 @@
-import 'package:flexify/src/settings/settings_controller.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,11 +8,9 @@ import '../provider/wallpaper_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class WallpapersView extends StatefulWidget {
-  const WallpapersView({super.key, required this.settingsController});
+  const WallpapersView({super.key});
 
   static const routeName = '/wallpapers';
-
-  final SettingsController settingsController;
 
   @override
   State<WallpapersView> createState() => _WallpapersViewState();
@@ -129,9 +126,8 @@ class _WallpapersViewState extends State<WallpapersView> {
           }
         },
       ),
-      bottomNavigationBar: MaterialNavBar(
+      bottomNavigationBar: const MaterialNavBar(
         selectedIndex: 0,
-        settingsController: widget.settingsController,
       ),
     );
   }

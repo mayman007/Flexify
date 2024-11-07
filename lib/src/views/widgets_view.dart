@@ -1,13 +1,10 @@
-import 'package:flexify/src/settings/settings_controller.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 class WidgetsView extends StatefulWidget {
-  const WidgetsView({super.key, required this.settingsController});
+  const WidgetsView({super.key});
 
   static const routeName = '/widgets';
-
-  final SettingsController settingsController;
 
   @override
   State<WidgetsView> createState() => _WidgetsViewState();
@@ -31,9 +28,8 @@ class _WidgetsViewState extends State<WidgetsView> {
           ],
         ),
       ),
-      bottomNavigationBar: MaterialNavBar(
+      bottomNavigationBar: const MaterialNavBar(
         selectedIndex: 1,
-        settingsController: widget.settingsController,
       ),
     );
   }
