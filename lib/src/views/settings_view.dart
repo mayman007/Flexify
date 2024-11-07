@@ -37,11 +37,13 @@ class _SettingsViewState extends State<SettingsView> {
   }
 
   String colorSchemeValue = 'Material You';
+  String themeValue = 'System Mode';
   bool isPureBlackEnabledValue = false;
 
   getPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? scheme = prefs.getString('schemeMode');
+    String? theme = prefs.getString('themeMode');
     bool? isPureBlackEnabled = prefs.getBool('isPureBlackEnabled');
 
     setState(() {
@@ -59,6 +61,13 @@ class _SettingsViewState extends State<SettingsView> {
         colorSchemeValue = 'Purble Scheme';
       } else if (scheme == 'red') {
         colorSchemeValue = 'Red Scheme';
+      }
+      if (theme == null || theme == 'system') {
+        themeValue = 'System Mode';
+      } else if (theme == 'light') {
+        themeValue = 'Light Mode';
+      } else if (theme == 'dark') {
+        themeValue = 'Dark Mode';
       }
 
       if (isPureBlackEnabled == null || isPureBlackEnabled == false) {
@@ -94,29 +103,44 @@ class _SettingsViewState extends State<SettingsView> {
             ),
             RadioListTile<String>(
               title: const Text('System'),
-              value: ThemeMode.system.toString(),
-              groupValue: widget.controller.themeMode.toString(),
+              value: 'System Mode',
+              groupValue: themeValue,
               onChanged: (value) async {
-                widget.controller.updateThemeMode(ThemeMode.system);
-                Navigator.of(context).pop();
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                await prefs.setString('themeMode', 'system');
+                setState(() {
+                  themeValue = 'System Mode';
+                });
+                if (context.mounted) Navigator.of(context).pop();
               },
             ),
             RadioListTile<String>(
               title: const Text('Light'),
-              value: ThemeMode.light.toString(),
-              groupValue: widget.controller.themeMode.toString(),
+              value: 'Light Mode',
+              groupValue: themeValue,
               onChanged: (value) async {
-                widget.controller.updateThemeMode(ThemeMode.light);
-                Navigator.of(context).pop();
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                await prefs.setString('themeMode', 'light');
+                setState(() {
+                  themeValue = 'Light Mode';
+                });
+                if (context.mounted) Navigator.of(context).pop();
               },
             ),
             RadioListTile<String>(
               title: const Text('Dark'),
-              value: ThemeMode.dark.toString(),
-              groupValue: widget.controller.themeMode.toString(),
+              value: 'Dark Mode',
+              groupValue: themeValue,
               onChanged: (value) async {
-                widget.controller.updateThemeMode(ThemeMode.dark);
-                Navigator.of(context).pop();
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                await prefs.setString('themeMode', 'dark');
+                setState(() {
+                  themeValue = 'Dark Mode';
+                });
+                if (context.mounted) Navigator.of(context).pop();
               },
             )
           ],
@@ -255,9 +279,9 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                   ElevatedButton(
                     onPressed: showThemeDialog,
-                    child: Text(widget.controller.themeMode == ThemeMode.system
+                    child: Text(themeValue == 'System Mode'
                         ? 'System'
-                        : widget.controller.themeMode == ThemeMode.light
+                        : themeValue == 'Light Mode'
                             ? 'Light'
                             : 'Dark'),
                   ),

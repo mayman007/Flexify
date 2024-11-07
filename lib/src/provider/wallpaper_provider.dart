@@ -19,10 +19,7 @@ class WallpaperProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      log("1111");
       final response = await _dio.get(baseUrl);
-      log("2222");
-      log("RESPONSE IS: ${response.toString()}");
       if (response.statusCode == 200 && response.data is List) {
         _wallpaperNames = List<String>.from(response.data);
       } else {
@@ -32,7 +29,7 @@ class WallpaperProvider extends ChangeNotifier {
       log('Error fetching wallpaper names: $e');
       _wallpaperNames = [];
     } finally {
-      log("wallpaperNAMES IS: $_wallpaperNames");
+      log("Wallpaper fetching done.");
       _isLoading = false;
       notifyListeners();
     }
