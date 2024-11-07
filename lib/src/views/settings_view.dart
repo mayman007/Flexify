@@ -2,18 +2,15 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../settings/settings_controller.dart';
 
 /// Displays the various settings that can be customized by the user.
 ///
 /// When a user changes a setting, the SettingsController is updated and
 /// Widgets that listen to the SettingsController are rebuilt.
 class SettingsView extends StatefulWidget {
-  const SettingsView({super.key, required this.controller});
+  const SettingsView({super.key});
 
   static const routeName = '/settings';
-
-  final SettingsController controller;
 
   @override
   State<SettingsView> createState() => _SettingsViewState();
@@ -343,9 +340,8 @@ class _SettingsViewState extends State<SettingsView> {
             ],
           ),
         ),
-        bottomNavigationBar: MaterialNavBar(
+        bottomNavigationBar: const MaterialNavBar(
           selectedIndex: 2,
-          settingsController: widget.controller,
         ));
   }
 }

@@ -2,17 +2,14 @@ import 'package:flexify/src/views/wallpapers_view.dart';
 import 'package:flexify/src/views/widgets_view.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../settings/settings_controller.dart';
 import '../views/settings_view.dart';
 
 class MaterialNavBar extends StatefulWidget {
   final int selectedIndex;
-  final SettingsController settingsController;
 
   const MaterialNavBar({
     super.key,
     required this.selectedIndex,
-    required this.settingsController,
   });
 
   @override
@@ -29,8 +26,7 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) =>
-              WallpapersView(settingsController: widget.settingsController),
+          pageBuilder: (_, __, ___) => const WallpapersView(),
           transitionDuration: const Duration(milliseconds: 200),
           transitionsBuilder: (_, a, __, c) =>
               FadeTransition(opacity: a, child: c),
@@ -40,8 +36,7 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) =>
-              WidgetsView(settingsController: widget.settingsController),
+          pageBuilder: (_, __, ___) => const WidgetsView(),
           transitionDuration: const Duration(milliseconds: 200),
           transitionsBuilder: (_, a, __, c) =>
               FadeTransition(opacity: a, child: c),
@@ -51,8 +46,7 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) =>
-              SettingsView(controller: widget.settingsController),
+          pageBuilder: (_, __, ___) => const SettingsView(),
           transitionDuration: const Duration(milliseconds: 200),
           transitionsBuilder: (_, a, __, c) =>
               FadeTransition(opacity: a, child: c),
@@ -61,28 +55,27 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
     }
   }
 
-  String darkThemeValue = 'Dim';
-  String materialYou = 'Dim';
+  bool isPureBlackEnabledValue = true;
+  bool materialYouValue = false;
 
   getPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? darkTheme = prefs.getString('darkTheme');
-    bool? materialYou = prefs.getBool('materialYou');
+    bool? isPureBlackEnabledPref = prefs.getBool('isPureBlackEnabled');
+    bool? materialYouPref = prefs.getBool('materialYou');
     setState(() {
-      if (darkTheme == null || darkTheme == 'Dim') {
-        darkThemeValue = 'Dim';
-      } else if (darkTheme == 'Lights out') {
-        darkThemeValue = 'Lights out';
+      if (isPureBlackEnabledPref == null || isPureBlackEnabledPref == false) {
+        isPureBlackEnabledValue = false;
+      } else if (isPureBlackEnabledPref == true) {
+        isPureBlackEnabledValue = true;
       }
-      if (materialYou != null) {
-        materialYou = materialYou;
+      if (materialYouPref != null) {
+        materialYouValue = materialYouPref;
       }
     });
   }
 
   @override
   void initState() {
-    getPrefs();
     setState(() {
       selectedIndex = widget.selectedIndex;
     });
@@ -91,13 +84,14 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
 
   @override
   Widget build(BuildContext context) {
+    getPrefs();
     return NavigationBar(
       animationDuration: const Duration(seconds: 1),
       backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? darkThemeValue == 'Lights out ' || materialYou == false
+          ? isPureBlackEnabledValue
               ? Colors.black
-              : Theme.of(context).scaffoldBackgroundColor
-          : Theme.of(context).scaffoldBackgroundColor,
+              : null
+          : null,
       destinations: [
         NavigationDestination(
           icon: Icon(selectedIndex == 0
