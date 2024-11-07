@@ -131,7 +131,7 @@ class _MyAppState extends State<MyApp> {
               // Define a light and dark color theme. Then, read the user's
               // preferred ThemeMode (light, dark, or system default) from the
               // SettingsController to display the correct theme.
-              theme: appColorSchemeSeed == null
+              theme: appColorSchemeSeed == null // If Material You is used
                   ? ThemeData(
                       brightness: Brightness.light,
                       colorScheme: lightColorScheme,
@@ -140,7 +140,7 @@ class _MyAppState extends State<MyApp> {
                       brightness: Brightness.light,
                       colorSchemeSeed: appColorSchemeSeed,
                     ),
-              darkTheme: appColorSchemeSeed == null
+              darkTheme: appColorSchemeSeed == null // If Material You is used
                   ? ThemeData(
                       brightness: Brightness.dark,
                       colorScheme: darkColorScheme!.copyWith(
