@@ -17,6 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.0
+  flutter_dotenv: ^5.2.1
   flutter_localizations:
     sdk: flutter
   provider: ^6.1.2
@@ -37,3 +38,4 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+    - .env

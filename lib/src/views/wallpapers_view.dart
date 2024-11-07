@@ -2,6 +2,9 @@ import 'package:flexify/src/settings/settings_controller.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import '../provider/wallpaper_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class WallpapersView extends StatefulWidget {
   const WallpapersView({super.key, required this.settingsController});
@@ -19,6 +22,17 @@ class _WallpapersViewState extends State<WallpapersView> {
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
+
+    final wallpaperProvider =
+        Provider.of<WallpaperProvider>(context, listen: false);
+
+    if (wallpaperProvider.wallpaperNames.isEmpty) {
+      // Fetch wallpaper names on screen load
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        wallpaperProvider.fetchWallpaperNames();
+      });
+    }
+
     super.initState();
   }
 
@@ -31,13 +45,74 @@ class _WallpapersViewState extends State<WallpapersView> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Text("This is the wallpapers view"),
-          ],
-        ),
+      body: Consumer<WallpaperProvider>(
+        builder: (context, provider, child) {
+          if (provider.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (provider.wallpaperNames.isEmpty) {
+            return const Center(child: Text('No wallpapers found'));
+          } else {
+            return GridView.builder(
+              padding: const EdgeInsets.all(10),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: provider.wallpaperNames.length,
+              itemBuilder: (context, index) {
+                final wallpaperUrl =
+                    '${provider.baseUrl}/${provider.wallpaperNames[index]}';
+                final wallpaperName =
+                    provider.wallpaperNames[index].split(".")[0];
+
+                return SizedBox(
+                  height: 500,
+                  width: 5000,
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: Stack(
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: wallpaperUrl,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: double.infinity,
+                            color: Colors.black54,
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Text(
+                              wallpaperName,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
       ),
       bottomNavigationBar: MaterialNavBar(
         selectedIndex: 0,
