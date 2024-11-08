@@ -1,11 +1,12 @@
+import 'package:flexify/src/views/wallpaper_details_view.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
+import 'package:flexify/src/widgets/custom_page_route.dart';
+import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import '../provider/wallpaper_provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class WallpapersView extends StatefulWidget {
   const WallpapersView({super.key});
@@ -19,9 +20,6 @@ class WallpapersView extends StatefulWidget {
 class _WallpapersViewState extends State<WallpapersView> {
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top]);
-
     final wallpaperProvider =
         Provider.of<WallpaperProvider>(context, listen: false);
 
@@ -62,8 +60,11 @@ class _WallpapersViewState extends State<WallpapersView> {
               showChildOpacityTransition: false,
               color: Theme.of(context).colorScheme.inversePrimary,
               child: GridView.builder(
+                key: const PageStorageKey(
+                    'wallpapersGrid'), // Add PageStorageKey
                 padding: const EdgeInsets.all(10),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 3 / 4,
                   crossAxisCount: 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
@@ -73,51 +74,30 @@ class _WallpapersViewState extends State<WallpapersView> {
                   final wallpaperUrl =
                       '${provider.baseUrl}/${provider.wallpaperNames[index]}';
                   final wallpaperName =
-                      provider.wallpaperNames[index].split(".")[0];
+                      provider.wallpaperNames[index].split("@")[0];
+                  final wallpaperAuthor = provider.wallpaperNames[index]
+                      .split("@")[1]
+                      .split(".")[0];
+                  final uniqueKey = UniqueKey();
 
-                  return Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: Stack(
-                      children: [
-                        CachedNetworkImage(
-                          imageUrl: wallpaperUrl,
-                          placeholder: (context, url) => Center(
-                            child: Shimmer.fromColors(
-                              baseColor: Theme.of(context).colorScheme.surface,
-                              highlightColor: Colors.grey,
-                              child: Container(
-                                color: Colors.red,
-                              ),
-                            ),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CustomPageRoute(
+                          builder: (context) => WallpaperDetailsView(
+                            wallpaperUrl: wallpaperUrl,
+                            wallpaperName: wallpaperName,
+                            wallpaperAuthor: wallpaperAuthor,
+                            uniqueKey: uniqueKey,
                           ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: double.infinity,
+                          duration: const Duration(milliseconds: 600),
                         ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            width: double.infinity,
-                            color: Colors.black54,
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: Text(
-                              wallpaperName,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ],
+                      );
+                    },
+                    child: WallpaperCard(
+                      wallpaperUrl: wallpaperUrl,
+                      uniqueKey: uniqueKey,
                     ),
                   );
                 },

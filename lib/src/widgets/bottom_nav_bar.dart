@@ -1,3 +1,4 @@
+import 'package:flexify/src/views/favourites_view.dart';
 import 'package:flexify/src/views/wallpapers_view.dart';
 import 'package:flexify/src/views/widgets_view.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,16 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
         ),
       );
     } else if (index == 2) {
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => const FavouritesView(),
+          transitionDuration: const Duration(milliseconds: 200),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        ),
+      );
+    } else if (index == 3) {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
@@ -107,6 +118,12 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
         ),
         NavigationDestination(
           icon: Icon(selectedIndex == 2
+              ? Icons.favorite_rounded
+              : Icons.favorite_outline_outlined),
+          label: 'Favourites',
+        ),
+        NavigationDestination(
+          icon: Icon(selectedIndex == 3
               ? Icons.settings_rounded
               : Icons.settings_outlined),
           label: 'Settings',
