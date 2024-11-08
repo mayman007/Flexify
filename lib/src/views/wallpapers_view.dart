@@ -41,73 +41,83 @@ class _WallpapersViewState extends State<WallpapersView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Wallpapers",
-          style: TextStyle(fontWeight: FontWeight.bold),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        systemNavigationBarColor: Theme.of(context).colorScheme.surface,
+        systemNavigationBarDividerColor: Theme.of(context).colorScheme.surface,
+        systemNavigationBarIconBrightness:
+            Theme.of(context).brightness == Brightness.light
+                ? Brightness.dark
+                : Brightness.light,
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Wallpapers",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      body: Consumer<WallpaperProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (provider.wallpaperNames.isEmpty) {
-            return const Center(child: Text('Fetching Wallpapers...'));
-          } else {
-            return LiquidPullToRefresh(
-              onRefresh: fetchWallpapers,
-              showChildOpacityTransition: false,
-              color: Theme.of(context).colorScheme.inversePrimary,
-              child: GridView.builder(
-                key: const PageStorageKey(
-                    'wallpapersGrid'), // Add PageStorageKey
-                padding: const EdgeInsets.all(10),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 3 / 4,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: provider.wallpaperNames.length,
-                itemBuilder: (context, index) {
-                  final wallpaperUrl =
-                      '${provider.baseUrl}/${provider.wallpaperNames[index]}';
-                  final wallpaperName =
-                      provider.wallpaperNames[index].split("@")[0];
-                  final wallpaperAuthor = provider.wallpaperNames[index]
-                      .split("@")[1]
-                      .split(".")[0];
-                  final uniqueKey = UniqueKey();
+        body: Consumer<WallpaperProvider>(
+          builder: (context, provider, child) {
+            if (provider.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (provider.wallpaperNames.isEmpty) {
+              return const Center(child: Text('Fetching Wallpapers...'));
+            } else {
+              return LiquidPullToRefresh(
+                onRefresh: fetchWallpapers,
+                showChildOpacityTransition: false,
+                color: Theme.of(context).colorScheme.inversePrimary,
+                child: GridView.builder(
+                  key: const PageStorageKey(
+                      'wallpapersGrid'), // Add PageStorageKey
+                  padding: const EdgeInsets.all(10),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 3 / 4,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: provider.wallpaperNames.length,
+                  itemBuilder: (context, index) {
+                    final wallpaperUrl =
+                        '${provider.baseUrl}/${provider.wallpaperNames[index]}';
+                    final wallpaperName =
+                        provider.wallpaperNames[index].split("@")[0];
+                    final wallpaperAuthor = provider.wallpaperNames[index]
+                        .split("@")[1]
+                        .split(".")[0];
+                    final uniqueKey = UniqueKey();
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CustomPageRoute(
-                          builder: (context) => WallpaperDetailsView(
-                            wallpaperUrl: wallpaperUrl,
-                            wallpaperName: wallpaperName,
-                            wallpaperAuthor: wallpaperAuthor,
-                            uniqueKey: uniqueKey,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CustomPageRoute(
+                            builder: (context) => WallpaperDetailsView(
+                              wallpaperUrl: wallpaperUrl,
+                              wallpaperName: wallpaperName,
+                              wallpaperAuthor: wallpaperAuthor,
+                              uniqueKey: uniqueKey,
+                            ),
+                            duration: const Duration(milliseconds: 600),
                           ),
-                          duration: const Duration(milliseconds: 600),
-                        ),
-                      );
-                    },
-                    child: WallpaperCard(
-                      wallpaperUrl: wallpaperUrl,
-                      uniqueKey: uniqueKey,
-                    ),
-                  );
-                },
-              ),
-            );
-          }
-        },
-      ),
-      bottomNavigationBar: const MaterialNavBar(
-        selectedIndex: 0,
+                        );
+                      },
+                      child: WallpaperCard(
+                        wallpaperUrl: wallpaperUrl,
+                        uniqueKey: uniqueKey,
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
+          },
+        ),
+        bottomNavigationBar: const MaterialNavBar(
+          selectedIndex: 0,
+        ),
       ),
     );
   }
