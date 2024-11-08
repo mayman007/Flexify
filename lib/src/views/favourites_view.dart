@@ -1,22 +1,22 @@
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
-class WidgetsView extends StatefulWidget {
-  const WidgetsView({super.key});
+class FavouritesView extends StatefulWidget {
+  const FavouritesView({super.key});
 
-  static const routeName = '/widgets';
+  static const routeName = '/favourites';
 
   @override
-  State<WidgetsView> createState() => _WidgetsViewState();
+  State<FavouritesView> createState() => _FavouritesViewState();
 }
 
-class _WidgetsViewState extends State<WidgetsView> {
+class _FavouritesViewState extends State<FavouritesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Widgets",
+          "Favourites",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -29,7 +29,7 @@ class _WidgetsViewState extends State<WidgetsView> {
         ),
       ),
       bottomNavigationBar: const MaterialNavBar(
-        selectedIndex: 1,
+        selectedIndex: 2,
       ),
     );
   }
