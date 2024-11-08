@@ -105,9 +105,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     getPref();
 
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top]);
-
     // Glue the SettingsController to the MaterialApp.
     //
     // The ListenableBuilder Widget listens to the SettingsController for changes.

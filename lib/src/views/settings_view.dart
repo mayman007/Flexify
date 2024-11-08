@@ -1,6 +1,7 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Displays the various settings that can be customized by the user.
@@ -256,92 +257,102 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Settings',
-            style: TextStyle(fontWeight: FontWeight.bold),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        systemNavigationBarColor: Theme.of(context).colorScheme.surface,
+        systemNavigationBarDividerColor: Theme.of(context).colorScheme.surface,
+        systemNavigationBarIconBrightness:
+            Theme.of(context).brightness == Brightness.light
+                ? Brightness.dark
+                : Brightness.light,
+      ),
+      child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Settings',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'General Theme',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  ElevatedButton(
-                    onPressed: showThemeDialog,
-                    child: Text(themeValue == 'System Mode'
-                        ? 'System'
-                        : themeValue == 'Light Mode'
-                            ? 'Light'
-                            : 'Dark'),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Color Scheme',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  ElevatedButton(
-                    onPressed: showColorSchemesDialog,
-                    child: Text(colorSchemeValue == 'Blue Scheme'
-                        ? 'Blue'
-                        : colorSchemeValue == 'Green Scheme'
-                            ? 'Green'
-                            : colorSchemeValue == 'Purble Scheme'
-                                ? 'Purble'
-                                : colorSchemeValue == 'Red Scheme'
-                                    ? 'Red'
-                                    : colorSchemeValue == 'Material You'
-                                        ? 'Material You'
-                                        : ''),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Pure Black',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Switch(
-                    value: isPureBlackEnabledValue == true,
-                    onChanged: (newValue) async {
-                      final SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      bool isPureBlackEnabled;
-                      if (newValue) {
-                        isPureBlackEnabled = true;
-                      } else {
-                        isPureBlackEnabled = false;
-                      }
-                      await prefs.setBool(
-                          'isPureBlackEnabled', isPureBlackEnabled);
-                      setState(() {
-                        isPureBlackEnabledValue = isPureBlackEnabled;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'General Theme',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    ElevatedButton(
+                      onPressed: showThemeDialog,
+                      child: Text(themeValue == 'System Mode'
+                          ? 'System'
+                          : themeValue == 'Light Mode'
+                              ? 'Light'
+                              : 'Dark'),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Color Scheme',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    ElevatedButton(
+                      onPressed: showColorSchemesDialog,
+                      child: Text(colorSchemeValue == 'Blue Scheme'
+                          ? 'Blue'
+                          : colorSchemeValue == 'Green Scheme'
+                              ? 'Green'
+                              : colorSchemeValue == 'Purble Scheme'
+                                  ? 'Purble'
+                                  : colorSchemeValue == 'Red Scheme'
+                                      ? 'Red'
+                                      : colorSchemeValue == 'Material You'
+                                          ? 'Material You'
+                                          : ''),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Pure Black',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Switch(
+                      value: isPureBlackEnabledValue == true,
+                      onChanged: (newValue) async {
+                        final SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        bool isPureBlackEnabled;
+                        if (newValue) {
+                          isPureBlackEnabled = true;
+                        } else {
+                          isPureBlackEnabled = false;
+                        }
+                        await prefs.setBool(
+                            'isPureBlackEnabled', isPureBlackEnabled);
+                        setState(() {
+                          isPureBlackEnabledValue = isPureBlackEnabled;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        bottomNavigationBar: const MaterialNavBar(
-          selectedIndex: 3,
-        ));
+          bottomNavigationBar: const MaterialNavBar(
+            selectedIndex: 3,
+          )),
+    );
   }
 }
