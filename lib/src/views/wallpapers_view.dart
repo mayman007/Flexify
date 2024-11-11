@@ -4,7 +4,6 @@ import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import '../provider/wallpaper_provider.dart';
 
@@ -64,13 +63,9 @@ class _WallpapersViewState extends State<WallpapersView> {
             } else if (provider.wallpaperNames.isEmpty) {
               return const Center(child: Text('Fetching Wallpapers...'));
             } else {
-              return LiquidPullToRefresh(
+              return RefreshIndicator(
                 onRefresh: fetchWallpapers,
-                showChildOpacityTransition: false,
-                color: Theme.of(context).colorScheme.inversePrimary,
                 child: GridView.builder(
-                  key: const PageStorageKey(
-                      'wallpapersGrid'), // Add PageStorageKey
                   padding: const EdgeInsets.all(10),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: 3 / 4,

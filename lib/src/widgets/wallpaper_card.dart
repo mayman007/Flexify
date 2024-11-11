@@ -33,6 +33,7 @@ class WallpaperCardState extends State<WallpaperCard>
         clipBehavior: Clip.antiAlias,
         child: CachedNetworkImage(
           imageUrl: widget.wallpaperUrl,
+          key: widget.uniqueKey,
           placeholder: (context, url) => Center(
             child: Shimmer.fromColors(
               baseColor: Theme.of(context).colorScheme.surface,
