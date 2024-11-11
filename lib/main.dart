@@ -1,3 +1,4 @@
+import 'package:flexify/src/database/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,11 @@ void main() async {
   // Run the app and pass in the SettingsController. The app listens to the
   // SettingsController for changes, then passes it further down to the
   // SettingsView.
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  DatabaseHelper sqlDb = DatabaseHelper();
+  await sqlDb.initialDb();
 
   runApp(
     MultiProvider(

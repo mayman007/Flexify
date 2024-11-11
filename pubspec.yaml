@@ -25,6 +25,7 @@ dependencies:
   flutter_styled_toast: ^2.2.1
   image: ^4.3.0
   image_gallery_saver_plus: ^3.0.5
+  path: ^1.9.0
   path_provider: ^2.1.5
   permission_handler: ^11.3.1
   provider: ^6.1.2
