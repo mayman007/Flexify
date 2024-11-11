@@ -3,9 +3,11 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
+import 'package:wallpaper_manager_plus/wallpaper_manager_plus.dart';
 
 class WallpaperDetailsView extends StatefulWidget {
   final String wallpaperUrl;
@@ -28,24 +30,122 @@ class WallpaperDetailsView extends StatefulWidget {
 }
 
 class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
+  bool saveImageCoolDown = false;
   saveNetworkImage() async {
-    var response = await Dio().get(widget.wallpaperUrl,
-        options: Options(responseType: ResponseType.bytes));
-    final result = await ImageGallerySaverPlus.saveImage(
-      Uint8List.fromList(response.data),
-      // quality: 60,
-      name: widget.wallpaperName,
+    if (saveImageCoolDown) {
+      showToast(
+        "You has just downloaded this wallpaper! wait a few seconds.",
+        animation: StyledToastAnimation.fade,
+        reverseAnimation: StyledToastAnimation.fade,
+        animDuration: const Duration(milliseconds: 500),
+        // ignore: use_build_context_synchronously
+        context: context,
+      );
+    } else {
+      setState(() {
+        saveImageCoolDown = true;
+      });
+      var response = await Dio().get(widget.wallpaperUrl,
+          options: Options(responseType: ResponseType.bytes));
+      final result = await ImageGallerySaverPlus.saveImage(
+        Uint8List.fromList(response.data),
+        name: widget.wallpaperName,
+      );
+      showToast(
+        "Wallpaper Downloaded",
+        animation: StyledToastAnimation.fade,
+        reverseAnimation: StyledToastAnimation.fade,
+        animDuration: const Duration(milliseconds: 500),
+        // ignore: use_build_context_synchronously
+        context: context,
+      );
+      log(result.toString());
+      await Future.delayed(const Duration(seconds: 10));
+      setState(() {
+        saveImageCoolDown = false;
+      });
+    }
+  }
+
+  Future<void> setAsWallpaper() async {
+    final file = await DefaultCacheManager()
+        .getSingleFile(widget.wallpaperUrl, key: widget.uniqueKey.toString());
+    try {
+      await WallpaperManagerPlus().setWallpaper(file, wallLocation);
+    } catch (e) {
+      log("Error setting wallpaper: $e");
+    }
+    setState(() {
+      wallLocation = 0;
+    });
+    log("wallLocation $wallLocation");
+  }
+
+  int wallLocation = 0;
+
+  Future<void> showSetWallpaperDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            content: SingleChildScrollView(
+                child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.photo_size_select_actual_rounded,
+              size: 30,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            const Text(
+              'Set Wallpaper',
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            RadioListTile<String>(
+              title: const Text('Home Screen'),
+              value: WallpaperManagerPlus.homeScreen.toString(),
+              groupValue: null,
+              onChanged: (value) async {
+                setState(() {
+                  wallLocation = WallpaperManagerPlus.homeScreen;
+                });
+                if (context.mounted) Navigator.of(context).pop();
+                await setAsWallpaper();
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('Lock Screen'),
+              value: WallpaperManagerPlus.lockScreen.toString(),
+              groupValue: null,
+              onChanged: (value) async {
+                setState(() {
+                  wallLocation = WallpaperManagerPlus.lockScreen;
+                });
+                if (context.mounted) Navigator.of(context).pop();
+                await setAsWallpaper();
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('Both'),
+              value: WallpaperManagerPlus.bothScreens.toString(),
+              groupValue: null,
+              onChanged: (value) async {
+                setState(() {
+                  wallLocation = WallpaperManagerPlus.bothScreens;
+                });
+                if (context.mounted) Navigator.of(context).pop();
+                await setAsWallpaper();
+              },
+            )
+          ],
+        )));
+      },
     );
-    Fluttertoast.showToast(
-      msg: "Downloaded",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      // backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-    log(result.toString());
   }
 
   @override
@@ -88,7 +188,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
               icon: const Icon(Icons.download_rounded),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: showSetWallpaperDialog,
               icon: const Icon(Icons.check_circle_outline_rounded),
             ),
             IconButton(

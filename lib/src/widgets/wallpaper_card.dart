@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:shimmer/shimmer.dart';
 
 class WallpaperCard extends StatefulWidget {
@@ -34,6 +35,7 @@ class WallpaperCardState extends State<WallpaperCard>
         child: CachedNetworkImage(
           imageUrl: widget.wallpaperUrl,
           key: widget.uniqueKey,
+          cacheManager: DefaultCacheManager(),
           placeholder: (context, url) => Center(
             child: Shimmer.fromColors(
               baseColor: Theme.of(context).colorScheme.surface,
