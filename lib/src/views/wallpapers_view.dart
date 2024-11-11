@@ -56,16 +56,16 @@ class _WallpapersViewState extends State<WallpapersView> {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        body: Consumer<WallpaperProvider>(
-          builder: (context, provider, child) {
-            if (provider.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (provider.wallpaperNames.isEmpty) {
-              return const Center(child: Text('Fetching Wallpapers...'));
-            } else {
-              return RefreshIndicator(
-                onRefresh: fetchWallpapers,
-                child: GridView.builder(
+        body: RefreshIndicator(
+          onRefresh: fetchWallpapers,
+          child: Consumer<WallpaperProvider>(
+            builder: (context, provider, child) {
+              if (provider.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (provider.wallpaperNames.isEmpty) {
+                return const Center(child: Text('Fetching Wallpapers...'));
+              } else {
+                return GridView.builder(
                   padding: const EdgeInsets.all(10),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: 3 / 4,
@@ -105,10 +105,10 @@ class _WallpapersViewState extends State<WallpapersView> {
                       ),
                     );
                   },
-                ),
-              );
-            }
-          },
+                );
+              }
+            },
+          ),
         ),
         bottomNavigationBar: const MaterialNavBar(
           selectedIndex: 0,

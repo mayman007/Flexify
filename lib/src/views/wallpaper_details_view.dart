@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
+import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -30,6 +31,7 @@ class WallpaperDetailsView extends StatefulWidget {
 }
 
 class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
+  DatabaseHelper sqlDb = DatabaseHelper();
   bool saveImageCoolDown = false;
   saveNetworkImage() async {
     if (saveImageCoolDown) {
@@ -148,8 +150,39 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
     );
   }
 
+  bool isFaved = false;
+
+  checkIfFaved() async {
+    var table = await sqlDb.selectData("SELECT * FROM 'wallfavs'");
+    for (var row in table) {
+      if (widget.wallpaperUrl == row['wallurl']) {
+        setState(() {
+          isFaved = true;
+        });
+        break;
+      }
+    }
+  }
+
+  insertOrDeleteFaved() async {
+    if (isFaved) {
+      await sqlDb.deleteData(
+          "DELETE FROM 'wallfavs' WHERE wallurl = '${widget.wallpaperUrl}'");
+      setState(() {
+        isFaved = false;
+      });
+    } else {
+      await sqlDb.insertData(
+          "INSERT INTO 'wallfavs' ('wallurl', 'wallname', 'wallauthor')VALUES ('${widget.wallpaperUrl}', '${widget.wallpaperName}', '${widget.wallpaperAuthor}')");
+      setState(() {
+        isFaved = true;
+      });
+    }
+  }
+
   @override
   void initState() {
+    checkIfFaved();
     super.initState();
   }
 
@@ -192,8 +225,12 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
               icon: const Icon(Icons.check_circle_outline_rounded),
             ),
             IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.favorite_outline_rounded),
+              onPressed: insertOrDeleteFaved,
+              icon: Icon(
+                isFaved
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_outline_rounded,
+              ),
             ),
           ],
         ),
