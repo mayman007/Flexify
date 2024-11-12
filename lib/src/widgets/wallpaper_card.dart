@@ -41,7 +41,7 @@ class WallpaperCardState extends State<WallpaperCard>
               baseColor: Theme.of(context).colorScheme.surface,
               highlightColor: Colors.grey,
               child: Container(
-                color: Colors.red,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
