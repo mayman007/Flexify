@@ -1,13 +1,16 @@
 import 'dart:developer';
-import 'dart:typed_data';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flexify/src/database/database_helper.dart';
+import 'package:flexify/src/widgets/color_container.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:wallpaper_manager_plus/wallpaper_manager_plus.dart';
 
 class WallpaperDetailsView extends StatefulWidget {
@@ -71,7 +74,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
 
   Future<void> setAsWallpaper() async {
     final file = await DefaultCacheManager()
-        .getSingleFile(widget.wallpaperUrl, key: widget.uniqueKey.toString());
+        .getSingleFile(widget.wallpaperUrl, key: widget.wallpaperUrl);
     try {
       await WallpaperManagerPlus().setWallpaper(file, wallLocation);
     } catch (e) {
@@ -102,7 +105,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
               height: 5,
             ),
             const Text(
-              'Set Wallpaper',
+              'Set as Wallpaper',
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
@@ -171,133 +174,237 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       setState(() {
         isFaved = false;
       });
+      showToast(
+        "Removed from Favorites",
+        duration: const Duration(milliseconds: 1500),
+        animation: StyledToastAnimation.fade,
+        reverseAnimation: StyledToastAnimation.fade,
+        // ignore: use_build_context_synchronously
+        context: context,
+      );
     } else {
       await sqlDb.insertData(
           "INSERT INTO 'wallfavs' ('wallurl', 'wallname', 'wallauthor')VALUES ('${widget.wallpaperUrl}', '${widget.wallpaperName}', '${widget.wallpaperAuthor}')");
       setState(() {
         isFaved = true;
       });
+      showToast(
+        "Added to Favorites",
+        duration: const Duration(milliseconds: 1500),
+        animation: StyledToastAnimation.fade,
+        reverseAnimation: StyledToastAnimation.fade,
+        // ignore: use_build_context_synchronously
+        context: context,
+      );
     }
+  }
+
+  String imageDimensions = '';
+  String imageSize = '';
+
+  Color? dominantColor = const Color.fromARGB(255, 0, 0, 0);
+  Color? lightVibrantColor = const Color.fromARGB(255, 0, 0, 0);
+  Color? vibrantColor = const Color.fromARGB(255, 0, 0, 0);
+  Color? darkVibrantColor = const Color.fromARGB(255, 0, 0, 0);
+  Color? lightMutedColor = const Color.fromARGB(255, 0, 0, 0);
+  Color? mutedColor = const Color.fromARGB(255, 0, 0, 0);
+  Color? darkMutedColor = const Color.fromARGB(255, 0, 0, 0);
+
+  getWallpaperInfo() async {
+    final File image = await DefaultCacheManager().getSingleFile(
+      widget.wallpaperUrl,
+      key: widget.wallpaperUrl,
+    );
+    final decodedImage = await decodeImageFromList(image.readAsBytesSync());
+    final double size = (image.readAsBytesSync().lengthInBytes / 1024 / 1024);
+
+    final PaletteGenerator paletteGenerator =
+        await PaletteGenerator.fromImage(decodedImage);
+
+    setState(() {
+      imageDimensions = "${decodedImage.width}×${decodedImage.height}";
+      imageSize = "${size.toStringAsFixed(2)} MB";
+      dominantColor = paletteGenerator.dominantColor?.color;
+      lightVibrantColor = paletteGenerator.lightVibrantColor?.color;
+      vibrantColor = paletteGenerator.vibrantColor?.color;
+      darkVibrantColor = paletteGenerator.darkVibrantColor?.color;
+      lightMutedColor = paletteGenerator.lightMutedColor?.color;
+      mutedColor = paletteGenerator.mutedColor?.color;
+      darkMutedColor = paletteGenerator.darkMutedColor?.color;
+    });
   }
 
   @override
   void initState() {
     checkIfFaved();
+    getWallpaperInfo();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BottomBar(
-      fit: StackFit.expand,
-      borderRadius: BorderRadius.circular(15),
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.decelerate,
-      showIcon: false,
-      barColor: Theme.of(context).colorScheme.onPrimary,
-      start: 2,
-      end: 0,
-      offset: 10,
-      barAlignment: Alignment.bottomCenter,
-      barDecoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.6),
-            spreadRadius: 3,
-            blurRadius: 7,
-            offset: const Offset(0, 3), // changes position of shadow
-          ),
-        ],
-      ),
-      hideOnScroll: false,
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
           children: [
-            IconButton(
-              onPressed: saveNetworkImage,
-              icon: const Icon(Icons.download_rounded),
-            ),
-            IconButton(
-              onPressed: showSetWallpaperDialog,
-              icon: const Icon(Icons.check_circle_outline_rounded),
-            ),
-            IconButton(
-              onPressed: insertOrDeleteFaved,
-              icon: Icon(
-                isFaved
-                    ? Icons.favorite_rounded
-                    : Icons.favorite_outline_rounded,
+            Container(
+              margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
+              height: 450,
+              child: WallpaperCard(
+                wallpaperUrl: widget.wallpaperUrl,
+                uniqueKey: widget.uniqueKey,
               ),
             ),
-          ],
-        ),
-      ),
-      body: (context, controller) => Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
-                height: 450,
-                child: WallpaperCard(
-                  wallpaperUrl: widget.wallpaperUrl,
-                  uniqueKey: widget.uniqueKey,
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 30),
-                  Text(
+            Row(
+              children: [
+                const SizedBox(width: 30),
+                SizedBox(
+                  width: 220,
+                  child: Text(
                     widget.wallpaperName,
                     style: const TextStyle(
                       fontSize: 23,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.left,
+                    overflow: TextOverflow.clip,
                   ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 30),
-                  Text(
-                    "@${widget.wallpaperAuthor}",
-                    style: const TextStyle(
-                      fontSize: 12,
+                ),
+                const SizedBox(width: 8),
+                Icon(
+                  Icons.verified_rounded,
+                  size: 35,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(width: 2),
+                IconButton(
+                  onPressed: insertOrDeleteFaved,
+                  tooltip: 'Favorite',
+                  iconSize: 35,
+                  icon: Icon(
+                    isFaved
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_outline_rounded,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  height: 60,
+                  width: 250,
+                  child: ElevatedButton.icon(
+                    onPressed: showSetWallpaperDialog,
+                    label: const Text(
+                      "Set as Wallpaper",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    icon: const Icon(
+                      Icons.wallpaper_rounded,
+                      size: 27,
                     ),
                   ),
-                  const SizedBox(width: 6),
-                  const Icon(Icons.verified_rounded, size: 16)
-                ],
-              ),
-              Card(
-                margin: const EdgeInsets.all(20),
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
                 ),
-                clipBehavior: Clip.antiAlias,
-                child: const SizedBox(
-                  height: 251,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20),
-                      Center(
-                        child: Text('This is the info card'),
-                      ),
-                      SizedBox(height: 70),
-                    ],
+              ],
+            ),
+            Card(
+              margin: const EdgeInsets.all(20),
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: SizedBox(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 20),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Dimensions:',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              imageDimensions,
+                              style: const TextStyle(fontSize: 15),
+                            ).animate().fade(),
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            const Text(
+                              'Size:',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              imageSize,
+                              style: const TextStyle(fontSize: 15),
+                            ).animate().fade(),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Colors Used',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            dominantColor == null ||
+                                    dominantColor == Colors.black
+                                ? const SizedBox()
+                                : ColorContainer(
+                                    containerColor: dominantColor!),
+                            lightVibrantColor == null ||
+                                    lightVibrantColor == Colors.black
+                                ? const SizedBox()
+                                : ColorContainer(
+                                    containerColor: lightVibrantColor!),
+                            vibrantColor == null || vibrantColor == Colors.black
+                                ? const SizedBox()
+                                : ColorContainer(containerColor: vibrantColor!),
+                            darkVibrantColor == null ||
+                                    darkVibrantColor == Colors.black
+                                ? const SizedBox()
+                                : ColorContainer(
+                                    containerColor: darkVibrantColor!),
+                            lightMutedColor == null ||
+                                    lightMutedColor == Colors.black
+                                ? const SizedBox()
+                                : ColorContainer(
+                                    containerColor: lightMutedColor!),
+                            mutedColor == null || mutedColor == Colors.black
+                                ? const SizedBox()
+                                : ColorContainer(containerColor: mutedColor!),
+                            darkMutedColor == null ||
+                                    darkMutedColor == Colors.black
+                                ? const SizedBox()
+                                : ColorContainer(
+                                    containerColor: darkMutedColor!),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 60),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

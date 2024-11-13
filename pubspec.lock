@@ -182,14 +182,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.1"
-  flutter_floating_bottom_bar:
-    dependency: "direct main"
-    description:
-      name: flutter_floating_bottom_bar
-      sha256: "5aff247b2015837bd121b6c694fb30107ed5677cd74e3088f6a5a18e369bc0ec"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.1+1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -341,6 +333,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  palette_generator:
+    dependency: "direct main"
+    description:
+      name: palette_generator
+      sha256: "0b20245c451f14a5ca0818ab7a377765162389f8e8f0db361cceabf0fed9d1ea"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3+5"
   path:
     dependency: "direct main"
     description:

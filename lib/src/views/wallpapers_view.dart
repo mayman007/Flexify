@@ -25,10 +25,9 @@ class _WallpapersViewState extends State<WallpapersView> {
     if (wallpaperProvider.wallpaperNames.isEmpty) {
       // Fetch wallpaper names on screen load
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        wallpaperProvider.fetchWallpaperNames();
+        fetchWallpapers();
       });
     }
-
     super.initState();
   }
 
@@ -62,6 +61,42 @@ class _WallpapersViewState extends State<WallpapersView> {
             builder: (context, provider, child) {
               if (provider.isLoading) {
                 return const Center(child: CircularProgressIndicator());
+              } else if (provider.isError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        '( ˃̣̣̥⌓˂̣̣̥)',
+                        style: TextStyle(
+                          fontSize: 55,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Connection Error',
+                            style: TextStyle(fontSize: 25),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Icon(
+                            Icons.wifi_off_rounded,
+                            size: 34,
+                          ),
+                        ],
+                      ),
+                      TextButton(
+                          onPressed: fetchWallpapers,
+                          child: const Text("Try Again"))
+                    ],
+                  ),
+                );
               } else if (provider.wallpaperNames.isEmpty) {
                 return const Center(child: Text('Fetching Wallpapers...'));
               } else {
