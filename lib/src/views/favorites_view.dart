@@ -5,16 +5,16 @@ import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 
-class FavouritesView extends StatefulWidget {
-  const FavouritesView({super.key});
+class FavoritesView extends StatefulWidget {
+  const FavoritesView({super.key});
 
-  static const routeName = '/favourites';
+  static const routeName = '/favorites';
 
   @override
-  State<FavouritesView> createState() => _FavouritesViewState();
+  State<FavoritesView> createState() => _FavoritesViewState();
 }
 
-class _FavouritesViewState extends State<FavouritesView> {
+class _FavoritesViewState extends State<FavoritesView> {
   DatabaseHelper sqlDb = DatabaseHelper();
   List favedWalls = [];
 
@@ -41,7 +41,7 @@ class _FavouritesViewState extends State<FavouritesView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Favourites",
+          "Favorites",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -57,7 +57,7 @@ class _FavouritesViewState extends State<FavouritesView> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '(•́︵•́)',
+                          '(˵•ヘ•˵)',
                           style: TextStyle(
                             fontSize: 45,
                           ),
@@ -66,7 +66,7 @@ class _FavouritesViewState extends State<FavouritesView> {
                           height: 15,
                         ),
                         Text(
-                          'No Favourites Yet',
+                          'No Favorites Yet',
                           style: TextStyle(
                             fontSize: 21,
                           ),

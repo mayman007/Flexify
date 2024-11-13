@@ -1,4 +1,4 @@
-import 'package:flexify/src/views/favourites_view.dart';
+import 'package:flexify/src/views/favorites_view.dart';
 import 'package:flexify/src/views/wallpapers_view.dart';
 import 'package:flexify/src/views/widgets_view.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +47,7 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const FavouritesView(),
+          pageBuilder: (_, __, ___) => const FavoritesView(),
           transitionDuration: const Duration(milliseconds: 200),
           transitionsBuilder: (_, a, __, c) =>
               FadeTransition(opacity: a, child: c),
@@ -120,7 +120,7 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
           icon: Icon(selectedIndex == 2
               ? Icons.favorite_rounded
               : Icons.favorite_outline_outlined),
-          label: 'Favourites',
+          label: 'Favorites',
         ),
         NavigationDestination(
           icon: Icon(selectedIndex == 3

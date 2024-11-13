@@ -10,12 +10,15 @@ class WallpaperProvider extends ChangeNotifier {
 
   List<String> _wallpaperNames = [];
   bool _isLoading = false;
+  bool _isError = false;
 
   List<String> get wallpaperNames => _wallpaperNames;
   bool get isLoading => _isLoading;
+  bool get isError => _isError;
 
   Future<void> fetchWallpaperNames() async {
     _isLoading = true;
+    _isError = false;
     notifyListeners();
 
     try {
@@ -28,10 +31,11 @@ class WallpaperProvider extends ChangeNotifier {
     } catch (e) {
       log('Error fetching wallpaper names: $e');
       _wallpaperNames = [];
+      _isError = true;
     } finally {
       log("Wallpaper fetching done.");
       _isLoading = false;
-      notifyListeners();
     }
+    notifyListeners();
   }
 }

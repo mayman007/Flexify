@@ -19,12 +19,12 @@ dependencies:
   flutter_animate: ^4.5.0
   flutter_cache_manager: ^3.4.1
   flutter_dotenv: ^5.2.1
-  flutter_floating_bottom_bar: ^1.2.1+1
   flutter_localizations:
     sdk: flutter
   flutter_styled_toast: ^2.2.1
   image: ^4.3.0
   image_gallery_saver_plus: ^3.0.5
+  palette_generator: ^0.3.3+5
   path: ^1.9.0
   path_provider: ^2.1.5
   permission_handler: ^11.3.1
