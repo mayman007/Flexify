@@ -12,7 +12,8 @@ import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:wallpaper_manager_plus/wallpaper_manager_plus.dart';
 
 class WallpaperDetailsView extends StatefulWidget {
-  final String wallpaperUrl;
+  final String wallpaperUrlHq;
+  final String wallpaperUrlMid;
   final String wallpaperName;
   final UniqueKey uniqueKey;
   final String wallpaperResolution;
@@ -24,7 +25,8 @@ class WallpaperDetailsView extends StatefulWidget {
 
   const WallpaperDetailsView({
     super.key,
-    required this.wallpaperUrl,
+    required this.wallpaperUrlHq,
+    required this.wallpaperUrlMid,
     required this.wallpaperName,
     required this.wallpaperResolution,
     required this.wallpaperSize,
@@ -54,7 +56,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       setState(() {
         saveImageCoolDown = true;
       });
-      var response = await Dio().get(widget.wallpaperUrl,
+      var response = await Dio().get(widget.wallpaperUrlHq,
           options: Options(responseType: ResponseType.bytes));
       final result = await ImageGallerySaverPlus.saveImage(
         Uint8List.fromList(response.data),
@@ -78,7 +80,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
 
   Future<void> setAsWallpaper() async {
     final file = await DefaultCacheManager()
-        .getSingleFile(widget.wallpaperUrl, key: widget.wallpaperUrl);
+        .getSingleFile(widget.wallpaperUrlHq, key: widget.wallpaperUrlHq);
     try {
       await WallpaperManagerPlus().setWallpaper(file, wallLocation);
     } catch (e) {
@@ -162,7 +164,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
   checkIfFaved() async {
     var table = await sqlDb.selectData("SELECT * FROM 'wallfavs'");
     for (var row in table) {
-      if (widget.wallpaperUrl == row['wallurl']) {
+      if (widget.wallpaperUrlHq == row['wallurlhq']) {
         setState(() {
           isFaved = true;
         });
@@ -174,7 +176,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
   insertOrDeleteFaved() async {
     if (isFaved) {
       await sqlDb.deleteData(
-          "DELETE FROM 'wallfavs' WHERE wallurl = '${widget.wallpaperUrl}'");
+          "DELETE FROM 'wallfavs' WHERE wallurlhq = '${widget.wallpaperUrlHq}'");
       setState(() {
         isFaved = false;
       });
@@ -188,7 +190,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       );
     } else {
       await sqlDb.insertData(
-          "INSERT INTO 'wallfavs' ('wallurl', 'wallname', 'wallresolution', 'wallsize', 'wallcategory', 'wallcolors' )VALUES ('${widget.wallpaperUrl}', '${widget.wallpaperName}', '${widget.wallpaperResolution}', '${widget.wallpaperSize}', '${widget.wallpaperCategory}', '${widget.wallpaperColors}' )");
+          "INSERT INTO 'wallfavs' ('wallurlhq', 'wallurlmid', 'wallname', 'wallresolution', 'wallsize', 'wallcategory', 'wallcolors' )VALUES ('${widget.wallpaperUrlHq}', '${widget.wallpaperUrlMid}', '${widget.wallpaperName}', '${widget.wallpaperResolution}', '${widget.wallpaperSize}', '${widget.wallpaperCategory}', '${widget.wallpaperColors}' )");
       setState(() {
         isFaved = true;
       });
@@ -253,7 +255,8 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
               margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
               height: 450,
               child: WallpaperCard(
-                wallpaperUrl: widget.wallpaperUrl,
+                wallpaperUrlHq: widget.wallpaperUrlHq,
+                wallpaperUrlMid: widget.wallpaperUrlMid,
                 uniqueKey: widget.uniqueKey,
               ),
             ),

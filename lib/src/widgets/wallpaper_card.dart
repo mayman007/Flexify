@@ -4,12 +4,14 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:shimmer/shimmer.dart';
 
 class WallpaperCard extends StatefulWidget {
-  final String wallpaperUrl;
+  final String wallpaperUrlHq;
+  final String wallpaperUrlMid;
   final UniqueKey uniqueKey;
 
   const WallpaperCard({
     super.key,
-    required this.wallpaperUrl,
+    required this.wallpaperUrlHq,
+    required this.wallpaperUrlMid,
     required this.uniqueKey,
   });
 
@@ -24,7 +26,7 @@ class WallpaperCardState extends State<WallpaperCard>
     super.build(context); // This is important to retain the state
 
     return Hero(
-      tag: widget.wallpaperUrl,
+      tag: widget.wallpaperUrlHq,
       key: widget.uniqueKey,
       child: Card(
         elevation: 5,
@@ -33,8 +35,8 @@ class WallpaperCardState extends State<WallpaperCard>
         ),
         clipBehavior: Clip.antiAlias,
         child: CachedNetworkImage(
-          imageUrl: widget.wallpaperUrl,
-          key: Key(widget.wallpaperUrl),
+          imageUrl: widget.wallpaperUrlMid,
+          key: Key(widget.wallpaperUrlMid),
           cacheManager: DefaultCacheManager(),
           placeholder: (context, url) => Center(
             child: Shimmer.fromColors(

@@ -26,7 +26,8 @@ class DatabaseHelper {
     await db.execute('''
     CREATE TABLE 'wallfavs' (
       'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-      'wallurl' TEXT NOT NULL,
+      'wallurlhq' TEXT NOT NULL,
+      'wallurlmid' TEXT NOT NULL,
       'wallname' TEXT NOT NULL,
       'wallauthor' TEXT,
       'wallresolution' TEXT NOT NULL,
