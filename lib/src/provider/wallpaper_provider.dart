@@ -6,7 +6,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class WallpaperProvider extends ChangeNotifier {
   final Dio _dio = Dio();
-  final String baseUrl = '${dotenv.env['API_URL']}/wallpapers';
+  final String baseUrlHq = '${dotenv.env['API_URL']}/wallpapers/hq';
+  final String baseUrlMid = '${dotenv.env['API_URL']}/wallpapers/mid';
 
   List<String> _wallpaperNames = [];
   List<String> _wallpaperResolutions = [];
@@ -30,7 +31,7 @@ class WallpaperProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _dio.get(baseUrl);
+      final response = await _dio.get(baseUrlHq);
       if (response.statusCode == 200 && response.data is List) {
         for (Map wallpaper in response.data) {
           _wallpaperNames.add(wallpaper["name"]);

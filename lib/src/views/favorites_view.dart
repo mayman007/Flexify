@@ -87,7 +87,8 @@ class _FavoritesViewState extends State<FavoritesView> {
                 ),
                 itemCount: favedWalls.length,
                 itemBuilder: (context, index) {
-                  final wallpaperUrl = favedWalls[index]['wallurl'];
+                  final wallpaperUrlHq = favedWalls[index]['wallurlhq'];
+                  final wallpaperUrlMid = favedWalls[index]['wallurlmid'];
                   final wallpaperName = favedWalls[index]['wallname'];
                   // final wallpaperAuthor = favedWalls[index]['wallauthor'];
                   final wallpaperResolution =
@@ -103,7 +104,8 @@ class _FavoritesViewState extends State<FavoritesView> {
                         context,
                         CustomPageRoute(
                           builder: (context) => WallpaperDetailsView(
-                            wallpaperUrl: wallpaperUrl,
+                            wallpaperUrlHq: wallpaperUrlHq,
+                            wallpaperUrlMid: wallpaperUrlMid,
                             wallpaperName: wallpaperName,
                             wallpaperResolution: wallpaperResolution,
                             wallpaperSize: wallpaperSize,
@@ -116,7 +118,8 @@ class _FavoritesViewState extends State<FavoritesView> {
                       );
                     },
                     child: WallpaperCard(
-                      wallpaperUrl: wallpaperUrl,
+                      wallpaperUrlHq: wallpaperUrlHq,
+                      wallpaperUrlMid: wallpaperUrlMid,
                       uniqueKey: uniqueKey,
                     ),
                   );

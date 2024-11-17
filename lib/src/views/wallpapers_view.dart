@@ -120,8 +120,10 @@ class _WallpapersViewState extends State<WallpapersView> {
                     final wallpaperCategory =
                         provider.wallpaperCategories[index];
                     final wallpaperColors = provider.wallpaperColors[index];
-                    final wallpaperUrl =
-                        '${provider.baseUrl}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
+                    final wallpaperUrlHq =
+                        '${provider.baseUrlHq}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
+                    final wallpaperUrlMid =
+                        '${provider.baseUrlMid}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
                     final uniqueKey = UniqueKey();
 
                     return GestureDetector(
@@ -130,7 +132,8 @@ class _WallpapersViewState extends State<WallpapersView> {
                           context,
                           CustomPageRoute(
                             builder: (context) => WallpaperDetailsView(
-                              wallpaperUrl: wallpaperUrl,
+                              wallpaperUrlHq: wallpaperUrlHq,
+                              wallpaperUrlMid: wallpaperUrlMid,
                               wallpaperName: wallpaperName,
                               wallpaperResolution: wallpaperResolution,
                               wallpaperSize: wallpaperSize,
@@ -143,7 +146,8 @@ class _WallpapersViewState extends State<WallpapersView> {
                         );
                       },
                       child: WallpaperCard(
-                        wallpaperUrl: wallpaperUrl,
+                        wallpaperUrlHq: wallpaperUrlHq,
+                        wallpaperUrlMid: wallpaperUrlMid,
                         uniqueKey: uniqueKey,
                       ),
                     );
