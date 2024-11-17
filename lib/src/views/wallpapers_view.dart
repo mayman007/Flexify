@@ -34,7 +34,7 @@ class _WallpapersViewState extends State<WallpapersView> {
   Future fetchWallpapers() async {
     final wallpaperProvider =
         Provider.of<WallpaperProvider>(context, listen: false);
-    wallpaperProvider.fetchWallpaperNames();
+    wallpaperProvider.fetchWallpaperData();
   }
 
   @override
@@ -110,13 +110,18 @@ class _WallpapersViewState extends State<WallpapersView> {
                   ),
                   itemCount: provider.wallpaperNames.length,
                   itemBuilder: (context, index) {
-                    final wallpaperUrl =
-                        '${provider.baseUrl}/${provider.wallpaperNames[index]}';
                     final wallpaperName =
-                        provider.wallpaperNames[index].split("@")[0];
-                    final wallpaperAuthor = provider.wallpaperNames[index]
-                        .split("@")[1]
-                        .split(".")[0];
+                        provider.wallpaperNames[index].split(".")[0];
+                    final wallpaperExtension =
+                        provider.wallpaperNames[index].split(".")[1];
+                    final wallpaperResolution =
+                        provider.wallpaperResolutions[index];
+                    final wallpaperSize = provider.wallpaperSizes[index];
+                    final wallpaperCategory =
+                        provider.wallpaperCategories[index];
+                    final wallpaperColors = provider.wallpaperColors[index];
+                    final wallpaperUrl =
+                        '${provider.baseUrl}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
                     final uniqueKey = UniqueKey();
 
                     return GestureDetector(
@@ -127,7 +132,10 @@ class _WallpapersViewState extends State<WallpapersView> {
                             builder: (context) => WallpaperDetailsView(
                               wallpaperUrl: wallpaperUrl,
                               wallpaperName: wallpaperName,
-                              wallpaperAuthor: wallpaperAuthor,
+                              wallpaperResolution: wallpaperResolution,
+                              wallpaperSize: wallpaperSize,
+                              wallpaperCategory: wallpaperCategory,
+                              wallpaperColors: wallpaperColors.toString(),
                               uniqueKey: uniqueKey,
                             ),
                             duration: const Duration(milliseconds: 600),

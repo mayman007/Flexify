@@ -89,7 +89,12 @@ class _FavoritesViewState extends State<FavoritesView> {
                 itemBuilder: (context, index) {
                   final wallpaperUrl = favedWalls[index]['wallurl'];
                   final wallpaperName = favedWalls[index]['wallname'];
-                  final wallpaperAuthor = favedWalls[index]['wallauthor'];
+                  // final wallpaperAuthor = favedWalls[index]['wallauthor'];
+                  final wallpaperResolution =
+                      favedWalls[index]['wallresolution'];
+                  final wallpaperSize = favedWalls[index]['wallsize'];
+                  final wallpaperCategory = favedWalls[index]['wallcategory'];
+                  final wallpaperColors = favedWalls[index]['wallcolors'];
                   final uniqueKey = UniqueKey();
 
                   return GestureDetector(
@@ -100,7 +105,10 @@ class _FavoritesViewState extends State<FavoritesView> {
                           builder: (context) => WallpaperDetailsView(
                             wallpaperUrl: wallpaperUrl,
                             wallpaperName: wallpaperName,
-                            wallpaperAuthor: wallpaperAuthor,
+                            wallpaperResolution: wallpaperResolution,
+                            wallpaperSize: wallpaperSize,
+                            wallpaperCategory: wallpaperCategory,
+                            wallpaperColors: wallpaperColors,
                             uniqueKey: uniqueKey,
                           ),
                           duration: const Duration(milliseconds: 600),

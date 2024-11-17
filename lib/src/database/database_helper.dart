@@ -28,7 +28,11 @@ class DatabaseHelper {
       'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       'wallurl' TEXT NOT NULL,
       'wallname' TEXT NOT NULL,
-      'wallauthor' TEXT NOT NULL
+      'wallauthor' TEXT,
+      'wallresolution' TEXT NOT NULL,
+      'wallsize' INTEGER NOT NULL,
+      'wallcategory' TEXT NOT NULL,
+      'wallcolors' TEXT NOT NULL
     )
 ''');
   }

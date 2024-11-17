@@ -1,23 +1,24 @@
+import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/widgets/color_container.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:wallpaper_manager_plus/wallpaper_manager_plus.dart';
 
 class WallpaperDetailsView extends StatefulWidget {
   final String wallpaperUrl;
   final String wallpaperName;
-  final String wallpaperAuthor;
   final UniqueKey uniqueKey;
+  final String wallpaperResolution;
+  final int wallpaperSize;
+  final String wallpaperCategory;
+  final String wallpaperColors;
 
   static const routeName = '/wallpapers_details';
 
@@ -25,7 +26,10 @@ class WallpaperDetailsView extends StatefulWidget {
     super.key,
     required this.wallpaperUrl,
     required this.wallpaperName,
-    required this.wallpaperAuthor,
+    required this.wallpaperResolution,
+    required this.wallpaperSize,
+    required this.wallpaperCategory,
+    required this.wallpaperColors,
     required this.uniqueKey,
   });
 
@@ -184,7 +188,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       );
     } else {
       await sqlDb.insertData(
-          "INSERT INTO 'wallfavs' ('wallurl', 'wallname', 'wallauthor')VALUES ('${widget.wallpaperUrl}', '${widget.wallpaperName}', '${widget.wallpaperAuthor}')");
+          "INSERT INTO 'wallfavs' ('wallurl', 'wallname', 'wallresolution', 'wallsize', 'wallcategory', 'wallcolors' )VALUES ('${widget.wallpaperUrl}', '${widget.wallpaperName}', '${widget.wallpaperResolution}', '${widget.wallpaperSize}', '${widget.wallpaperCategory}', '${widget.wallpaperColors}' )");
       setState(() {
         isFaved = true;
       });
@@ -199,45 +203,43 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
     }
   }
 
-  String imageDimensions = '';
-  String imageSize = '';
+  Color? containerColor1 = const Color.fromARGB(255, 0, 0, 0);
+  Color? containerColor2 = const Color.fromARGB(255, 0, 0, 0);
+  Color? containerColor3 = const Color.fromARGB(255, 0, 0, 0);
+  Color? containerColor4 = const Color.fromARGB(255, 0, 0, 0);
 
-  Color? dominantColor = const Color.fromARGB(255, 0, 0, 0);
-  Color? lightVibrantColor = const Color.fromARGB(255, 0, 0, 0);
-  Color? vibrantColor = const Color.fromARGB(255, 0, 0, 0);
-  Color? darkVibrantColor = const Color.fromARGB(255, 0, 0, 0);
-  Color? lightMutedColor = const Color.fromARGB(255, 0, 0, 0);
-  Color? mutedColor = const Color.fromARGB(255, 0, 0, 0);
-  Color? darkMutedColor = const Color.fromARGB(255, 0, 0, 0);
+  String calculateSize() {
+    double size = (widget.wallpaperSize / 1024 / 1024);
+    return "${size.toStringAsFixed(2)} MB";
+  }
 
-  getWallpaperInfo() async {
-    final File image = await DefaultCacheManager().getSingleFile(
-      widget.wallpaperUrl,
-      key: widget.wallpaperUrl,
-    );
-    final decodedImage = await decodeImageFromList(image.readAsBytesSync());
-    final double size = (image.readAsBytesSync().lengthInBytes / 1024 / 1024);
-
-    final PaletteGenerator paletteGenerator =
-        await PaletteGenerator.fromImage(decodedImage);
+  getColors() {
+    String fixedColors = widget.wallpaperColors
+        .replaceAll('[', '["')
+        .replaceAll(']', '"]')
+        .replaceAll(', ', '", "')
+        .replaceAll('#', '#');
+    List<String> listedColors =
+        json.decode(fixedColors).cast<String>().toList();
+    log(listedColors.toString());
+    // Convert hex strings to Color objects
+    List<Color> colors = listedColors.map((hex) {
+      // Remove '#' and parse the hex code to a Color
+      return Color(int.parse(hex.replaceFirst('#', '0xFF')));
+    }).toList();
 
     setState(() {
-      imageDimensions = "${decodedImage.width}×${decodedImage.height}";
-      imageSize = "${size.toStringAsFixed(2)} MB";
-      dominantColor = paletteGenerator.dominantColor?.color;
-      lightVibrantColor = paletteGenerator.lightVibrantColor?.color;
-      vibrantColor = paletteGenerator.vibrantColor?.color;
-      darkVibrantColor = paletteGenerator.darkVibrantColor?.color;
-      lightMutedColor = paletteGenerator.lightMutedColor?.color;
-      mutedColor = paletteGenerator.mutedColor?.color;
-      darkMutedColor = paletteGenerator.darkMutedColor?.color;
+      containerColor1 = colors[0];
+      containerColor2 = colors[1];
+      containerColor3 = colors[2];
+      containerColor4 = colors[3];
     });
   }
 
   @override
   void initState() {
     checkIfFaved();
-    getWallpaperInfo();
+    getColors();
     super.initState();
   }
 
@@ -293,11 +295,12 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
               height: 10,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                const SizedBox(width: 20),
                 SizedBox(
-                  height: 60,
-                  width: 250,
+                  height: 50,
+                  width: 240,
                   child: ElevatedButton.icon(
                     onPressed: showSetWallpaperDialog,
                     label: const Text(
@@ -337,9 +340,9 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                               ),
                             ),
                             Text(
-                              imageDimensions,
+                              widget.wallpaperResolution,
                               style: const TextStyle(fontSize: 15),
-                            ).animate().fade(),
+                            ),
                             const SizedBox(
                               width: 15,
                             ),
@@ -351,9 +354,28 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                               ),
                             ),
                             Text(
-                              imageSize,
+                              calculateSize(),
                               style: const TextStyle(fontSize: 15),
-                            ).animate().fade(),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Category:  ',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              widget.wallpaperCategory,
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                            const SizedBox(
+                              width: 15,
+                            ),
                           ],
                         ),
                         const SizedBox(height: 10),
@@ -365,37 +387,22 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            dominantColor == null ||
-                                    dominantColor == Colors.black
+                            containerColor1 == null
                                 ? const SizedBox()
                                 : ColorContainer(
-                                    containerColor: dominantColor!),
-                            lightVibrantColor == null ||
-                                    lightVibrantColor == Colors.black
+                                    containerColor: containerColor1!),
+                            containerColor2 == null
                                 ? const SizedBox()
                                 : ColorContainer(
-                                    containerColor: lightVibrantColor!),
-                            vibrantColor == null || vibrantColor == Colors.black
-                                ? const SizedBox()
-                                : ColorContainer(containerColor: vibrantColor!),
-                            darkVibrantColor == null ||
-                                    darkVibrantColor == Colors.black
+                                    containerColor: containerColor2!),
+                            containerColor3 == null
                                 ? const SizedBox()
                                 : ColorContainer(
-                                    containerColor: darkVibrantColor!),
-                            lightMutedColor == null ||
-                                    lightMutedColor == Colors.black
+                                    containerColor: containerColor3!),
+                            containerColor4 == null
                                 ? const SizedBox()
                                 : ColorContainer(
-                                    containerColor: lightMutedColor!),
-                            mutedColor == null || mutedColor == Colors.black
-                                ? const SizedBox()
-                                : ColorContainer(containerColor: mutedColor!),
-                            darkMutedColor == null ||
-                                    darkMutedColor == Colors.black
-                                ? const SizedBox()
-                                : ColorContainer(
-                                    containerColor: darkMutedColor!),
+                                    containerColor: containerColor4!),
                           ],
                         ),
                       ],
