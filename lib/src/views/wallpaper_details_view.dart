@@ -15,7 +15,6 @@ class WallpaperDetailsView extends StatefulWidget {
   final String wallpaperUrlHq;
   final String wallpaperUrlMid;
   final String wallpaperName;
-  final UniqueKey uniqueKey;
   final String wallpaperResolution;
   final int wallpaperSize;
   final String wallpaperCategory;
@@ -32,7 +31,6 @@ class WallpaperDetailsView extends StatefulWidget {
     required this.wallpaperSize,
     required this.wallpaperCategory,
     required this.wallpaperColors,
-    required this.uniqueKey,
   });
 
   @override
@@ -42,6 +40,7 @@ class WallpaperDetailsView extends StatefulWidget {
 class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
   DatabaseHelper sqlDb = DatabaseHelper();
   bool saveImageCoolDown = false;
+
   saveNetworkImage() async {
     if (saveImageCoolDown) {
       showToast(
@@ -223,7 +222,6 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
         .replaceAll('#', '#');
     List<String> listedColors =
         json.decode(fixedColors).cast<String>().toList();
-    log(listedColors.toString());
     // Convert hex strings to Color objects
     List<Color> colors = listedColors.map((hex) {
       // Remove '#' and parse the hex code to a Color
@@ -257,7 +255,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
               child: WallpaperCard(
                 wallpaperUrlHq: widget.wallpaperUrlHq,
                 wallpaperUrlMid: widget.wallpaperUrlMid,
-                uniqueKey: widget.uniqueKey,
+                isWallpaper: true,
               ),
             ),
             Row(
@@ -266,7 +264,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                 SizedBox(
                   width: 220,
                   child: Text(
-                    widget.wallpaperName,
+                    widget.wallpaperName.replaceAll("_", " "),
                     style: const TextStyle(
                       fontSize: 23,
                       fontWeight: FontWeight.bold,
@@ -336,7 +334,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              'Dimensions:',
+                              'Resolution:',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

@@ -110,21 +110,21 @@ class _WallpapersViewState extends State<WallpapersView> {
                   ),
                   itemCount: provider.wallpaperNames.length,
                   itemBuilder: (context, index) {
-                    final wallpaperName =
+                    final String wallpaperName =
                         provider.wallpaperNames[index].split(".")[0];
-                    final wallpaperExtension =
+                    final String wallpaperExtension =
                         provider.wallpaperNames[index].split(".")[1];
-                    final wallpaperResolution =
+                    final String wallpaperResolution =
                         provider.wallpaperResolutions[index];
-                    final wallpaperSize = provider.wallpaperSizes[index];
-                    final wallpaperCategory =
+                    final int wallpaperSize = provider.wallpaperSizes[index];
+                    final String wallpaperCategory =
                         provider.wallpaperCategories[index];
-                    final wallpaperColors = provider.wallpaperColors[index];
-                    final wallpaperUrlHq =
+                    final List wallpaperColors =
+                        provider.wallpaperColors[index];
+                    final String wallpaperUrlHq =
                         '${provider.baseUrlHq}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
-                    final wallpaperUrlMid =
+                    final String wallpaperUrlMid =
                         '${provider.baseUrlMid}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
-                    final uniqueKey = UniqueKey();
 
                     return GestureDetector(
                       onTap: () {
@@ -139,7 +139,6 @@ class _WallpapersViewState extends State<WallpapersView> {
                               wallpaperSize: wallpaperSize,
                               wallpaperCategory: wallpaperCategory,
                               wallpaperColors: wallpaperColors.toString(),
-                              uniqueKey: uniqueKey,
                             ),
                             duration: const Duration(milliseconds: 600),
                           ),
@@ -148,7 +147,7 @@ class _WallpapersViewState extends State<WallpapersView> {
                       child: WallpaperCard(
                         wallpaperUrlHq: wallpaperUrlHq,
                         wallpaperUrlMid: wallpaperUrlMid,
-                        uniqueKey: uniqueKey,
+                        isWallpaper: true,
                       ),
                     );
                   },

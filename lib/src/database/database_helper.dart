@@ -36,6 +36,15 @@ class DatabaseHelper {
       'wallcolors' TEXT NOT NULL
     )
 ''');
+    await db.execute('''
+    CREATE TABLE 'widgetfavs' (
+      'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      'widgeturl' TEXT NOT NULL,
+      'widgetname' TEXT NOT NULL,
+      'widgetauthor' TEXT,
+      'widgetcategory' TEXT NOT NULL
+    )
+''');
   }
 
   selectData(String sql) async {
