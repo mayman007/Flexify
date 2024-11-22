@@ -6,13 +6,13 @@ import 'package:shimmer/shimmer.dart';
 class WallpaperCard extends StatefulWidget {
   final String wallpaperUrlHq;
   final String wallpaperUrlMid;
-  final UniqueKey uniqueKey;
+  final bool isWallpaper;
 
   const WallpaperCard({
     super.key,
     required this.wallpaperUrlHq,
     required this.wallpaperUrlMid,
-    required this.uniqueKey,
+    required this.isWallpaper,
   });
 
   @override
@@ -27,7 +27,7 @@ class WallpaperCardState extends State<WallpaperCard>
 
     return Hero(
       tag: widget.wallpaperUrlHq,
-      key: widget.uniqueKey,
+      key: Key(widget.wallpaperUrlHq),
       child: Card(
         elevation: 5,
         shape: RoundedRectangleBorder(
@@ -48,7 +48,7 @@ class WallpaperCardState extends State<WallpaperCard>
             ),
           ),
           errorWidget: (context, url, error) => const Icon(Icons.error),
-          fit: BoxFit.cover,
+          fit: widget.isWallpaper ? BoxFit.cover : BoxFit.contain,
           width: double.infinity,
           height: double.infinity,
         ),

@@ -1,4 +1,5 @@
 import 'package:flexify/src/database/database_helper.dart';
+import 'package:flexify/src/provider/widget_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +27,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => WallpaperProvider()),
+        ChangeNotifierProvider(create: (_) => WidgetProvider()),
       ],
       child: const MyApp(),
     ),
