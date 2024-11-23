@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Displays the various settings that can be customized by the user.
@@ -248,10 +250,36 @@ class _SettingsViewState extends State<SettingsView> {
     );
   }
 
+  String cacheSize = '';
+
+  Future getCacheSize() async {
+    Directory tempDir = await getTemporaryDirectory();
+    int tempDirSize = _getSize(tempDir);
+    double tempDirSizeInMb = tempDirSize / 1024 / 1024;
+    setState(() {
+      cacheSize = tempDirSizeInMb.toStringAsFixed(2);
+    });
+  }
+
+  int _getSize(FileSystemEntity file) {
+    if (file is File) {
+      return file.lengthSync();
+    } else if (file is Directory) {
+      int sum = 0;
+      List<FileSystemEntity> children = file.listSync();
+      for (FileSystemEntity child in children) {
+        sum += _getSize(child);
+      }
+      return sum;
+    }
+    return 0;
+  }
+
   @override
   void initState() {
     getPrefs();
     isAndroid12OrHigher();
+    getCacheSize();
     super.initState();
   }
 
@@ -345,6 +373,26 @@ class _SettingsViewState extends State<SettingsView> {
                         });
                       },
                     ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Delete Cache ($cacheSize MB)',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        var appDir = (await getTemporaryDirectory()).path;
+                        Directory(appDir).delete();
+                        await getCacheSize();
+                      },
+                      child: const Text("Delete"),
+                    )
                   ],
                 ),
               ],
