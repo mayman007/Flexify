@@ -6,6 +6,7 @@
         android:label="Flexify"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/round_launcher"
         android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:requestLegacyExternalStorage="true">
