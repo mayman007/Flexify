@@ -5,7 +5,7 @@
     <application
         android:label="Flexify"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:roundIcon="@mipmap/round_launcher"
         android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
