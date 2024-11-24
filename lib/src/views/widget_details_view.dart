@@ -1,7 +1,11 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:android_intent_plus/android_intent.dart';
 
 class WidgetDetailsView extends StatefulWidget {
   final String widgetUrl;
@@ -70,6 +74,88 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
     }
   }
 
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Container(
+              margin: const EdgeInsets.fromLTRB(20, 15, 0, 10),
+              child: const Text("Fetching Widget...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  Future<void> openKWGTFile(String fullPath) async {
+    const packageName = 'org.kustom.widget';
+    if (Platform.isAndroid) {
+      try {
+        // Convert file URI to content URI using FileProvider
+        final contentUri = await _getContentUri(fullPath);
+        final intent = AndroidIntent(
+          action: 'android.intent.action.VIEW',
+          data: contentUri,
+          package: packageName,
+          flags: <int>[
+            268435456, // FLAG_ACTIVITY_NEW_TASK
+            1, // FLAG_GRANT_READ_URI_PERMISSION
+          ],
+        );
+        await intent.launch();
+      } catch (e) {
+        debugPrint('Error launching intent: $e');
+      }
+    } else {
+      debugPrint('Opening .kwgt files is supported only on Android.');
+    }
+  }
+
+  /// Converts a file:// URI to a content:// URI using FileProvider.
+  Future<String> _getContentUri(String filePath) async {
+    final file = File(filePath);
+    const authority = 'com.maymanxineffable.flexify.fileprovider';
+
+    // Verify the file exists
+    if (!file.existsSync()) {
+      throw Exception("File not found: $filePath");
+    }
+    return 'content://$authority/cache_files/${Uri.encodeComponent(file.uri.pathSegments.last)}';
+  }
+
+  applyWidget() async {
+    showLoaderDialog(context); // Show loading dialog
+    // Make file path
+    var tempDir = await getTemporaryDirectory();
+    String fullPath = "${tempDir.path}/${widget.widgetName}.kwgt";
+
+    // Download file
+    Response response = await Dio().get(
+      widget.widgetUrl,
+      options: Options(
+        responseType: ResponseType.bytes,
+        followRedirects: false,
+      ),
+    );
+
+    // Write file
+    File file = File(fullPath);
+    var raf = file.openSync(mode: FileMode.write);
+    raf.writeFromSync(response.data);
+    await raf.close();
+
+    // Open file
+    Navigator.pop(context);
+    openKWGTFile(fullPath);
+  }
+
   @override
   void initState() {
     checkIfFaved();
@@ -136,7 +222,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
                   height: 60,
                   width: 240,
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: applyWidget,
                     label: const Text(
                       "Apply Widget",
                       style: TextStyle(fontSize: 20),
