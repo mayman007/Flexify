@@ -154,6 +154,13 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
     // Open file
     Navigator.pop(context);
     openKWGTFile(fullPath);
+    showToast(
+      "Opened KWGT To Apply Widget",
+      animation: StyledToastAnimation.fade,
+      reverseAnimation: StyledToastAnimation.fade,
+      // ignore: use_build_context_synchronously
+      context: context,
+    );
   }
 
   @override

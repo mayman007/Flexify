@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
@@ -275,6 +276,25 @@ class _SettingsViewState extends State<SettingsView> {
     return 0;
   }
 
+  Future<void> clearAppCache() async {
+    try {
+      // Get the temporary directory (cache directory)
+      final Directory tempDir = await getTemporaryDirectory();
+
+      // Check if the directory exists
+      if (tempDir.existsSync()) {
+        // Delete the directory and its contents
+        tempDir.deleteSync(recursive: true);
+        log("Cache cleared successfully!");
+      } else {
+        log("No cache found to clear.");
+      }
+    } catch (e) {
+      log("Failed to clear cache: $e");
+    }
+    await getCacheSize();
+  }
+
   @override
   void initState() {
     getPrefs();
@@ -386,11 +406,7 @@ class _SettingsViewState extends State<SettingsView> {
                       width: 10,
                     ),
                     ElevatedButton(
-                      onPressed: () async {
-                        var appDir = (await getTemporaryDirectory()).path;
-                        Directory(appDir).delete();
-                        await getCacheSize();
-                      },
+                      onPressed: clearAppCache,
                       child: const Text("Delete"),
                     )
                   ],
