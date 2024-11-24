@@ -1,4 +1,4 @@
-package com.mayman007.flexify
+package com.maymanxineffable.flexify
 
 import io.flutter.embedding.android.FlutterActivity
 
