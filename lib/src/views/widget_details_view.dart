@@ -4,8 +4,10 @@ import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:installed_apps/installed_apps.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WidgetDetailsView extends StatefulWidget {
   final String widgetUrl;
@@ -94,6 +96,48 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
     );
   }
 
+  showAppNotFoundDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            content: const SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "To apply widgets, you need to have KWGT installed. Join our official Telegram group for further support!",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 18,
+                      ),
+                    )
+                  ]),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  await launchUrl(Uri.parse(
+                      'https://play.google.com/store/apps/details?id=org.kustom.widget'));
+                },
+                child: const Text("Get KWGT From Play Store"),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await launchUrl(Uri.parse('https://t.me/Flexify_discussion'));
+                },
+                child: const Text("Telegram Support Group"),
+              )
+            ],
+          );
+        });
+  }
+
   Future<void> openKWGTFile(String fullPath) async {
     const packageName = 'org.kustom.widget';
     if (Platform.isAndroid) {
@@ -131,7 +175,15 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
   }
 
   applyWidget() async {
+    // Check if KWGT is installed
+    bool? appIsInstalled =
+        await InstalledApps.isAppInstalled('org.kustom.widget');
+    if (appIsInstalled == null || appIsInstalled == false) {
+      showAppNotFoundDialog(context);
+      return;
+    }
     showLoaderDialog(context); // Show loading dialog
+
     // Make file path
     var tempDir = await getTemporaryDirectory();
     String fullPath = "${tempDir.path}/${widget.widgetName}.kwgt";
