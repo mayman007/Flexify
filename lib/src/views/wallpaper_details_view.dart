@@ -77,13 +77,49 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
     }
   }
 
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Container(
+              margin: const EdgeInsets.fromLTRB(20, 15, 0, 10),
+              child: const Text("Fetching Wallpaper...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   Future<void> setAsWallpaper() async {
+    showLoaderDialog(context); // Show loading dialog
     final file = await DefaultCacheManager()
         .getSingleFile(widget.wallpaperUrlHq, key: widget.wallpaperUrlHq);
+    Navigator.pop(context);
     try {
       await WallpaperManagerPlus().setWallpaper(file, wallLocation);
+      showToast(
+        "Wallpaper Set",
+        animation: StyledToastAnimation.fade,
+        reverseAnimation: StyledToastAnimation.fade,
+        // ignore: use_build_context_synchronously
+        context: context,
+      );
     } catch (e) {
       log("Error setting wallpaper: $e");
+      showToast(
+        "Setting Walllpaper Failed",
+        animation: StyledToastAnimation.fade,
+        reverseAnimation: StyledToastAnimation.fade,
+        // ignore: use_build_context_synchronously
+        context: context,
+      );
     }
     setState(() {
       wallLocation = 0;
