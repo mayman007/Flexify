@@ -10,6 +10,7 @@ environment:
   sdk: ^3.5.3
 
 dependencies:
+  android_intent_plus: ^5.2.0
   cached_network_image: ^3.4.1
   device_info_plus: ^11.1.0
   dio: ^5.7.0
