@@ -22,12 +22,14 @@ dependencies:
   flutter_styled_toast: ^2.2.1
   image: ^4.3.0
   image_gallery_saver_plus: ^3.0.5
+  installed_apps: ^1.5.2
   path: ^1.9.0
   path_provider: ^2.1.5
   provider: ^6.1.2
   shared_preferences: ^2.3.2
   shimmer: ^3.0.0
   sqflite: ^2.4.1
+  url_launcher: ^6.3.1
   wallpaper_manager_plus: ^0.0.3
 
 dev_dependencies:
