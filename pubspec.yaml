@@ -19,6 +19,7 @@ dependencies:
     sdk: flutter
   flutter_cache_manager: ^3.4.1
   flutter_dotenv: ^5.2.1
+  flutter_native_splash: ^2.4.3
   flutter_styled_toast: ^2.2.1
   image: ^4.3.0
   image_gallery_saver_plus: ^3.0.5
@@ -44,6 +45,16 @@ flutter_icons:
   image_path: "assets/images/icon.png"
   adaptive_icon_background: "#d9d9d9" # You can use a color or image for the background
   adaptive_icon_foreground: "assets/images/icon_adaptive.png" # For adaptive icons on Android
+
+flutter_native_splash:
+  color: "#d9d9d9"
+  image: assets/images/icon_splash.png
+  # android_12:
+  #   image: assets/images/icon_splash.png
+  #   color: "#d9d9d9"
+  web: false
+  ios: false
+
 
 flutter:
   uses-material-design: true
