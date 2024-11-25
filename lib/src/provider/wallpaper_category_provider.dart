@@ -2,19 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class WallpaperProvider extends ChangeNotifier {
+class WallpaperCategoryProvider extends ChangeNotifier {
   final Dio _dio = Dio();
-  final String baseUrlHq = '${dotenv.env['API_URL']}/wallpapers/hq';
-  final String baseUrlMid = '${dotenv.env['API_URL']}/wallpapers/mid';
 
   List<String> _wallpaperNames = [];
   List<String> _wallpaperResolutions = [];
   List<int> _wallpaperSizes = [];
   List<String> _wallpaperCategories = [];
   List<dynamic> _wallpaperColors = [];
-  List<String> _categoriesList = [];
   bool _isLoading = false;
   bool _isError = false;
 
@@ -23,11 +19,10 @@ class WallpaperProvider extends ChangeNotifier {
   List<int> get wallpaperSizes => _wallpaperSizes;
   List<String> get wallpaperCategories => _wallpaperCategories;
   List<dynamic> get wallpaperColors => _wallpaperColors;
-  List<String> get categoriesList => _categoriesList;
   bool get isLoading => _isLoading;
   bool get isError => _isError;
 
-  Future<void> fetchWallpaperData() async {
+  Future<void> fetchWallpaperCategoryData(String url) async {
     _wallpaperNames = [];
     _wallpaperResolutions = [];
     _wallpaperSizes = [];
@@ -38,7 +33,7 @@ class WallpaperProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _dio.get(baseUrlHq);
+      final response = await _dio.get(url);
       if (response.statusCode == 200 && response.data is List) {
         for (Map wallpaper in response.data) {
           _wallpaperNames.add(wallpaper["name"]);
@@ -46,9 +41,6 @@ class WallpaperProvider extends ChangeNotifier {
           _wallpaperSizes.add(wallpaper["size"]);
           _wallpaperCategories.add(wallpaper["category"]);
           _wallpaperColors.add(wallpaper["colors"]);
-          if (!_categoriesList.contains(wallpaper["category"])) {
-            _categoriesList.add(wallpaper["category"]);
-          }
         }
       } else {
         _wallpaperNames = [];
@@ -56,7 +48,6 @@ class WallpaperProvider extends ChangeNotifier {
         _wallpaperSizes = [];
         _wallpaperCategories = [];
         _wallpaperColors = [];
-        _categoriesList = [];
       }
     } catch (e) {
       log('Error fetching wallpaper names: $e');
@@ -65,7 +56,6 @@ class WallpaperProvider extends ChangeNotifier {
       _wallpaperSizes = [];
       _wallpaperCategories = [];
       _wallpaperColors = [];
-      _categoriesList = [];
       _isError = true;
     } finally {
       log("Wallpaper fetching done.");

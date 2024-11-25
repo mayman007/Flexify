@@ -1,4 +1,5 @@
 import 'package:flexify/src/views/widget_details_view.dart';
+import 'package:flexify/src/views/widgets_category_view.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
@@ -20,6 +21,73 @@ class _WidgetsViewState extends State<WidgetsView> {
   Future fetchWidgets() async {
     final widgetProvider = Provider.of<WidgetProvider>(context, listen: false);
     widgetProvider.fetchWidgetData();
+  }
+
+  _modalBottomSheetMenu() {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          final provider = Provider.of<WidgetProvider>(context, listen: false);
+          return Container(
+            height: 500,
+            color: Colors.transparent,
+            child: Container(
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(50),
+                        topRight: Radius.circular(50))),
+                child: GridView.builder(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 25, horizontal: 40),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 3 / 1,
+                    crossAxisCount: 1,
+                    mainAxisSpacing: 15,
+                  ),
+                  itemCount: provider.categoriesList.length,
+                  itemBuilder: (context, index) {
+                    final String categoryName = provider.categoriesList[index];
+                    final String categoryUrl =
+                        "${provider.baseUrl}/$categoryName";
+
+                    return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            CustomPageRoute(
+                              builder: (context) => WidgetsCategoryView(
+                                categoryName: categoryName,
+                                categoryUrl: categoryUrl,
+                              ),
+                              duration: const Duration(milliseconds: 600),
+                            ),
+                          );
+                        },
+                        child: SizedBox(
+                          child: Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            clipBehavior: Clip.antiAlias,
+                            child: SizedBox(
+                              child: Center(
+                                child: Text(
+                                  categoryName,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ));
+                  },
+                )),
+          );
+        });
   }
 
   @override
@@ -138,6 +206,10 @@ class _WidgetsViewState extends State<WidgetsView> {
       ),
       bottomNavigationBar: const MaterialNavBar(
         selectedIndex: 1,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _modalBottomSheetMenu,
+        child: const Icon(Icons.menu_rounded),
       ),
     );
   }

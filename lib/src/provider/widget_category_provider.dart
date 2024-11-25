@@ -1,11 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class WidgetProvider extends ChangeNotifier {
+class WidgetCategoryProvider extends ChangeNotifier {
   final Dio _dio = Dio();
-  final String baseUrl = '${dotenv.env['API_URL']}/widgets';
 
   List<String> _widgetNames = [];
   List<String> _widgetCategories = [];
@@ -19,7 +17,7 @@ class WidgetProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isError => _isError;
 
-  Future<void> fetchWidgetData() async {
+  Future<void> fetchWidgetCategoryData(String url) async {
     _widgetNames = [];
     _widgetCategories = [];
     _categoriesList = [];
@@ -28,7 +26,7 @@ class WidgetProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _dio.get(baseUrl);
+      final response = await _dio.get(url);
       if (response.statusCode == 200 && response.data is List) {
         for (Map widget in response.data) {
           if (widget["type"] == "kwgt") {
