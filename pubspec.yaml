@@ -24,6 +24,7 @@ dependencies:
   image: ^4.3.0
   image_gallery_saver_plus: ^3.0.5
   installed_apps: ^1.5.2
+  no_screenshot: ^0.3.1
   path: ^1.9.0
   path_provider: ^2.1.5
   provider: ^6.1.2
