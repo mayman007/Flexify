@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flexify/src/database/database_helper.dart';
+import 'package:flexify/src/views/wallpaper_fullscreen_view.dart';
 import 'package:flexify/src/widgets/color_container.dart';
+import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -104,13 +106,6 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
     Navigator.pop(context);
     try {
       await WallpaperManagerPlus().setWallpaper(file, wallLocation);
-      showToast(
-        "Wallpaper Set",
-        animation: StyledToastAnimation.fade,
-        reverseAnimation: StyledToastAnimation.fade,
-        // ignore: use_build_context_synchronously
-        context: context,
-      );
     } catch (e) {
       log("Error setting wallpaper: $e");
       showToast(
@@ -288,10 +283,24 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
             Container(
               margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
               height: 450,
-              child: WallpaperCard(
-                wallpaperUrlHq: widget.wallpaperUrlHq,
-                wallpaperUrlMid: widget.wallpaperUrlMid,
-                isWallpaper: true,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CustomPageRoute(
+                      builder: (context) => WallpaperFullscreenView(
+                        wallpaperUrlHq: widget.wallpaperUrlHq,
+                        wallpaperUrlMid: widget.wallpaperUrlMid,
+                      ),
+                      duration: const Duration(milliseconds: 600),
+                    ),
+                  );
+                },
+                child: WallpaperCard(
+                  wallpaperUrlHq: widget.wallpaperUrlHq,
+                  wallpaperUrlMid: widget.wallpaperUrlMid,
+                  isWallpaper: true,
+                ),
               ),
             ),
             Row(
@@ -332,13 +341,12 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
               height: 10,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(width: 20),
                 SizedBox(
                   height: 50,
-                  width: 240,
-                  child: ElevatedButton.icon(
+                  child: TextButton.icon(
                     onPressed: showSetWallpaperDialog,
                     label: const Text(
                       "Set as Wallpaper",
