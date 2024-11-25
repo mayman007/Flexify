@@ -279,8 +279,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
                 const SizedBox(width: 20),
                 SizedBox(
                   height: 60,
-                  width: 240,
-                  child: ElevatedButton.icon(
+                  child: TextButton.icon(
                     onPressed: applyWidget,
                     label: const Text(
                       "Apply Widget",
