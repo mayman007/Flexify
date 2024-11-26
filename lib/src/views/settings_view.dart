@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flexify/src/views/about_us_view.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
+import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -410,6 +412,42 @@ class _SettingsViewState extends State<SettingsView> {
                       child: const Text("Delete"),
                     )
                   ],
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CustomPageRoute(
+                        builder: (context) => const AboutUsView(),
+                        duration: const Duration(milliseconds: 600),
+                      ),
+                    );
+                  },
+                  child: const Column(
+                    children: [
+                      SizedBox(
+                        height: 13,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline_rounded,
+                            size: 28,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            "About Us",
+                            style: TextStyle(fontSize: 22),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 13,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
