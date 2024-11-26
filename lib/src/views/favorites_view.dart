@@ -1,4 +1,5 @@
 import 'package:flexify/src/database/database_helper.dart';
+import 'package:flexify/src/views/lockscreen_details_view.dart';
 import 'package:flexify/src/views/wallpaper_details_view.dart';
 import 'package:flexify/src/views/widget_details_view.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
@@ -19,6 +20,7 @@ class _FavoritesViewState extends State<FavoritesView> {
   DatabaseHelper sqlDb = DatabaseHelper();
   List favedWalls = [];
   List favedWidgets = [];
+  List favedLockscreen = [];
 
   Future fetchFavedWallpapers() async {
     setState(() {
@@ -44,10 +46,23 @@ class _FavoritesViewState extends State<FavoritesView> {
     }
   }
 
+  Future fetchFavedLockscreens() async {
+    setState(() {
+      favedLockscreen = [];
+    });
+    var table = await sqlDb.selectData("SELECT * FROM 'lockscreenfavs'");
+    for (var row in table) {
+      setState(() {
+        favedLockscreen.add(row);
+      });
+    }
+  }
+
   @override
   void initState() {
     fetchFavedWallpapers();
     fetchFavedWidgets();
+    fetchFavedLockscreens();
     super.initState();
   }
 
@@ -55,7 +70,7 @@ class _FavoritesViewState extends State<FavoritesView> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: 0,
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -72,6 +87,10 @@ class _FavoritesViewState extends State<FavoritesView> {
               Tab(
                 text: 'Widgets',
                 icon: Icon(Icons.widgets_rounded),
+              ),
+              Tab(
+                text: 'Depth Walls',
+                icon: Icon(Icons.photo_library_rounded),
               ),
             ],
           ),
@@ -240,10 +259,84 @@ class _FavoritesViewState extends State<FavoritesView> {
                       },
                     ),
             ),
+            RefreshIndicator(
+              onRefresh: fetchFavedLockscreens,
+              child: favedLockscreen.isEmpty
+                  ? Center(
+                      child: SingleChildScrollView(
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                '(˵•ヘ•˵)',
+                                style: TextStyle(
+                                  fontSize: 45,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Text(
+                                'No Favorites Yet',
+                                style: TextStyle(
+                                  fontSize: 21,
+                                ),
+                                textAlign: TextAlign.center,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : GridView.builder(
+                      padding: const EdgeInsets.all(10),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: 3 / 4,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: favedLockscreen.length,
+                      itemBuilder: (context, index) {
+                        final String lockscreenUrl =
+                            favedLockscreen[index]['lockscreenurl'];
+                        final String lockscreenThumbnailUrl =
+                            lockscreenUrl.replaceAll(".klwp", ".png");
+                        final String lockscreenName =
+                            favedLockscreen[index]['lockscreenname'];
+
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              CustomPageRoute(
+                                builder: (context) => LockscreenDetailsView(
+                                  lockscreenUrl: lockscreenUrl,
+                                  lockscreenThumbnailUrl:
+                                      lockscreenThumbnailUrl,
+                                  lockscreenName: lockscreenName,
+                                ),
+                                duration: const Duration(milliseconds: 600),
+                              ),
+                            );
+                          },
+                          child: WallpaperCard(
+                            wallpaperUrlHq: lockscreenThumbnailUrl,
+                            wallpaperUrlMid: lockscreenThumbnailUrl,
+                            isWallpaper: true,
+                          ),
+                        );
+                      },
+                    ),
+            ),
           ],
         ),
         bottomNavigationBar: const MaterialNavBar(
-          selectedIndex: 2,
+          selectedIndex: 3,
         ),
       ),
     );

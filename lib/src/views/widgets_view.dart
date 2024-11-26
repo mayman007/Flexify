@@ -205,7 +205,7 @@ class _WidgetsViewState extends State<WidgetsView> {
         ),
       ),
       bottomNavigationBar: const MaterialNavBar(
-        selectedIndex: 1,
+        selectedIndex: 2,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _modalBottomSheetMenu,

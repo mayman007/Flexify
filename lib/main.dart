@@ -1,4 +1,5 @@
 import 'package:flexify/src/database/database_helper.dart';
+import 'package:flexify/src/provider/lockscreen_provider.dart';
 import 'package:flexify/src/provider/widget_category_provider.dart';
 import 'package:flexify/src/provider/widget_provider.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => WallpaperCategoryProvider()),
         ChangeNotifierProvider(create: (_) => WidgetProvider()),
         ChangeNotifierProvider(create: (_) => WidgetCategoryProvider()),
+        ChangeNotifierProvider(create: (_) => LockscreenProvider()),
       ],
       child: const MyApp(),
     ),

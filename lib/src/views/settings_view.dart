@@ -415,7 +415,7 @@ class _SettingsViewState extends State<SettingsView> {
             ),
           ),
           bottomNavigationBar: const MaterialNavBar(
-            selectedIndex: 3,
+            selectedIndex: 4,
           )),
     );
   }

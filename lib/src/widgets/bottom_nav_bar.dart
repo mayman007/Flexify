@@ -1,4 +1,5 @@
 import 'package:flexify/src/views/favorites_view.dart';
+import 'package:flexify/src/views/lockscreen_view.dart';
 import 'package:flexify/src/views/wallpapers_view.dart';
 import 'package:flexify/src/views/widgets_view.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const WidgetsView(),
+          pageBuilder: (_, __, ___) => const LockscreenView(),
           transitionDuration: const Duration(milliseconds: 200),
           transitionsBuilder: (_, a, __, c) =>
               FadeTransition(opacity: a, child: c),
@@ -47,13 +48,23 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const FavoritesView(),
+          pageBuilder: (_, __, ___) => const WidgetsView(),
           transitionDuration: const Duration(milliseconds: 200),
           transitionsBuilder: (_, a, __, c) =>
               FadeTransition(opacity: a, child: c),
         ),
       );
     } else if (index == 3) {
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => const FavoritesView(),
+          transitionDuration: const Duration(milliseconds: 200),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        ),
+      );
+    } else if (index == 4) {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
@@ -112,18 +123,24 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
         ),
         NavigationDestination(
           icon: Icon(selectedIndex == 1
+              ? Icons.photo_library_rounded
+              : Icons.photo_library_outlined),
+          label: 'Depth Walls',
+        ),
+        NavigationDestination(
+          icon: Icon(selectedIndex == 2
               ? Icons.widgets_rounded
               : Icons.widgets_outlined),
           label: 'Widgets',
         ),
         NavigationDestination(
-          icon: Icon(selectedIndex == 2
+          icon: Icon(selectedIndex == 3
               ? Icons.favorite_rounded
               : Icons.favorite_outline_outlined),
           label: 'Favorites',
         ),
         NavigationDestination(
-          icon: Icon(selectedIndex == 3
+          icon: Icon(selectedIndex == 4
               ? Icons.settings_rounded
               : Icons.settings_outlined),
           label: 'Settings',
