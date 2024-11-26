@@ -121,10 +121,12 @@ class _MyAppState extends State<MyApp> {
           // SettingsController to display the correct theme.
           theme: appColorSchemeSeed == null // If Material You is used
               ? ThemeData(
+                  fontFamily: "Oduda",
                   brightness: Brightness.light,
                   colorScheme: lightColorScheme,
                 )
               : ThemeData(
+                  fontFamily: "Oduda",
                   brightness: Brightness.light,
                   colorSchemeSeed: appColorSchemeSeed,
                 ),
