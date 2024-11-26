@@ -282,7 +282,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
           children: [
             Container(
               margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
-              height: 450,
+              height: MediaQuery.sizeOf(context).height / 1.8,
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
