@@ -111,6 +111,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                               Text(
                                 '(˵•ヘ•˵)',
                                 style: TextStyle(
+                                  fontFamily: "Roboto",
                                   fontSize: 45,
                                 ),
                               ),
@@ -196,6 +197,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                               Text(
                                 '(˵•ヘ•˵)',
                                 style: TextStyle(
+                                  fontFamily: "Roboto",
                                   fontSize: 45,
                                 ),
                               ),
@@ -273,6 +275,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                               Text(
                                 '(˵•ヘ•˵)',
                                 style: TextStyle(
+                                  fontFamily: "Roboto",
                                   fontSize: 45,
                                 ),
                               ),

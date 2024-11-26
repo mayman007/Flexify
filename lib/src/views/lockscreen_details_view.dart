@@ -259,7 +259,7 @@ class _LockscreenDetailsViewState extends State<LockscreenDetailsView> {
                   child: Text(
                     widget.lockscreenName.replaceAll("_", " "),
                     style: const TextStyle(
-                      fontSize: 23,
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.left,
@@ -298,7 +298,7 @@ class _LockscreenDetailsViewState extends State<LockscreenDetailsView> {
                     onPressed: applyLockscreen,
                     label: const Text(
                       "Apply Depth Wallpaper",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 23),
                     ),
                     icon: const Icon(
                       Icons.photo_library_rounded,

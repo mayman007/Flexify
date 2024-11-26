@@ -130,11 +130,13 @@ class _MyAppState extends State<MyApp> {
                 ),
           darkTheme: appColorSchemeSeed == null // If Material You is used
               ? ThemeData(
+                  fontFamily: "Oduda",
                   brightness: Brightness.dark,
                   colorScheme: darkColorScheme!.copyWith(
                       surface: isPureBlackEnabled ? Colors.black : null),
                 )
               : ThemeData(
+                  fontFamily: "Oduda",
                   colorScheme: ColorScheme.fromSeed(
                     seedColor: appColorSchemeSeed!,
                     brightness: Brightness.dark,

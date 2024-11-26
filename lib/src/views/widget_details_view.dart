@@ -244,7 +244,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
                   child: Text(
                     widget.widgetName,
                     style: const TextStyle(
-                      fontSize: 23,
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.left,
@@ -283,7 +283,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
                     onPressed: applyWidget,
                     label: const Text(
                       "Apply Widget",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 23),
                     ),
                     icon: const Icon(
                       Icons.widgets_rounded,
