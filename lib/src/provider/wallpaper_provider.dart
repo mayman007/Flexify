@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -6,8 +7,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class WallpaperProvider extends ChangeNotifier {
   final Dio _dio = Dio();
-  final String baseUrlHq = '${dotenv.env['API_URL']}/wallpapers/hq';
-  final String baseUrlMid = '${dotenv.env['API_URL']}/wallpapers/mid';
+  final String baseUrlHq =
+      '${utf8.decode(base64.decode(dotenv.env['ENCRYPTED']!))}/wallpapers/hq';
+  final String baseUrlMid =
+      '${utf8.decode(base64.decode(dotenv.env['ENCRYPTED']!))}/wallpapers/mid';
 
   List<String> _wallpaperNames = [];
   List<String> _wallpaperResolutions = [];
