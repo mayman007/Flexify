@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -5,7 +6,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LockscreenProvider extends ChangeNotifier {
   final Dio _dio = Dio();
-  final String baseUrl = '${dotenv.env['API_URL']}/klwp';
+  final String baseUrl =
+      '${utf8.decode(base64.decode(dotenv.env['ENCRYPTED']!))}/klwp';
 
   List<String> _lockscreenNames = [];
   bool _isLoading = false;
