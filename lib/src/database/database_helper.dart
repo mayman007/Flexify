@@ -45,6 +45,15 @@ class DatabaseHelper {
       'widgetcategory' TEXT NOT NULL
     )
 ''');
+    await db.execute('''
+    CREATE TABLE 'lockscreenfavs' (
+      'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      'lockscreenurl' TEXT NOT NULL,
+      'lockscreenname' TEXT NOT NULL,
+      'lockscreeneauthor' TEXT,
+      'lockscreencategory' TEXT
+    )
+''');
   }
 
   selectData(String sql) async {
