@@ -1,3 +1,4 @@
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/views/wallpaper_details_view.dart';
 import 'package:flexify/src/views/wallpapers_category_view.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
@@ -20,6 +21,7 @@ class WallpapersView extends StatefulWidget {
 class _WallpapersViewState extends State<WallpapersView> {
   @override
   void initState() {
+    AnalyticsEngine.pageOpened("Wallpapers View");
     final wallpaperProvider =
         Provider.of<WallpaperProvider>(context, listen: false);
 

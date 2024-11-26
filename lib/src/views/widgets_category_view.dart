@@ -1,3 +1,4 @@
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/provider/widget_category_provider.dart';
 import 'package:flexify/src/views/widget_details_view.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
@@ -25,6 +26,7 @@ class _WidgetsCategoryViewState extends State<WidgetsCategoryView> {
 
   @override
   void initState() {
+    AnalyticsEngine.pageOpened("Widgets Category View");
     fetchWidgets();
     super.initState();
   }

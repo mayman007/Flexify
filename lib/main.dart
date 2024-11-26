@@ -1,3 +1,4 @@
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/provider/lockscreen_provider.dart';
 import 'package:flexify/src/provider/widget_category_provider.dart';
@@ -9,8 +10,10 @@ import 'src/app.dart';
 import 'src/provider/wallpaper_provider.dart';
 import 'src/provider/wallpaper_category_provider.dart';
 
-void main() async {
+Future<void> main() async {
   await dotenv.load(fileName: '.env');
+  await AnalyticsEngine.init();
+  AnalyticsEngine.appOpened;
   // Set up the SettingsController, which will glue user settings to multiple
   // Flutter Widgets.
 

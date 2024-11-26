@@ -1,3 +1,4 @@
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/provider/lockscreen_provider.dart';
 import 'package:flexify/src/views/lockscreen_details_view.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
@@ -24,6 +25,7 @@ class _LockscreenViewState extends State<LockscreenView> {
 
   @override
   void initState() {
+    AnalyticsEngine.pageOpened("Depth Wall View");
     final lockscreenProvider =
         Provider.of<LockscreenProvider>(context, listen: false);
 

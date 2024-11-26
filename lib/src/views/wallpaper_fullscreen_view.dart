@@ -1,9 +1,9 @@
 import 'dart:developer';
-
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:no_screenshot/no_screenshot.dart';
+import 'package:flexify/src/analytics_engine.dart';
 
 class WallpaperFullscreenView extends StatefulWidget {
   final String wallpaperUrlHq;
@@ -35,6 +35,7 @@ class _WallpaperFullscreenViewState extends State<WallpaperFullscreenView> {
 
   @override
   void initState() {
+    AnalyticsEngine.pageOpened("Image Fullscreen View");
     disableScreenshot();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     super.initState();

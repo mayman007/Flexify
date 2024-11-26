@@ -1,3 +1,4 @@
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/provider/wallpaper_category_provider.dart';
 import 'package:flexify/src/views/wallpaper_details_view.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
@@ -31,6 +32,7 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
 
   @override
   void initState() {
+    AnalyticsEngine.pageOpened("Wallpapers Category View");
     fetchWallpapers();
     super.initState();
   }

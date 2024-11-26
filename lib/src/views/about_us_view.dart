@@ -1,3 +1,4 @@
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,6 +11,12 @@ class AboutUsView extends StatefulWidget {
 }
 
 class _AboutUsViewState extends State<AboutUsView> {
+  @override
+  void initState() {
+    AnalyticsEngine.pageOpened("About Us View");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,6 +106,7 @@ class _AboutUsViewState extends State<AboutUsView> {
                               ..onTap = () async {
                                 await launchUrl(Uri.parse(
                                     "https://github.com/mayman007/flexify"));
+                                AnalyticsEngine.clickedOnOpenSourceLink();
                               },
                           ),
                           TextSpan(
@@ -126,6 +134,7 @@ class _AboutUsViewState extends State<AboutUsView> {
                               ..onTap = () async {
                                 await launchUrl(
                                     Uri.parse("https://ko-fi.com/flexify"));
+                                AnalyticsEngine.clickedOnDonationLink();
                               },
                           ),
                           TextSpan(

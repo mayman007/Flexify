@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/views/about_us_view.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
@@ -300,6 +301,7 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   void initState() {
+    AnalyticsEngine.pageOpened("Settings View");
     getPrefs();
     isAndroid12OrHigher();
     getCacheSize();
@@ -417,6 +419,7 @@ class _SettingsViewState extends State<SettingsView> {
                 InkWell(
                   onTap: () async {
                     await launchUrl(Uri.parse("https://t.me/Flexify_updates"));
+                    AnalyticsEngine.joinedTelegramChannal();
                   },
                   child: const Column(
                     children: [

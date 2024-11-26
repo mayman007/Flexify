@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/views/wallpaper_fullscreen_view.dart';
 import 'package:flexify/src/widgets/color_container.dart';
@@ -109,7 +110,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
     } catch (e) {
       log("Error setting wallpaper: $e");
       showToast(
-        "Setting Walllpaper Failed",
+        "Setting Wallpaper Failed",
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
         // ignore: use_build_context_synchronously
@@ -120,6 +121,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       wallLocation = 0;
     });
     log("wallLocation $wallLocation");
+    AnalyticsEngine.wallpaperSet(widget.wallpaperName);
   }
 
   int wallLocation = 0;
@@ -232,6 +234,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
         // ignore: use_build_context_synchronously
         context: context,
       );
+      AnalyticsEngine.wallpaperFaved(widget.wallpaperName);
     }
   }
 
@@ -269,6 +272,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
 
   @override
   void initState() {
+    AnalyticsEngine.pageOpened("Wallpaper Details View");
     checkIfFaved();
     getColors();
     super.initState();

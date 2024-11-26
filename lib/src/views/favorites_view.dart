@@ -1,3 +1,4 @@
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/views/lockscreen_details_view.dart';
 import 'package:flexify/src/views/wallpaper_details_view.dart';
@@ -60,6 +61,7 @@ class _FavoritesViewState extends State<FavoritesView> {
 
   @override
   void initState() {
+    AnalyticsEngine.pageOpened("Favorites View");
     fetchFavedWallpapers();
     fetchFavedWidgets();
     fetchFavedLockscreens();
