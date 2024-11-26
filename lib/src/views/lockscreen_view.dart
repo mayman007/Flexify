@@ -42,7 +42,7 @@ class _LockscreenViewState extends State<LockscreenView> {
       appBar: AppBar(
         title: const Text(
           "Depth Wallpapers",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
         ),
       ),
       body: RefreshIndicator(

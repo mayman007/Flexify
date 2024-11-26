@@ -109,7 +109,7 @@ class _WidgetsViewState extends State<WidgetsView> {
       appBar: AppBar(
         title: const Text(
           "Widgets",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
         ),
       ),
       body: RefreshIndicator(

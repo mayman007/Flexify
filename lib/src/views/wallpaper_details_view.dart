@@ -311,7 +311,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                   child: Text(
                     widget.wallpaperName.replaceAll("_", " "),
                     style: const TextStyle(
-                      fontSize: 23,
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.left,
@@ -350,7 +350,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                     onPressed: showSetWallpaperDialog,
                     label: const Text(
                       "Set as Wallpaper",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 23),
                     ),
                     icon: const Icon(
                       Icons.wallpaper_rounded,

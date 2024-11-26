@@ -124,7 +124,7 @@ class _WallpapersViewState extends State<WallpapersView> {
         appBar: AppBar(
           title: const Text(
             "Wallpapers",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
           ),
         ),
         body: RefreshIndicator(

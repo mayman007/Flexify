@@ -60,6 +60,14 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
 
+  fonts:
+    - family: Oduda
+      fonts:
+        - asset: assets/fonts/oduda.otf
+    - family: Oduda-Bold
+      fonts:
+        - asset: assets/fonts/oduda_bold.otf
+
   # Enable generation of localized Strings from arb files.
   generate: true
 
