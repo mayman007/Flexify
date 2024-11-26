@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Displays the various settings that can be customized by the user.
 ///
@@ -412,6 +413,36 @@ class _SettingsViewState extends State<SettingsView> {
                       child: const Text("Delete"),
                     )
                   ],
+                ),
+                InkWell(
+                  onTap: () async {
+                    await launchUrl(Uri.parse("https://t.me/Flexify_updates"));
+                  },
+                  child: const Column(
+                    children: [
+                      SizedBox(
+                        height: 13,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.telegram_rounded,
+                            size: 28,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            "Join Telegram Channal",
+                            style: TextStyle(fontSize: 22),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 13,
+                      ),
+                    ],
+                  ),
                 ),
                 InkWell(
                   onTap: () {
