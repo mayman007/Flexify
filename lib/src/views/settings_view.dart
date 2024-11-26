@@ -318,7 +318,7 @@ class _SettingsViewState extends State<SettingsView> {
           appBar: AppBar(
             title: const Text(
               'Settings',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
             ),
           ),
           body: Padding(

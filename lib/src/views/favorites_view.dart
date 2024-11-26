@@ -75,7 +75,7 @@ class _FavoritesViewState extends State<FavoritesView> {
         appBar: AppBar(
           title: const Text(
             "Favorites",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
           ),
           bottom: const TabBar(
             dividerColor: Colors.transparent,
