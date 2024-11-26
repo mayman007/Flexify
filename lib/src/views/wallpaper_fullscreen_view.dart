@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:no_screenshot/no_screenshot.dart';
 
 class WallpaperFullscreenView extends StatefulWidget {
@@ -35,12 +36,17 @@ class _WallpaperFullscreenViewState extends State<WallpaperFullscreenView> {
   @override
   void initState() {
     disableScreenshot();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     super.initState();
   }
 
   @override
   void dispose() {
     enableScreenshot();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+      SystemUiOverlay.top,
+      SystemUiOverlay.bottom,
+    ]);
     super.dispose();
   }
 
