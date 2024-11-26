@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:dio/dio.dart';
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/views/wallpaper_fullscreen_view.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
@@ -74,6 +75,7 @@ class _LockscreenDetailsViewState extends State<LockscreenDetailsView> {
         // ignore: use_build_context_synchronously
         context: context,
       );
+      AnalyticsEngine.depthWallFaved(widget.lockscreenName);
     }
   }
 
@@ -214,10 +216,12 @@ class _LockscreenDetailsViewState extends State<LockscreenDetailsView> {
       // ignore: use_build_context_synchronously
       context: context,
     );
+    AnalyticsEngine.depthWallApplied(widget.lockscreenName);
   }
 
   @override
   void initState() {
+    AnalyticsEngine.pageOpened("Depth Wall Details View");
     checkIfFaved();
     super.initState();
   }

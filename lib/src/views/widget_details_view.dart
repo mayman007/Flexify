@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
         // ignore: use_build_context_synchronously
         context: context,
       );
+      AnalyticsEngine.widgetFaved(widget.widgetName);
     }
   }
 
@@ -213,10 +215,12 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
       // ignore: use_build_context_synchronously
       context: context,
     );
+    AnalyticsEngine.widgetApplied(widget.widgetName);
   }
 
   @override
   void initState() {
+    AnalyticsEngine.pageOpened("Widget Details View");
     checkIfFaved();
     super.initState();
   }

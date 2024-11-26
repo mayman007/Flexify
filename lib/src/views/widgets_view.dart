@@ -1,3 +1,4 @@
+import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/views/widget_details_view.dart';
 import 'package:flexify/src/views/widgets_category_view.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
@@ -92,6 +93,7 @@ class _WidgetsViewState extends State<WidgetsView> {
 
   @override
   void initState() {
+    AnalyticsEngine.pageOpened("Widgets View");
     final widgetProvider = Provider.of<WidgetProvider>(context, listen: false);
 
     if (widgetProvider.widgetNames.isEmpty) {
