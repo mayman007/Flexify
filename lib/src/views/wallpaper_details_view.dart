@@ -123,6 +123,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       wallLocation = 0;
     });
     log("wallLocation $wallLocation");
+    DefaultCacheManager().removeFile(widget.wallpaperUrlHq);
     AnalyticsEngine.wallpaperSet(widget.wallpaperName);
   }
 
