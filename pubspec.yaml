@@ -46,15 +46,17 @@ flutter_icons:
   android: "launcher_icon"
   ios: false
   image_path: "assets/images/icon.png"
-  adaptive_icon_background: "#d9d9d9" # You can use a color or image for the background
+  adaptive_icon_background: "#ffffff" # You can use a color or image for the background
   adaptive_icon_foreground: "assets/images/icon_adaptive.png" # For adaptive icons on Android
 
 flutter_native_splash:
-  color: "#d9d9d9"
+  color: "#ffffff"
+  color_dark: "#d9d9d9"
   image: assets/images/icon_splash.png
-  # android_12:
-  #   image: assets/images/icon_splash.png
-  #   color: "#d9d9d9"
+  android_12:
+    image: assets/images/icon_splash.png
+    color: "#ffffff"
+    color_dark: "#d9d9d9"
   web: false
   ios: false
 
