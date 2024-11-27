@@ -30,16 +30,20 @@ class _AboutUsViewState extends State<AboutUsView> {
         child: Center(
           child: Column(
             children: [
+              const SizedBox(
+                height: 10,
+              ),
               Image.asset(
-                'assets/images/icon_adaptive.png',
-                scale: 4.5,
+                'assets/images/icon.png',
+                fit: BoxFit.fitWidth,
+                height: 150,
               ),
               const Text(
                 "Flexify",
                 style: TextStyle(
                   fontSize: 45,
                   fontFamily: "Oduda-Bold",
-                  color: Color.fromARGB(255, 217, 217, 217),
+                  color: Color.fromARGB(255, 179, 179, 179),
                 ),
               ),
               const SizedBox(
@@ -87,10 +91,13 @@ class _AboutUsViewState extends State<AboutUsView> {
                             style: TextStyle(
                               fontSize: 18,
                               fontFamily: "Oduda",
-                              color: Theme.of(context)
-                                  .primaryTextTheme
-                                  .bodyLarge!
-                                  .color,
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Theme.of(context)
+                                      .primaryTextTheme
+                                      .bodyLarge!
+                                      .color
+                                  : Colors.black,
                             ),
                           ),
                           TextSpan(
@@ -115,10 +122,13 @@ class _AboutUsViewState extends State<AboutUsView> {
                             style: TextStyle(
                               fontSize: 18,
                               fontFamily: "Oduda",
-                              color: Theme.of(context)
-                                  .primaryTextTheme
-                                  .bodyLarge!
-                                  .color,
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Theme.of(context)
+                                      .primaryTextTheme
+                                      .bodyLarge!
+                                      .color
+                                  : Colors.black,
                             ),
                           ),
                           TextSpan(
@@ -184,10 +194,13 @@ class _AboutUsViewState extends State<AboutUsView> {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontFamily: "Oduda",
-                                    color: Theme.of(context)
-                                        .primaryTextTheme
-                                        .bodyLarge!
-                                        .color,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Theme.of(context)
+                                            .primaryTextTheme
+                                            .bodyLarge!
+                                            .color
+                                        : Colors.black,
                                   ),
                                 ),
                                 TextSpan(
@@ -224,10 +237,13 @@ class _AboutUsViewState extends State<AboutUsView> {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontFamily: "Oduda",
-                                    color: Theme.of(context)
-                                        .primaryTextTheme
-                                        .bodyLarge!
-                                        .color,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Theme.of(context)
+                                            .primaryTextTheme
+                                            .bodyLarge!
+                                            .color
+                                        : Colors.black,
                                   ),
                                 ),
                                 TextSpan(
@@ -254,6 +270,24 @@ class _AboutUsViewState extends State<AboutUsView> {
                     ],
                   ),
                 ),
+              ),
+              RichText(
+                text: TextSpan(
+                  text: "Privacy Policy",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontFamily: "Oduda",
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () async {
+                      await launchUrl(Uri.parse(
+                          "https://flexify-privacy-policy.pages.dev"));
+                    },
+                ),
+              ),
+              const SizedBox(
+                height: 10,
               )
             ],
           ),
