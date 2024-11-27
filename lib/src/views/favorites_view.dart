@@ -147,6 +147,8 @@ class _FavoritesViewState extends State<FavoritesView> {
                             favedWalls[index]['wallurlhq'];
                         final String wallpaperUrlMid =
                             favedWalls[index]['wallurlmid'];
+                        final String wallpaperUrlLow =
+                            favedWalls[index]['wallurllow'];
                         final String wallpaperName =
                             favedWalls[index]['wallname'];
                         // final wallpaperAuthor = favedWalls[index]['wallauthor'];
@@ -166,6 +168,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                 builder: (context) => WallpaperDetailsView(
                                   wallpaperUrlHq: wallpaperUrlHq,
                                   wallpaperUrlMid: wallpaperUrlMid,
+                                  wallpaperUrlLow: wallpaperUrlLow,
                                   wallpaperName: wallpaperName,
                                   wallpaperResolution: wallpaperResolution,
                                   wallpaperSize: wallpaperSize,
@@ -179,7 +182,9 @@ class _FavoritesViewState extends State<FavoritesView> {
                           child: WallpaperCard(
                             wallpaperUrlHq: wallpaperUrlHq,
                             wallpaperUrlMid: wallpaperUrlMid,
+                            wallpaperUrlLow: wallpaperUrlLow,
                             isWallpaper: true,
+                            lowQuality: true,
                           ),
                         );
                       },
@@ -257,7 +262,9 @@ class _FavoritesViewState extends State<FavoritesView> {
                           child: WallpaperCard(
                             wallpaperUrlHq: widgetThumbnailUrl,
                             wallpaperUrlMid: widgetThumbnailUrl,
+                            wallpaperUrlLow: widgetThumbnailUrl,
                             isWallpaper: false,
+                            lowQuality: true,
                           ),
                         );
                       },
@@ -332,7 +339,9 @@ class _FavoritesViewState extends State<FavoritesView> {
                           child: WallpaperCard(
                             wallpaperUrlHq: lockscreenThumbnailUrl,
                             wallpaperUrlMid: lockscreenThumbnailUrl,
+                            wallpaperUrlLow: lockscreenThumbnailUrl,
                             isWallpaper: true,
+                            lowQuality: true,
                           ),
                         );
                       },

@@ -8,11 +8,13 @@ import 'package:flexify/src/analytics_engine.dart';
 class WallpaperFullscreenView extends StatefulWidget {
   final String wallpaperUrlHq;
   final String wallpaperUrlMid;
+  final String wallpaperUrlLow;
 
   const WallpaperFullscreenView({
     super.key,
     required this.wallpaperUrlHq,
     required this.wallpaperUrlMid,
+    required this.wallpaperUrlLow,
   });
 
   @override
@@ -62,7 +64,9 @@ class _WallpaperFullscreenViewState extends State<WallpaperFullscreenView> {
         child: WallpaperCard(
           wallpaperUrlHq: widget.wallpaperUrlHq,
           wallpaperUrlMid: widget.wallpaperUrlMid,
+          wallpaperUrlLow: widget.wallpaperUrlLow,
           isWallpaper: true,
+          lowQuality: false,
         ),
       ),
     );

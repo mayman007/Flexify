@@ -237,7 +237,9 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
               child: WallpaperCard(
                 wallpaperUrlHq: widget.widgetThumbnailUrl,
                 wallpaperUrlMid: widget.widgetThumbnailUrl,
+                wallpaperUrlLow: widget.widgetThumbnailUrl,
                 isWallpaper: false,
+                lowQuality: true,
               ),
             ),
             Row(

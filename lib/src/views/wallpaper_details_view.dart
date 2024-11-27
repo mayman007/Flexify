@@ -17,6 +17,7 @@ import 'package:wallpaper_manager_plus/wallpaper_manager_plus.dart';
 class WallpaperDetailsView extends StatefulWidget {
   final String wallpaperUrlHq;
   final String wallpaperUrlMid;
+  final String wallpaperUrlLow;
   final String wallpaperName;
   final String wallpaperResolution;
   final int wallpaperSize;
@@ -29,6 +30,7 @@ class WallpaperDetailsView extends StatefulWidget {
     super.key,
     required this.wallpaperUrlHq,
     required this.wallpaperUrlMid,
+    required this.wallpaperUrlLow,
     required this.wallpaperName,
     required this.wallpaperResolution,
     required this.wallpaperSize,
@@ -295,6 +297,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                       builder: (context) => WallpaperFullscreenView(
                         wallpaperUrlHq: widget.wallpaperUrlHq,
                         wallpaperUrlMid: widget.wallpaperUrlMid,
+                        wallpaperUrlLow: widget.wallpaperUrlLow,
                       ),
                       duration: const Duration(milliseconds: 600),
                     ),
@@ -303,7 +306,9 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                 child: WallpaperCard(
                   wallpaperUrlHq: widget.wallpaperUrlHq,
                   wallpaperUrlMid: widget.wallpaperUrlMid,
+                  wallpaperUrlLow: widget.wallpaperUrlLow,
                   isWallpaper: true,
+                  lowQuality: false,
                 ),
               ),
             ),

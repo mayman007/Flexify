@@ -6,13 +6,17 @@ import 'package:shimmer/shimmer.dart';
 class WallpaperCard extends StatefulWidget {
   final String wallpaperUrlHq;
   final String wallpaperUrlMid;
+  final String wallpaperUrlLow;
   final bool isWallpaper;
+  final bool lowQuality;
 
   const WallpaperCard({
     super.key,
     required this.wallpaperUrlHq,
     required this.wallpaperUrlMid,
+    required this.wallpaperUrlLow,
     required this.isWallpaper,
+    required this.lowQuality,
   });
 
   @override
@@ -35,18 +39,41 @@ class WallpaperCardState extends State<WallpaperCard>
         ),
         clipBehavior: Clip.antiAlias,
         child: CachedNetworkImage(
-          imageUrl: widget.wallpaperUrlMid,
-          key: Key(widget.wallpaperUrlMid),
+          imageUrl: widget.lowQuality
+              ? widget.wallpaperUrlLow
+              : widget.wallpaperUrlMid,
+          key: widget.lowQuality
+              ? Key(widget.wallpaperUrlLow)
+              : Key(widget.wallpaperUrlMid),
           cacheManager: DefaultCacheManager(),
-          placeholder: (context, url) => Center(
-            child: Shimmer.fromColors(
-              baseColor: Theme.of(context).colorScheme.surface,
-              highlightColor: Colors.grey,
-              child: Container(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          ),
+          placeholder: (context, url) => widget.lowQuality
+              ? Center(
+                  child: Shimmer.fromColors(
+                    baseColor: Theme.of(context).colorScheme.surface,
+                    highlightColor: Colors.grey,
+                    child: Container(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                )
+              : CachedNetworkImage(
+                  imageUrl: widget.wallpaperUrlLow,
+                  key: Key(widget.wallpaperUrlLow),
+                  cacheManager: DefaultCacheManager(),
+                  placeholder: (context, url) => Center(
+                    child: Shimmer.fromColors(
+                      baseColor: Theme.of(context).colorScheme.surface,
+                      highlightColor: Colors.grey,
+                      child: Container(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  fit: widget.isWallpaper ? BoxFit.cover : BoxFit.contain,
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
           errorWidget: (context, url, error) => const Icon(Icons.error),
           fit: widget.isWallpaper ? BoxFit.cover : BoxFit.contain,
           width: double.infinity,
