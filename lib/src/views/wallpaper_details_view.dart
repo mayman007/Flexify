@@ -225,7 +225,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       );
     } else {
       await sqlDb.insertData(
-          "INSERT INTO 'wallfavs' ('wallurlhq', 'wallurlmid', 'wallname', 'wallresolution', 'wallsize', 'wallcategory', 'wallcolors' )VALUES ('${widget.wallpaperUrlHq}', '${widget.wallpaperUrlMid}', '${widget.wallpaperName}', '${widget.wallpaperResolution}', '${widget.wallpaperSize}', '${widget.wallpaperCategory}', '${widget.wallpaperColors}' )");
+          "INSERT INTO 'wallfavs' ('wallurlhq', 'wallurlmid', 'wallurllow', 'wallname', 'wallresolution', 'wallsize', 'wallcategory', 'wallcolors' )VALUES ('${widget.wallpaperUrlHq}', '${widget.wallpaperUrlMid}', '${widget.wallpaperUrlLow}', '${widget.wallpaperName}', '${widget.wallpaperResolution}', '${widget.wallpaperSize}', '${widget.wallpaperCategory}', '${widget.wallpaperColors}' )");
       setState(() {
         isFaved = true;
       });
