@@ -243,6 +243,7 @@ class _LockscreenDetailsViewState extends State<LockscreenDetailsView> {
                       builder: (context) => WallpaperFullscreenView(
                         wallpaperUrlHq: widget.lockscreenThumbnailUrl,
                         wallpaperUrlMid: widget.lockscreenThumbnailUrl,
+                        wallpaperUrlLow: widget.lockscreenThumbnailUrl,
                       ),
                       duration: const Duration(milliseconds: 600),
                     ),
@@ -251,7 +252,9 @@ class _LockscreenDetailsViewState extends State<LockscreenDetailsView> {
                 child: WallpaperCard(
                   wallpaperUrlHq: widget.lockscreenThumbnailUrl,
                   wallpaperUrlMid: widget.lockscreenThumbnailUrl,
+                  wallpaperUrlLow: widget.lockscreenThumbnailUrl,
                   isWallpaper: true,
+                  lowQuality: true,
                 ),
               ),
             ),

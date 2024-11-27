@@ -10,12 +10,15 @@ class WallpapersCategoryView extends StatefulWidget {
   final String categoryName;
   final String categoryUrlHq;
   final String categoryUrlMid;
+  final String categoryUrlLow;
 
-  const WallpapersCategoryView(
-      {super.key,
-      required this.categoryName,
-      required this.categoryUrlHq,
-      required this.categoryUrlMid});
+  const WallpapersCategoryView({
+    super.key,
+    required this.categoryName,
+    required this.categoryUrlHq,
+    required this.categoryUrlMid,
+    required this.categoryUrlLow,
+  });
 
   static const routeName = '/wallpaperscategory';
 
@@ -115,6 +118,8 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
                       '${widget.categoryUrlHq}/$wallpaperName.$wallpaperExtension';
                   final String wallpaperUrlMid =
                       '${widget.categoryUrlMid}/$wallpaperName.$wallpaperExtension';
+                  final String wallpaperUrlLow =
+                      '${widget.categoryUrlLow}/$wallpaperName.$wallpaperExtension';
 
                   return GestureDetector(
                     onTap: () {
@@ -124,6 +129,7 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
                           builder: (context) => WallpaperDetailsView(
                             wallpaperUrlHq: wallpaperUrlHq,
                             wallpaperUrlMid: wallpaperUrlMid,
+                            wallpaperUrlLow: wallpaperUrlLow,
                             wallpaperName: wallpaperName,
                             wallpaperResolution: wallpaperResolution,
                             wallpaperSize: wallpaperSize,
@@ -137,7 +143,9 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
                     child: WallpaperCard(
                       wallpaperUrlHq: wallpaperUrlHq,
                       wallpaperUrlMid: wallpaperUrlMid,
+                      wallpaperUrlLow: wallpaperUrlLow,
                       isWallpaper: true,
+                      lowQuality: true,
                     ),
                   );
                 },

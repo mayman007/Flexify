@@ -28,6 +28,7 @@ class DatabaseHelper {
       'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       'wallurlhq' TEXT NOT NULL,
       'wallurlmid' TEXT NOT NULL,
+      'wallurllow' TEXT NOT NULL,
       'wallname' TEXT NOT NULL,
       'wallauthor' TEXT,
       'wallresolution' TEXT NOT NULL,

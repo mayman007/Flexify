@@ -11,6 +11,8 @@ class WallpaperProvider extends ChangeNotifier {
       '${utf8.decode(base64.decode(dotenv.env['ENCRYPTED']!))}/wallpapers/hq';
   final String baseUrlMid =
       '${utf8.decode(base64.decode(dotenv.env['ENCRYPTED']!))}/wallpapers/mid';
+  final String baseUrlLow =
+      '${utf8.decode(base64.decode(dotenv.env['ENCRYPTED']!))}/wallpapers/low';
 
   List<String> _wallpaperNames = [];
   List<String> _wallpaperResolutions = [];

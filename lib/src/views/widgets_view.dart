@@ -197,7 +197,9 @@ class _WidgetsViewState extends State<WidgetsView> {
                     child: WallpaperCard(
                       wallpaperUrlHq: widgetThumbnailUrl,
                       wallpaperUrlMid: widgetThumbnailUrl,
+                      wallpaperUrlLow: widgetThumbnailUrl,
                       isWallpaper: false,
+                      lowQuality: true,
                     ),
                   );
                 },

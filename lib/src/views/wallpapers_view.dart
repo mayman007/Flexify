@@ -69,6 +69,8 @@ class _WallpapersViewState extends State<WallpapersView> {
                         "${provider.baseUrlHq}/$categoryName";
                     final String categoryUrlMid =
                         "${provider.baseUrlMid}/$categoryName";
+                    final String categoryUrlLow =
+                        "${provider.baseUrlLow}/$categoryName";
 
                     return GestureDetector(
                         onTap: () {
@@ -79,6 +81,7 @@ class _WallpapersViewState extends State<WallpapersView> {
                                 categoryName: categoryName,
                                 categoryUrlHq: categoryUrlHq,
                                 categoryUrlMid: categoryUrlMid,
+                                categoryUrlLow: categoryUrlLow,
                               ),
                               duration: const Duration(milliseconds: 600),
                             ),
@@ -199,6 +202,8 @@ class _WallpapersViewState extends State<WallpapersView> {
                         '${provider.baseUrlHq}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
                     final String wallpaperUrlMid =
                         '${provider.baseUrlMid}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
+                    final String wallpaperUrlLow =
+                        '${provider.baseUrlLow}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
 
                     return GestureDetector(
                       onTap: () {
@@ -208,6 +213,7 @@ class _WallpapersViewState extends State<WallpapersView> {
                             builder: (context) => WallpaperDetailsView(
                               wallpaperUrlHq: wallpaperUrlHq,
                               wallpaperUrlMid: wallpaperUrlMid,
+                              wallpaperUrlLow: wallpaperUrlLow,
                               wallpaperName: wallpaperName,
                               wallpaperResolution: wallpaperResolution,
                               wallpaperSize: wallpaperSize,
@@ -221,7 +227,9 @@ class _WallpapersViewState extends State<WallpapersView> {
                       child: WallpaperCard(
                         wallpaperUrlHq: wallpaperUrlHq,
                         wallpaperUrlMid: wallpaperUrlMid,
+                        wallpaperUrlLow: wallpaperUrlLow,
                         isWallpaper: true,
+                        lowQuality: true,
                       ),
                     );
                   },

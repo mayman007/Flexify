@@ -128,7 +128,9 @@ class _LockscreenViewState extends State<LockscreenView> {
                     child: WallpaperCard(
                       wallpaperUrlHq: lockscreenThumbnailUrl,
                       wallpaperUrlMid: lockscreenThumbnailUrl,
+                      wallpaperUrlLow: lockscreenThumbnailUrl,
                       isWallpaper: true,
+                      lowQuality: true,
                     ),
                   );
                 },
