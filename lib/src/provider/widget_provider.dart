@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flexify/src/env/env.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class WidgetProvider extends ChangeNotifier {
   final Dio _dio = Dio();
-  final String baseUrl =
-      '${utf8.decode(base64.decode(dotenv.env['ENCRYPTED']!))}/widgets';
+  final String baseUrl = '${utf8.decode(base64.decode(Env.apiKey))}/widgets';
 
   List<String> _widgetNames = [];
   List<String> _widgetCategories = [];

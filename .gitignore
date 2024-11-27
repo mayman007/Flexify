@@ -10,6 +10,7 @@
 .history
 .svn/
 .env
+lib/src/env
 migrate_working_dir/
 android/app/google-services.json
 lib/firebase_options.dart

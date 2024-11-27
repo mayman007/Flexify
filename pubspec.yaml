@@ -15,12 +15,12 @@ dependencies:
   device_info_plus: ^11.1.0
   dio: ^5.7.0
   dynamic_color: ^1.7.0
+  envied: ^1.0.0
   firebase_analytics: ^11.3.5
   firebase_core: ^3.8.0
   flutter:
     sdk: flutter
   flutter_cache_manager: ^3.4.1
-  flutter_dotenv: ^5.2.1
   flutter_native_splash: ^2.4.3
   flutter_styled_toast: ^2.2.1
   image: ^4.3.0
@@ -41,6 +41,8 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
   flutter_launcher_icons: ^0.14.1
+  envied_generator: ^1.0.0
+  build_runner: ^2.4.13
 
 flutter_icons:
   android: "launcher_icon"
@@ -78,4 +80,3 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
-    - .env

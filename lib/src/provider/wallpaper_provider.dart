@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:flexify/src/env/env.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class WallpaperProvider extends ChangeNotifier {
   final Dio _dio = Dio();
   final String baseUrlHq =
-      '${utf8.decode(base64.decode(dotenv.env['ENCRYPTED']!))}/wallpapers/hq';
+      '${utf8.decode(base64.decode(Env.apiKey))}/wallpapers/hq';
   final String baseUrlMid =
-      '${utf8.decode(base64.decode(dotenv.env['ENCRYPTED']!))}/wallpapers/mid';
+      '${utf8.decode(base64.decode(Env.apiKey))}/wallpapers/mid';
   final String baseUrlLow =
-      '${utf8.decode(base64.decode(dotenv.env['ENCRYPTED']!))}/wallpapers/low';
+      '${utf8.decode(base64.decode(Env.apiKey))}/wallpapers/low';
 
   List<String> _wallpaperNames = [];
   List<String> _wallpaperResolutions = [];

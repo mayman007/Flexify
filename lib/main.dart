@@ -4,14 +4,13 @@ import 'package:flexify/src/provider/lockscreen_provider.dart';
 import 'package:flexify/src/provider/widget_category_provider.dart';
 import 'package:flexify/src/provider/widget_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'src/app.dart';
 import 'src/provider/wallpaper_provider.dart';
 import 'src/provider/wallpaper_category_provider.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: '.env');
+  WidgetsFlutterBinding.ensureInitialized();
   await AnalyticsEngine.init();
   AnalyticsEngine.appOpened;
   // Set up the SettingsController, which will glue user settings to multiple
@@ -23,8 +22,6 @@ Future<void> main() async {
   // Run the app and pass in the SettingsController. The app listens to the
   // SettingsController for changes, then passes it further down to the
   // SettingsView.
-
-  WidgetsFlutterBinding.ensureInitialized();
 
   DatabaseHelper sqlDb = DatabaseHelper();
   await sqlDb.initialDb();
