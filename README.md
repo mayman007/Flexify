@@ -28,7 +28,7 @@ Flexify is more than just a personalization app; it’s your gateway to making y
 ## Getting Started  
 
 ### Download the App  
-Download Flexify directly from [Google Play Store](#).  
+Download Flexify directly from [Google Play Store](https://play.google.com/store/apps/details?id=com.maymanxineffable.flexify).  
 
 ### Requirements  
 - Android 5.0 or later.  
