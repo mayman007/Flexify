@@ -15,6 +15,7 @@ migrate_working_dir/
 android/app/google-services.json
 lib/firebase_options.dart
 firebase.json
+shorebird.yaml
 
 # IntelliJ related
 *.iml
