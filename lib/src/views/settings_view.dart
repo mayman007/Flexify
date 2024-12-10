@@ -299,6 +299,54 @@ class _SettingsViewState extends State<SettingsView> {
     await getCacheSize();
   }
 
+  showDeleteCacheDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            title: const Text("Delete Cache?"),
+            content: const SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Are you sure that you want to delete all the cache of the app?",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 18,
+                      ),
+                    )
+                  ]),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Cancel"),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      await clearAppCache();
+                    },
+                    child: const Text("Delete"),
+                  ),
+                ],
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   void initState() {
     AnalyticsEngine.pageOpened("Settings View");
@@ -411,7 +459,9 @@ class _SettingsViewState extends State<SettingsView> {
                       width: 10,
                     ),
                     ElevatedButton(
-                      onPressed: clearAppCache,
+                      onPressed: () async {
+                        await showDeleteCacheDialog(context);
+                      },
                       child: const Text("Delete"),
                     )
                   ],
