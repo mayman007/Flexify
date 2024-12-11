@@ -86,7 +86,7 @@ class _LockscreenDetailsViewState extends State<LockscreenDetailsView> {
           const CircularProgressIndicator(),
           Container(
               margin: const EdgeInsets.fromLTRB(20, 15, 0, 10),
-              child: const Text("Fetching Lockscreen...")),
+              child: const Text("Fetching Depth Wallpaper...")),
         ],
       ),
     );

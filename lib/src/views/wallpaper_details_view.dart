@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:dio/dio.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:wallpaper_manager_plus/wallpaper_manager_plus.dart';
 
 class WallpaperDetailsView extends StatefulWidget {
@@ -104,11 +107,55 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
 
   Future<void> setAsWallpaper() async {
     showLoaderDialog(context); // Show loading dialog
-    final file = await DefaultCacheManager()
-        .getSingleFile(widget.wallpaperUrlHq, key: widget.wallpaperUrlHq);
-    Navigator.pop(context);
+
     try {
-      await WallpaperManagerPlus().setWallpaper(file, wallLocation);
+      if (wallLocation < 4) {
+        final file = await DefaultCacheManager()
+            .getSingleFile(widget.wallpaperUrlHq, key: widget.wallpaperUrlHq);
+        Navigator.pop(context);
+        await WallpaperManagerPlus().setWallpaper(file, wallLocation);
+      } else {
+        // Make file path
+        var tempDir = await getTemporaryDirectory();
+        String fullPath = "${tempDir.path}/${widget.wallpaperName}.png";
+
+        // Download file
+        Response response = await Dio().get(
+          widget.wallpaperUrlHq,
+          options: Options(
+            responseType: ResponseType.bytes,
+            followRedirects: false,
+          ),
+        );
+        Navigator.pop(context);
+
+        // Write file
+        File file = File(fullPath);
+        var raf = file.openSync(mode: FileMode.write);
+        raf.writeFromSync(response.data);
+        await raf.close();
+
+        log('File path: ${file.path}');
+        log('File size: ${await file.length()} bytes');
+
+        // Create a content URI using FileProvider
+        final String authority =
+            "${Platform.environment['FLUTTER_APPLICATION_ID']}.fileprovider";
+        // final String filePath = file.path;
+        final Uri contentUri = Uri.parse(
+            "content://$authority/cache/${Uri.encodeComponent(file.uri.pathSegments.last)}");
+
+        // Use the android_intent_plus package to send the intent
+        final intent = AndroidIntent(
+          action: 'android.intent.action.ATTACH_DATA',
+          type: 'image/*',
+          data: contentUri.toString(),
+          flags: <int>[0x00000001], // FLAG_GRANT_READ_URI_PERMISSION
+        );
+
+        // Launch the intent
+        await intent.launch();
+      }
     } catch (e) {
       log("Error setting wallpaper: $e");
       showToast(
@@ -187,7 +234,19 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                 if (context.mounted) Navigator.of(context).pop();
                 await setAsWallpaper();
               },
-            )
+            ),
+            RadioListTile<String>(
+              title: const Text('Set With...'),
+              value: '4',
+              groupValue: null,
+              onChanged: (value) async {
+                setState(() {
+                  wallLocation = 4;
+                });
+                if (context.mounted) Navigator.of(context).pop();
+                await setAsWallpaper();
+              },
+            ),
           ],
         )));
       },
@@ -387,49 +446,115 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Resolution:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: "Resolution:  ",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Oduda",
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Theme.of(context)
+                                              .primaryTextTheme
+                                              .bodyLarge!
+                                              .color
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: widget.wallpaperResolution,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: "Oduda",
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Theme.of(context)
+                                              .primaryTextTheme
+                                              .bodyLarge!
+                                              .color
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            Text(
-                              widget.wallpaperResolution,
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            const Text(
-                              'Size:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: "Size:  ",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Oduda",
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Theme.of(context)
+                                              .primaryTextTheme
+                                              .bodyLarge!
+                                              .color
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: calculateSize(),
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: "Oduda",
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Theme.of(context)
+                                              .primaryTextTheme
+                                              .bodyLarge!
+                                              .color
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Text(
-                              calculateSize(),
-                              style: const TextStyle(fontSize: 15),
                             ),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Category:  ',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: "Category:  ",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Oduda",
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Theme.of(context)
+                                              .primaryTextTheme
+                                              .bodyLarge!
+                                              .color
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: widget.wallpaperCategory,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: "Oduda",
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Theme.of(context)
+                                              .primaryTextTheme
+                                              .bodyLarge!
+                                              .color
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Text(
-                              widget.wallpaperCategory,
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                            const SizedBox(
-                              width: 15,
                             ),
                           ],
                         ),
