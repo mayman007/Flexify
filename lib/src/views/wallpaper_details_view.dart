@@ -52,7 +52,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
   saveNetworkImage() async {
     if (saveImageCoolDown) {
       showToast(
-        "You has just downloaded this wallpaper! wait a few seconds.",
+        "You have just downloaded this wallpaper! wait a few seconds.",
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
         animDuration: const Duration(milliseconds: 500),
@@ -60,6 +60,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
         context: context,
       );
     } else {
+      showLoaderDialog(context);
       setState(() {
         saveImageCoolDown = true;
       });
@@ -67,8 +68,10 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
           options: Options(responseType: ResponseType.bytes));
       final result = await ImageGallerySaverPlus.saveImage(
         Uint8List.fromList(response.data),
-        name: widget.wallpaperName,
+        quality: 100,
+        name: "Flexify_${widget.wallpaperName}",
       );
+      Navigator.pop(context);
       showToast(
         "Wallpaper Downloaded",
         animation: StyledToastAnimation.fade,
@@ -519,7 +522,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                           ],
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             RichText(
                               text: TextSpan(
@@ -555,6 +558,14 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                                   ),
                                 ],
                               ),
+                            ),
+                            TextButton.icon(
+                              onPressed: saveNetworkImage,
+                              label: const Text("Download",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                  )),
+                              icon: const Icon(Icons.download_rounded),
                             ),
                           ],
                         ),
