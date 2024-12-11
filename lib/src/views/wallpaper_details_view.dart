@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
 import 'package:dio/dio.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
@@ -142,18 +143,19 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
         log('File size: ${await file.length()} bytes');
 
         // Create a content URI using FileProvider
-        final String authority =
-            "${Platform.environment['FLUTTER_APPLICATION_ID']}.fileprovider";
+        const String authority = "com.maymanxineffable.flexify.fileprovider";
         // final String filePath = file.path;
         final Uri contentUri = Uri.parse(
-            "content://$authority/cache/${Uri.encodeComponent(file.uri.pathSegments.last)}");
+            "content://$authority/cache_files/${Uri.encodeComponent(file.uri.pathSegments.last)}");
 
         // Use the android_intent_plus package to send the intent
         final intent = AndroidIntent(
           action: 'android.intent.action.ATTACH_DATA',
           type: 'image/*',
           data: contentUri.toString(),
-          flags: <int>[0x00000001], // FLAG_GRANT_READ_URI_PERMISSION
+          flags: [
+            Flag.FLAG_GRANT_READ_URI_PERMISSION,
+          ],
         );
 
         // Launch the intent
