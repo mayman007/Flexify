@@ -53,7 +53,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
   saveNetworkImage() async {
     if (saveImageCoolDown) {
       showToast(
-        "You have just downloaded this wallpaper! wait a few seconds.",
+        "You have just saved this wallpaper! wait a few seconds.",
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
         animDuration: const Duration(milliseconds: 500),
@@ -74,7 +74,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       );
       Navigator.pop(context);
       showToast(
-        "Wallpaper Downloaded",
+        "Wallpaper Saved",
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
         animDuration: const Duration(milliseconds: 500),
@@ -563,7 +563,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                             ),
                             TextButton.icon(
                               onPressed: saveNetworkImage,
-                              label: const Text("Download",
+                              label: const Text("Save",
                                   style: TextStyle(
                                     fontSize: 15,
                                   )),
