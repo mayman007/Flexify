@@ -7,26 +7,18 @@
 
 </div>
 
-## Features
-
-### 🎨 Wallpapers
-
-- A curated collection of high-quality 4k wallpapers to suit every style.
-- Regular updates with fresh designs.
-
-### 📦 KWGT Widgets
-
-- Access a variety of beautiful and functional widgets designed to enhance your home screen.
-- Easily customizable to match your personal theme.
-
-### 🌌 KLWP Depth Wallpapers
-
-- Bring your screen to life with dynamic and immersive depth wallpapers powered by KLWP.
-- Perfect for adding depth and motion to your phone.
-
 ## Why Flexify?
 
 Flexify is more than just a personalization app; it’s your gateway to making your phone reflect *you*. Whether you prefer minimalism, vibrant colors, or intricate designs, Flexify has you covered.
+
+## Features
+
+- 🖼️ More than 600 4K wallpapers
+- 📱 100+ customized KWGT widgets and KLWP live wallpapers
+- 📋 All the content categorized to make it easy to navigate
+- 💾 Save any wallpaper you want with high quality
+- 💙 Add wallpapers or widgets you like to favorites
+- 🎨 Fluid animations and beautiful UI design following Material Design 3
 
 ## Getting Started
 
