@@ -16,6 +16,7 @@ android/app/google-services.json
 lib/firebase_options.dart
 firebase.json
 shorebird.yaml
+.vscode
 
 # IntelliJ related
 *.iml
