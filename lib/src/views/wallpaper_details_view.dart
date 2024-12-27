@@ -86,6 +86,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       setState(() {
         saveImageCoolDown = false;
       });
+      AnalyticsEngine.wallpaperSaved(widget.wallpaperName);
     }
   }
 

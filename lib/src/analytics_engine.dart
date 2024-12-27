@@ -27,6 +27,15 @@ class AnalyticsEngine {
     );
   }
 
+  static void wallpaperSaved(String wallpaperName) async {
+    return _instance.logEvent(
+      name: "wallpaperSaved",
+      parameters: {
+        "wallpaper_name": wallpaperName,
+      },
+    );
+  }
+
   static void widgetApplied(String widgetName) async {
     return _instance.logEvent(
       name: "widgetSet",
