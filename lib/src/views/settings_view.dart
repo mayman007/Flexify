@@ -179,7 +179,7 @@ class _SettingsViewState extends State<SettingsView> {
             ),
             isAndroid12OrHigherValue
                 ? RadioListTile<String>(
-                    title: const Text('Material You'),
+                    title: const Text('Dynamic'),
                     value: 'Material You',
                     groupValue: colorSchemeValue,
                     onChanged: (value) async {
@@ -413,7 +413,7 @@ class _SettingsViewState extends State<SettingsView> {
                                   : colorSchemeValue == 'Red Scheme'
                                       ? 'Red'
                                       : colorSchemeValue == 'Material You'
-                                          ? 'Material You'
+                                          ? 'Dynamic'
                                           : ''),
                     ),
                   ],

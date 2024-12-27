@@ -119,33 +119,24 @@ class _MyAppState extends State<MyApp> {
           // Define a light and dark color theme. Then, read the user's
           // preferred ThemeMode (light, dark, or system default) from the
           // SettingsController to display the correct theme.
-          theme: appColorSchemeSeed == null // If Material You is used
-              ? ThemeData(
-                  fontFamily: "Oduda",
-                  brightness: Brightness.light,
-                  colorScheme: lightColorScheme,
-                )
-              : ThemeData(
-                  fontFamily: "Oduda",
-                  brightness: Brightness.light,
-                  colorSchemeSeed: appColorSchemeSeed,
-                ),
-          darkTheme: appColorSchemeSeed == null // If Material You is used
-              ? ThemeData(
-                  fontFamily: "Oduda",
-                  brightness: Brightness.dark,
-                  colorScheme: darkColorScheme!.copyWith(
-                      surface: isPureBlackEnabled ? Colors.black : null),
-                )
-              : ThemeData(
-                  fontFamily: "Oduda",
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: appColorSchemeSeed!,
-                    brightness: Brightness.dark,
-                  ).copyWith(
-                    surface: isPureBlackEnabled ? Colors.black : null,
-                  ),
-                ),
+          theme: ThemeData(
+            fontFamily: "Oduda",
+            brightness: Brightness.light,
+            colorSchemeSeed: appColorSchemeSeed == null
+                ? lightColorScheme!.primary // If Material You is used
+                : appColorSchemeSeed,
+          ),
+          darkTheme: ThemeData(
+            fontFamily: "Oduda",
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: appColorSchemeSeed == null
+                  ? darkColorScheme!.primary // If Material You is used
+                  : appColorSchemeSeed!,
+              brightness: Brightness.dark,
+            ).copyWith(
+              surface: isPureBlackEnabled ? Colors.black : null,
+            ),
+          ),
           themeMode: appThemeMode,
 
           // Define a function to handle named routes in order to support
