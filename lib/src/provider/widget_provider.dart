@@ -1,19 +1,21 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flexify/src/env/env.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
 class WidgetProvider extends ChangeNotifier {
+  final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
   final Dio _dio = Dio();
-  final String baseUrl = '${utf8.decode(base64.decode(Env.apiKey))}/widgets';
 
+  String _baseUrl = '';
   List<String> _widgetNames = [];
   List<String> _widgetCategories = [];
   List<String> _categoriesList = [];
   bool _isLoading = false;
   bool _isError = false;
 
+  String get baseUrl => _baseUrl;
   List<String> get widgetNames => _widgetNames;
   List<String> get widgetCategories => _widgetCategories;
   List<String> get categoriesList => _categoriesList;
@@ -21,6 +23,21 @@ class WidgetProvider extends ChangeNotifier {
   bool get isError => _isError;
 
   Future<void> fetchWidgetData() async {
+    // Remote Config
+    await _remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: const Duration(hours: 1),
+      ),
+    );
+    await _remoteConfig.fetchAndActivate();
+
+    // Use Remote Config values
+    String headersJson = _remoteConfig.getString('api_headers');
+    Map<String, String> headers =
+        Map<String, String>.from(json.decode(headersJson));
+    _baseUrl = _remoteConfig.getString('widgets');
+
     _widgetNames = [];
     _widgetCategories = [];
     _categoriesList = [];
@@ -29,7 +46,12 @@ class WidgetProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _dio.get(baseUrl);
+      final response = await _dio.get(
+        _baseUrl,
+        options: Options(
+          headers: headers,
+        ),
+      );
       if (response.statusCode == 200 && response.data is List) {
         for (Map widget in response.data) {
           if (widget["type"] == "kwgt") {

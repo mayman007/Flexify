@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flexify/src/env/env.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
 class WallpaperProvider extends ChangeNotifier {
+  final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
   final Dio _dio = Dio();
-  final String baseUrlHq =
-      '${utf8.decode(base64.decode(Env.apiKey))}/wallpapers/hq';
-  final String baseUrlMid =
-      '${utf8.decode(base64.decode(Env.apiKey))}/wallpapers/mid';
-  final String baseUrlLow =
-      '${utf8.decode(base64.decode(Env.apiKey))}/wallpapers/low';
 
+  String _baseUrlHq = '';
+  String _baseUrlMid = '';
+  String _baseUrlLow = '';
   List<String> _wallpaperNames = [];
   List<String> _wallpaperResolutions = [];
   List<int> _wallpaperSizes = [];
@@ -22,6 +20,9 @@ class WallpaperProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool _isError = false;
 
+  String get baseUrlHq => _baseUrlHq;
+  String get baseUrlMid => _baseUrlMid;
+  String get baseUrlLow => _baseUrlLow;
   List<String> get wallpaperNames => _wallpaperNames;
   List<String> get wallpaperResolutions => _wallpaperResolutions;
   List<int> get wallpaperSizes => _wallpaperSizes;
@@ -32,6 +33,23 @@ class WallpaperProvider extends ChangeNotifier {
   bool get isError => _isError;
 
   Future<void> fetchWallpaperData() async {
+    // Remote Config
+    await _remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: const Duration(hours: 1),
+      ),
+    );
+    await _remoteConfig.fetchAndActivate();
+
+    // Use Remote Config values
+    String headersJson = _remoteConfig.getString('api_headers');
+    Map<String, String> headers =
+        Map<String, String>.from(json.decode(headersJson));
+    _baseUrlHq = _remoteConfig.getString('walls_hq');
+    _baseUrlMid = _remoteConfig.getString('walls_mid');
+    _baseUrlLow = _remoteConfig.getString('walls_low');
+
     _wallpaperNames = [];
     _wallpaperResolutions = [];
     _wallpaperSizes = [];
@@ -42,7 +60,12 @@ class WallpaperProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _dio.get(baseUrlHq);
+      final response = await _dio.get(
+        _baseUrlHq,
+        options: Options(
+          headers: headers,
+        ),
+      );
       if (response.statusCode == 200 && response.data is List) {
         for (Map wallpaper in response.data) {
           _wallpaperNames.add(wallpaper["name"]);
