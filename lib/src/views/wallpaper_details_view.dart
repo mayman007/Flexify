@@ -382,7 +382,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
               children: [
                 const SizedBox(width: 30),
                 SizedBox(
-                  width: 220,
+                  width: MediaQuery.sizeOf(context).width - 153,
                   child: Text(
                     widget.wallpaperName.replaceAll("_", " "),
                     style: const TextStyle(

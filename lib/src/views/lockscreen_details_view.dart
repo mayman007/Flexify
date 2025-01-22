@@ -262,7 +262,7 @@ class _LockscreenDetailsViewState extends State<LockscreenDetailsView> {
               children: [
                 const SizedBox(width: 30),
                 SizedBox(
-                  width: 220,
+                  width: MediaQuery.sizeOf(context).width - 153,
                   child: Text(
                     widget.lockscreenName.replaceAll("_", " "),
                     style: const TextStyle(

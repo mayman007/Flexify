@@ -246,9 +246,9 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
               children: [
                 const SizedBox(width: 30),
                 SizedBox(
-                  width: 220,
+                  width: MediaQuery.sizeOf(context).width - 153,
                   child: Text(
-                    widget.widgetName,
+                    widget.widgetName.replaceAll("_", " "),
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
