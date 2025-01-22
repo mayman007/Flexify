@@ -38,29 +38,19 @@ class WallpaperCardState extends State<WallpaperCard>
           borderRadius: BorderRadius.circular(15),
         ),
         clipBehavior: Clip.antiAlias,
-        child: CachedNetworkImage(
-          imageUrl: widget.lowQuality
-              ? widget.wallpaperUrlLow
-              : widget.wallpaperUrlMid,
-          key: widget.lowQuality
-              ? Key(widget.wallpaperUrlLow)
-              : Key(widget.wallpaperUrlMid),
-          cacheManager: DefaultCacheManager(),
-          placeholder: (context, url) => widget.lowQuality
-              ? Center(
-                  child: Shimmer.fromColors(
-                    baseColor: Theme.of(context).colorScheme.surface,
-                    highlightColor: Colors.grey,
-                    child: Container(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                )
-              : CachedNetworkImage(
-                  imageUrl: widget.wallpaperUrlLow,
-                  key: Key(widget.wallpaperUrlLow),
-                  cacheManager: DefaultCacheManager(),
-                  placeholder: (context, url) => Center(
+        child: InteractiveViewer(
+          minScale: 0.5,
+          maxScale: 4.0,
+          child: CachedNetworkImage(
+            imageUrl: widget.lowQuality
+                ? widget.wallpaperUrlLow
+                : widget.wallpaperUrlMid,
+            key: widget.lowQuality
+                ? Key(widget.wallpaperUrlLow)
+                : Key(widget.wallpaperUrlMid),
+            cacheManager: DefaultCacheManager(),
+            placeholder: (context, url) => widget.lowQuality
+                ? Center(
                     child: Shimmer.fromColors(
                       baseColor: Theme.of(context).colorScheme.surface,
                       highlightColor: Colors.grey,
@@ -68,16 +58,31 @@ class WallpaperCardState extends State<WallpaperCard>
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
+                  )
+                : CachedNetworkImage(
+                    imageUrl: widget.wallpaperUrlLow,
+                    key: Key(widget.wallpaperUrlLow),
+                    cacheManager: DefaultCacheManager(),
+                    placeholder: (context, url) => Center(
+                      child: Shimmer.fromColors(
+                        baseColor: Theme.of(context).colorScheme.surface,
+                        highlightColor: Colors.grey,
+                        child: Container(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    fit: widget.isWallpaper ? BoxFit.cover : BoxFit.contain,
+                    width: double.infinity,
+                    height: double.infinity,
                   ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                  fit: widget.isWallpaper ? BoxFit.cover : BoxFit.contain,
-                  width: double.infinity,
-                  height: double.infinity,
-                ),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-          fit: widget.isWallpaper ? BoxFit.cover : BoxFit.contain,
-          width: double.infinity,
-          height: double.infinity,
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+            fit: widget.isWallpaper ? BoxFit.cover : BoxFit.contain,
+            width: double.infinity,
+            height: double.infinity,
+          ),
         ),
       ),
     );
