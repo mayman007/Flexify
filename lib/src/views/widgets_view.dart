@@ -30,7 +30,7 @@ class _WidgetsViewState extends State<WidgetsView> {
         builder: (builder) {
           final provider = Provider.of<WidgetProvider>(context, listen: false);
           return Container(
-            height: 500,
+            height: MediaQuery.sizeOf(context).height / 1.7,
             color: Colors.transparent,
             child: Container(
                 decoration: const BoxDecoration(

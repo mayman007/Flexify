@@ -47,7 +47,7 @@ class _WallpapersViewState extends State<WallpapersView> {
           final provider =
               Provider.of<WallpaperProvider>(context, listen: false);
           return Container(
-            height: 500,
+            height: MediaQuery.sizeOf(context).height / 1.7,
             color: Colors.transparent,
             child: Container(
                 decoration: const BoxDecoration(
