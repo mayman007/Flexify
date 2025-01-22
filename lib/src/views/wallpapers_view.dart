@@ -144,9 +144,9 @@ class _WallpapersViewState extends State<WallpapersView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        '( ˃̣̣̥⌓˂̣̣̥)',
+                        '( ︶︹︶ )',
                         style: TextStyle(
-                          fontSize: 55,
+                          fontSize: 40,
                         ),
                       ),
                       const SizedBox(
