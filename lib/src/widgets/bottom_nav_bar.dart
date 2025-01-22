@@ -1,5 +1,5 @@
 import 'package:flexify/src/views/favorites_view.dart';
-import 'package:flexify/src/views/lockscreen_view.dart';
+import 'package:flexify/src/views/depthWall_view.dart';
 import 'package:flexify/src/views/wallpapers_view.dart';
 import 'package:flexify/src/views/widgets_view.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const LockscreenView(),
+          pageBuilder: (_, __, ___) => const DepthWallView(),
           transitionDuration: const Duration(milliseconds: 200),
           transitionsBuilder: (_, a, __, c) =>
               FadeTransition(opacity: a, child: c),

@@ -1,6 +1,6 @@
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
-import 'package:flexify/src/views/lockscreen_details_view.dart';
+import 'package:flexify/src/views/depthwall_details_view.dart';
 import 'package:flexify/src/views/wallpaper_details_view.dart';
 import 'package:flexify/src/views/widget_details_view.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
@@ -21,7 +21,7 @@ class _FavoritesViewState extends State<FavoritesView> {
   DatabaseHelper sqlDb = DatabaseHelper();
   List favedWalls = [];
   List favedWidgets = [];
-  List favedLockscreen = [];
+  List favedDepthWall = [];
 
   Future fetchFavedWallpapers() async {
     setState(() {
@@ -47,14 +47,14 @@ class _FavoritesViewState extends State<FavoritesView> {
     }
   }
 
-  Future fetchFavedLockscreens() async {
+  Future fetchFavedDepthWalls() async {
     setState(() {
-      favedLockscreen = [];
+      favedDepthWall = [];
     });
     var table = await sqlDb.selectData("SELECT * FROM 'lockscreenfavs'");
     for (var row in table) {
       setState(() {
-        favedLockscreen.add(row);
+        favedDepthWall.add(row);
       });
     }
   }
@@ -64,7 +64,7 @@ class _FavoritesViewState extends State<FavoritesView> {
     AnalyticsEngine.pageOpened("Favorites View");
     fetchFavedWallpapers();
     fetchFavedWidgets();
-    fetchFavedLockscreens();
+    fetchFavedDepthWalls();
     super.initState();
   }
 
@@ -271,8 +271,8 @@ class _FavoritesViewState extends State<FavoritesView> {
                     ),
             ),
             RefreshIndicator(
-              onRefresh: fetchFavedLockscreens,
-              child: favedLockscreen.isEmpty
+              onRefresh: fetchFavedDepthWalls,
+              child: favedDepthWall.isEmpty
                   ? Center(
                       child: SingleChildScrollView(
                         child: Container(
@@ -312,34 +312,33 @@ class _FavoritesViewState extends State<FavoritesView> {
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
                       ),
-                      itemCount: favedLockscreen.length,
+                      itemCount: favedDepthWall.length,
                       itemBuilder: (context, index) {
-                        final String lockscreenUrl =
-                            favedLockscreen[index]['lockscreenurl'];
-                        final String lockscreenThumbnailUrl =
-                            lockscreenUrl.replaceAll(".klwp", ".png");
-                        final String lockscreenName =
-                            favedLockscreen[index]['lockscreenname'];
+                        final String depthWallUrl =
+                            favedDepthWall[index]['lockscreenurl'];
+                        final String depthWallThumbnailUrl =
+                            depthWallUrl.replaceAll(".klwp", ".png");
+                        final String depthWallName =
+                            favedDepthWall[index]['lockscreenname'];
 
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
                               CustomPageRoute(
-                                builder: (context) => LockscreenDetailsView(
-                                  lockscreenUrl: lockscreenUrl,
-                                  lockscreenThumbnailUrl:
-                                      lockscreenThumbnailUrl,
-                                  lockscreenName: lockscreenName,
+                                builder: (context) => DepthWallDetailsView(
+                                  depthWallUrl: depthWallUrl,
+                                  depthWallThumbnailUrl: depthWallThumbnailUrl,
+                                  depthWallName: depthWallName,
                                 ),
                                 duration: const Duration(milliseconds: 600),
                               ),
                             );
                           },
                           child: WallpaperCard(
-                            wallpaperUrlHq: lockscreenThumbnailUrl,
-                            wallpaperUrlMid: lockscreenThumbnailUrl,
-                            wallpaperUrlLow: lockscreenThumbnailUrl,
+                            wallpaperUrlHq: depthWallThumbnailUrl,
+                            wallpaperUrlMid: depthWallThumbnailUrl,
+                            wallpaperUrlLow: depthWallThumbnailUrl,
                             isWallpaper: true,
                             lowQuality: true,
                           ),

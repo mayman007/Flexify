@@ -1,6 +1,6 @@
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
-import 'package:flexify/src/provider/lockscreen_provider.dart';
+import 'package:flexify/src/provider/depthwall_provider.dart';
 import 'package:flexify/src/provider/widget_category_provider.dart';
 import 'package:flexify/src/provider/widget_provider.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => WallpaperCategoryProvider()),
         ChangeNotifierProvider(create: (_) => WidgetProvider()),
         ChangeNotifierProvider(create: (_) => WidgetCategoryProvider()),
-        ChangeNotifierProvider(create: (_) => LockscreenProvider()),
+        ChangeNotifierProvider(create: (_) => DepthWallProvider()),
       ],
       child: const MyApp(),
     ),
