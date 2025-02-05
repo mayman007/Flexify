@@ -287,7 +287,7 @@ packages:
     source: hosted
     version: "1.7.0"
   envied:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: envied
       sha256: "129a0dbf32b90344fa2e9d6943569fdec8f17904e66161e0a1f09ee3416508ae"
@@ -531,7 +531,7 @@ packages:
     source: hosted
     version: "4.0.2"
   image:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: image
       sha256: f31d52537dc417fdcde36088fdf11d191026fd5e4fae742491ebd40e5a8bea7d
@@ -674,14 +674,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  no_screenshot:
-    dependency: "direct main"
-    description:
-      name: no_screenshot
-      sha256: ec3d86d7ee89a09c3a3939c1003012536ba4b3fcb4f8cbd23d87ada595c99258
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.1"
   octo_image:
     dependency: transitive
     description:
@@ -1223,14 +1215,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
-  zoom_pinch_overlay:
-    dependency: "direct main"
-    description:
-      name: zoom_pinch_overlay
-      sha256: "8f34f508c81441b0f51f0ea56827ccbfd32fd3c1c63c0c4d677b55fd849d9ef4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.3"
 sdks:
   dart: ">=3.5.3 <4.0.0"
   flutter: ">=3.24.0"
