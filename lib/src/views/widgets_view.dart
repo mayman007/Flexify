@@ -128,7 +128,7 @@ class _WidgetsViewState extends State<WidgetsView> {
                     const Text(
                       '( ︶︹︶ )',
                       style: TextStyle(
-                        fontSize: 55,
+                        fontSize: 40,
                       ),
                     ),
                     const SizedBox(

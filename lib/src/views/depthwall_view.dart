@@ -61,7 +61,7 @@ class _DepthWallViewState extends State<DepthWallView> {
                     const Text(
                       '( ︶︹︶ )',
                       style: TextStyle(
-                        fontSize: 55,
+                        fontSize: 40,
                       ),
                     ),
                     const SizedBox(
