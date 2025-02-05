@@ -59,7 +59,7 @@ class _DepthWallViewState extends State<DepthWallView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      '( ˃̣̣̥⌓˂̣̣̥)',
+                      '( ︶︹︶ )',
                       style: TextStyle(
                         fontSize: 55,
                       ),

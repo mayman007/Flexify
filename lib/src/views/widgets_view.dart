@@ -126,7 +126,7 @@ class _WidgetsViewState extends State<WidgetsView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      '( ˃̣̣̥⌓˂̣̣̥)',
+                      '( ︶︹︶ )',
                       style: TextStyle(
                         fontSize: 55,
                       ),
