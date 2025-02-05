@@ -4,7 +4,7 @@ description: "Polish your phone with Flexify's amazing set of wallpapers and wid
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 1.2.1+6
+version: 1.2.1+7
 
 environment:
   sdk: ^3.5.3
