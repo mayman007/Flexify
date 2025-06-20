@@ -8,6 +8,7 @@ import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,6 +27,7 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   bool isAndroid12OrHigherValue = true;
+  bool isNotificationPermissionGranted = true;
 
   Future isAndroid12OrHigher() async {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -347,12 +349,65 @@ class _SettingsViewState extends State<SettingsView> {
         });
   }
 
+  Future<void> checkNotificationPermission() async {
+    if (Platform.isAndroid) {
+      final status = await Permission.notification.status;
+      setState(() {
+        isNotificationPermissionGranted = status.isGranted;
+      });
+    }
+  }
+
+  Future<void> requestNotificationPermission() async {
+    if (Platform.isAndroid) {
+      final status = await Permission.notification.request();
+      setState(() {
+        isNotificationPermissionGranted = status.isGranted;
+      });
+
+      if (!status.isGranted) {
+        // Show dialog to go to settings if permission is permanently denied
+        if (status.isPermanentlyDenied) {
+          _showPermissionDialog();
+        }
+      }
+    }
+  }
+
+  void _showPermissionDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Permission Required'),
+          content: const Text(
+            'Notification permission is required. Please enable it in app settings.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                openAppSettings();
+              },
+              child: const Text('Open Settings'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     AnalyticsEngine.pageOpened("Settings View");
     getPrefs();
     isAndroid12OrHigher();
     getCacheSize();
+    checkNotificationPermission();
     super.initState();
   }
 
@@ -466,6 +521,26 @@ class _SettingsViewState extends State<SettingsView> {
                     )
                   ],
                 ),
+                !isNotificationPermissionGranted
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Enable Notifications',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              await requestNotificationPermission();
+                            },
+                            child: const Text("Enable"),
+                          )
+                        ],
+                      )
+                    : const SizedBox(),
                 InkWell(
                   onTap: () async {
                     await launchUrl(Uri.parse("https://t.me/Flexify_updates"));
