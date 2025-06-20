@@ -7,6 +7,7 @@ import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class FavoritesView extends StatefulWidget {
   const FavoritesView({super.key});
@@ -75,23 +76,23 @@ class _FavoritesViewState extends State<FavoritesView> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            "Favorites",
+          title: Text(
+            context.tr('favorites.title'),
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             dividerColor: Colors.transparent,
             tabs: <Widget>[
               Tab(
-                text: 'Wallpapers',
+                text: context.tr('navigation.wallpapers'),
                 icon: Icon(Icons.wallpaper_rounded),
               ),
               Tab(
-                text: 'Widgets',
+                text: context.tr('navigation.widgets'),
                 icon: Icon(Icons.widgets_rounded),
               ),
               Tab(
-                text: 'Depth Walls',
+                text: context.tr('navigation.depthWalls'),
                 icon: Icon(Icons.photo_library_rounded),
               ),
             ],
@@ -106,7 +107,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                       child: SingleChildScrollView(
                         child: Container(
                           padding: const EdgeInsets.all(20),
-                          child: const Column(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -121,7 +122,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                 height: 15,
                               ),
                               Text(
-                                'No Favorites Yet',
+                                context.tr('favorites.noFavorites'),
                                 style: TextStyle(
                                   fontSize: 21,
                                 ),
@@ -197,7 +198,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                       child: SingleChildScrollView(
                         child: Container(
                           padding: const EdgeInsets.all(20),
-                          child: const Column(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -212,7 +213,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                 height: 15,
                               ),
                               Text(
-                                'No Favorites Yet',
+                                context.tr('favorites.noFavorites'),
                                 style: TextStyle(
                                   fontSize: 21,
                                 ),
@@ -277,7 +278,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                       child: SingleChildScrollView(
                         child: Container(
                           padding: const EdgeInsets.all(20),
-                          child: const Column(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -292,7 +293,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                 height: 15,
                               ),
                               Text(
-                                'No Favorites Yet',
+                                context.tr('favorites.noFavorites'),
                                 style: TextStyle(
                                   fontSize: 21,
                                 ),

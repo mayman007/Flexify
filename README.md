@@ -19,6 +19,7 @@ Flexify is more than just a personalization app; it’s your gateway to making y
 - 💾 Save any wallpaper you want with high quality
 - 💙 Add wallpapers or widgets you like to favorites
 - 🎨 Fluid animations and beautiful UI design following Material Design 3
+- 🌍 Multi-language support (English, Arabic)
 
 ## Getting Started
 
@@ -41,6 +42,65 @@ Join our growing community on Telegram to share your setups, get inspiration, an
 | ![Image 1](https://i.imgur.com/BoaWX10.jpeg) | ![Image 2](https://i.imgur.com/0DSRMiB.jpeg) | ![Image 3](https://i.imgur.com/A5PTTOe.jpeg) |
 |----------------------------------------------|----------------------------------------------|----------------------------------------------|
 | ![Image 4](https://i.imgur.com/qvc0og8.jpeg) | ![Image 5](https://i.imgur.com/7K5Ok3U.jpeg) | ![Image 6](https://i.imgur.com/tdXNoad.jpeg) |
+
+## Contributing
+
+We welcome contributions to make Flexify even better! Here are the ways you can help:
+
+### 🌍 Translation Contributions
+
+Help us make Flexify accessible to more people by adding your language or improving existing translations.
+
+#### Adding a New Language
+
+1. **Fork the repository** and clone it to your local machine
+2. **Navigate to the translations folder**: `assets/translations/`
+3. **Create a new JSON file** for your language using the ISO 639-1 language code (e.g., `fr.json` for French, `es.json` for Spanish)
+4. **Copy the structure** from `en.json` and translate all the values to your language
+5. **Update the main.dart file** to include your language:
+   ```dart
+   supportedLocales: [Locale('en'), Locale('ar'), Locale('your_language_code')],
+   ```
+6. **Test your translation** by running the app and switching to your language
+7. **Submit a pull request** with your translation
+
+#### Improving Existing Translations
+
+1. **Fork the repository** and clone it to your local machine
+2. **Navigate to the translations folder**: `assets/translations/`
+3. **Edit the appropriate JSON file** (e.g., `ar.json` for Arabic improvements)
+4. **Make your improvements** while keeping the JSON structure intact
+5. **Test your changes** by running the app
+6. **Submit a pull request** with your improvements
+
+#### Translation Guidelines
+
+- Keep translations **concise and natural** in your language
+- Maintain the **same tone** as the English version (friendly and professional)
+- Test translations in the app to ensure they **fit the UI properly**
+- For technical terms (like "KWGT", "KLWP"), keep them as-is unless there's a widely accepted translation
+- Use **gender-neutral language** where possible
+- Follow your language's **capitalization conventions**
+
+#### Translation File Structure
+
+Each translation file contains these main sections:
+- `navigation` - Bottom navigation labels
+- `wallpapers` - Wallpaper-related strings
+- `wallpaperDetails` - Wallpaper details screen
+- `widgetDetails` - Widget details screen
+- `widgets` - Widget-related strings
+- `depthWalls` - Depth wallpaper strings
+- `favorites` - Favorites screen
+- `settings` - Settings screen
+- `aboutUs` - About us screen
+- `common` - Common strings used throughout the app
+
+#### Need Help?
+
+If you have questions about translating or need clarification on any strings:
+- **Join our [Telegram Discussion Group](https://t.me/Flexify_discussion)**
+- **Open an [Issue](https://github.com/mayman007/Flexify/issues)** with the "translation" label
 
 ## Support
 

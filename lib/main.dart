@@ -6,6 +6,7 @@ import 'package:flexify/src/provider/widget_category_provider.dart';
 import 'package:flexify/src/provider/widget_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'src/app.dart';
 import 'src/notifications/notifications.dart';
 import 'src/provider/wallpaper_provider.dart';
@@ -21,6 +22,8 @@ Future<void> main() async {
   await AnalyticsEngine.init();
   AnalyticsEngine.appOpened;
 
+  await EasyLocalization.ensureInitialized();
+
   // Register background handler early
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -33,15 +36,20 @@ Future<void> main() async {
 
   runApp(
     // Init provider
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => WallpaperProvider()),
-        ChangeNotifierProvider(create: (_) => WallpaperCategoryProvider()),
-        ChangeNotifierProvider(create: (_) => WidgetProvider()),
-        ChangeNotifierProvider(create: (_) => WidgetCategoryProvider()),
-        ChangeNotifierProvider(create: (_) => DepthWallProvider()),
-      ],
-      child: const MyApp(),
+    EasyLocalization(
+      supportedLocales: [Locale('en'), Locale('ar')],
+      path: 'assets/translations',
+      fallbackLocale: Locale('en'),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => WallpaperProvider()),
+          ChangeNotifierProvider(create: (_) => WallpaperCategoryProvider()),
+          ChangeNotifierProvider(create: (_) => WidgetProvider()),
+          ChangeNotifierProvider(create: (_) => WidgetCategoryProvider()),
+          ChangeNotifierProvider(create: (_) => DepthWallProvider()),
+        ],
+        child: const MyApp(),
+      ),
     ),
   );
 }

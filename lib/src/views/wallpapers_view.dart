@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/views/wallpaper_details_view.dart';
 import 'package:flexify/src/views/wallpapers_category_view.dart';
@@ -127,9 +128,9 @@ class _WallpapersViewState extends State<WallpapersView> {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            "Wallpapers",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+          title: Text(
+            context.tr('wallpapers.title'),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
           ),
         ),
         body: RefreshIndicator(
@@ -152,17 +153,17 @@ class _WallpapersViewState extends State<WallpapersView> {
                       const SizedBox(
                         height: 30,
                       ),
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Connection Error',
-                            style: TextStyle(fontSize: 25),
+                            context.tr('common.connectionError'),
+                            style: const TextStyle(fontSize: 25),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
-                          Icon(
+                          const Icon(
                             Icons.wifi_off_rounded,
                             size: 34,
                           ),
@@ -170,12 +171,12 @@ class _WallpapersViewState extends State<WallpapersView> {
                       ),
                       TextButton(
                           onPressed: fetchWallpapers,
-                          child: const Text("Try Again"))
+                          child: Text(context.tr('common.tryAgain')))
                     ],
                   ),
                 );
               } else if (provider.wallpaperNames.isEmpty) {
-                return const Center(child: Text('Fetching Wallpapers...'));
+                return Center(child: Text(context.tr('wallpapers.fetching')));
               } else {
                 return GridView.builder(
                   padding: const EdgeInsets.all(10),

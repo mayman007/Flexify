@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
@@ -53,7 +54,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
         isFaved = false;
       });
       showToast(
-        "Removed from Favorites",
+        context.tr('widgetDetails.removedFromFavorites'),
         duration: const Duration(milliseconds: 1500),
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
@@ -67,7 +68,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
         isFaved = true;
       });
       showToast(
-        "Added to Favorites",
+        context.tr('widgetDetails.addedToFavorites'),
         duration: const Duration(milliseconds: 1500),
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
@@ -85,7 +86,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
           const CircularProgressIndicator(),
           Container(
               margin: const EdgeInsets.fromLTRB(20, 15, 0, 10),
-              child: const Text("Fetching Widget...")),
+              child: Text(context.tr('widgetDetails.fetchingWidget'))),
         ],
       ),
     );
@@ -105,16 +106,16 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
           return AlertDialog(
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(30))),
-            content: const SingleChildScrollView(
+            content: SingleChildScrollView(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Text(
-                      "To apply widgets, you need to have KWGT installed. Join our official Telegram group for further support!",
-                      style: TextStyle(
+                      context.tr('widgetDetails.kwgtRequiredMessage'),
+                      style: const TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 18,
                       ),
@@ -127,13 +128,13 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
                   await launchUrl(Uri.parse(
                       'https://play.google.com/store/apps/details?id=org.kustom.widget'));
                 },
-                child: const Text("Get KWGT From Play Store"),
+                child: Text(context.tr('widgetDetails.getKwgtFromPlayStore')),
               ),
               TextButton(
                 onPressed: () async {
                   await launchUrl(Uri.parse('https://t.me/Flexify_discussion'));
                 },
-                child: const Text("Telegram Support Group"),
+                child: Text(context.tr('widgetDetails.telegramSupportGroup')),
               )
             ],
           );
@@ -209,7 +210,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
     Navigator.pop(context);
     openKWGTFile(fullPath);
     showToast(
-      "Opened KWGT To Apply Widget",
+      context.tr('widgetDetails.openedKwgtToApplyWidget'),
       animation: StyledToastAnimation.fade,
       reverseAnimation: StyledToastAnimation.fade,
       // ignore: use_build_context_synchronously
@@ -287,9 +288,9 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
                   height: 60,
                   child: TextButton.icon(
                     onPressed: applyWidget,
-                    label: const Text(
-                      "Apply Widget",
-                      style: TextStyle(fontSize: 23),
+                    label: Text(
+                      context.tr('widgetDetails.applyWidget'),
+                      style: const TextStyle(fontSize: 23),
                     ),
                     icon: const Icon(
                       Icons.widgets_rounded,

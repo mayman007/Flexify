@@ -17,6 +17,7 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wallpaper_manager_plus/wallpaper_manager_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WallpaperDetailsView extends StatefulWidget {
   final String wallpaperUrlHq;
@@ -53,7 +54,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
   saveNetworkImage() async {
     if (saveImageCoolDown) {
       showToast(
-        "You have just saved this wallpaper! wait a few seconds.",
+        context.tr('wallpaperDetails.saveWaitMessage'),
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
         animDuration: const Duration(milliseconds: 500),
@@ -74,7 +75,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       );
       Navigator.pop(context);
       showToast(
-        "Wallpaper Saved",
+        context.tr('wallpaperDetails.wallpaperSaved'),
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
         animDuration: const Duration(milliseconds: 500),
@@ -97,7 +98,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
           const CircularProgressIndicator(),
           Container(
               margin: const EdgeInsets.fromLTRB(20, 15, 0, 10),
-              child: const Text("Fetching Wallpaper...")),
+              child: Text(context.tr('wallpaperDetails.fetchingWallpaper'))),
         ],
       ),
     );
@@ -165,7 +166,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
     } catch (e) {
       log("Error setting wallpaper: $e");
       showToast(
-        "Setting Wallpaper Failed",
+        context.tr('wallpaperDetails.settingWallpaperFailed'),
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
         // ignore: use_build_context_synchronously
@@ -189,72 +190,72 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
         return AlertDialog(
             content: SingleChildScrollView(
                 child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.photo_size_select_actual_rounded,
-              size: 30,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            const Text(
-              'Set as Wallpaper',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            RadioListTile<String>(
-              title: const Text('Home Screen'),
-              value: WallpaperManagerPlus.homeScreen.toString(),
-              groupValue: null,
-              onChanged: (value) async {
-                setState(() {
-                  wallLocation = WallpaperManagerPlus.homeScreen;
-                });
-                if (context.mounted) Navigator.of(context).pop();
-                await setAsWallpaper();
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('Lock Screen'),
-              value: WallpaperManagerPlus.lockScreen.toString(),
-              groupValue: null,
-              onChanged: (value) async {
-                setState(() {
-                  wallLocation = WallpaperManagerPlus.lockScreen;
-                });
-                if (context.mounted) Navigator.of(context).pop();
-                await setAsWallpaper();
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('Both'),
-              value: WallpaperManagerPlus.bothScreens.toString(),
-              groupValue: null,
-              onChanged: (value) async {
-                setState(() {
-                  wallLocation = WallpaperManagerPlus.bothScreens;
-                });
-                if (context.mounted) Navigator.of(context).pop();
-                await setAsWallpaper();
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('Set With...'),
-              value: '4',
-              groupValue: null,
-              onChanged: (value) async {
-                setState(() {
-                  wallLocation = 4;
-                });
-                if (context.mounted) Navigator.of(context).pop();
-                await setAsWallpaper();
-              },
-            ),
-          ],
-        )));
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+              const Icon(
+                Icons.photo_size_select_actual_rounded,
+                size: 30,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                context.tr('wallpaperDetails.setAsWallpaper'),
+                style:
+                    const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              RadioListTile<String>(
+                title: Text(context.tr('wallpaperDetails.homeScreen')),
+                value: WallpaperManagerPlus.homeScreen.toString(),
+                groupValue: null,
+                onChanged: (value) async {
+                  setState(() {
+                    wallLocation = WallpaperManagerPlus.homeScreen;
+                  });
+                  if (context.mounted) Navigator.of(context).pop();
+                  await setAsWallpaper();
+                },
+              ),
+              RadioListTile<String>(
+                title: Text(context.tr('wallpaperDetails.lockScreen')),
+                value: WallpaperManagerPlus.lockScreen.toString(),
+                groupValue: null,
+                onChanged: (value) async {
+                  setState(() {
+                    wallLocation = WallpaperManagerPlus.lockScreen;
+                  });
+                  if (context.mounted) Navigator.of(context).pop();
+                  await setAsWallpaper();
+                },
+              ),
+              RadioListTile<String>(
+                title: Text(context.tr('wallpaperDetails.both')),
+                value: WallpaperManagerPlus.bothScreens.toString(),
+                groupValue: null,
+                onChanged: (value) async {
+                  setState(() {
+                    wallLocation = WallpaperManagerPlus.bothScreens;
+                  });
+                  if (context.mounted) Navigator.of(context).pop();
+                  await setAsWallpaper();
+                },
+              ),
+              RadioListTile<String>(
+                title: Text(context.tr('wallpaperDetails.setWith')),
+                value: '4',
+                groupValue: null,
+                onChanged: (value) async {
+                  setState(() {
+                    wallLocation = 4;
+                  });
+                  if (context.mounted) Navigator.of(context).pop();
+                  await setAsWallpaper();
+                },
+              ),
+            ])));
       },
     );
   }
@@ -281,7 +282,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
         isFaved = false;
       });
       showToast(
-        "Removed from Favorites",
+        context.tr('wallpaperDetails.removedFromFavorites'),
         duration: const Duration(milliseconds: 1500),
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
@@ -295,7 +296,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
         isFaved = true;
       });
       showToast(
-        "Added to Favorites",
+        context.tr('wallpaperDetails.addedToFavorites'),
         duration: const Duration(milliseconds: 1500),
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
@@ -423,9 +424,9 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                   height: 50,
                   child: TextButton.icon(
                     onPressed: showSetWallpaperDialog,
-                    label: const Text(
-                      "Set as Wallpaper",
-                      style: TextStyle(fontSize: 23),
+                    label: Text(
+                      context.tr('wallpaperDetails.setAsWallpaper'),
+                      style: const TextStyle(fontSize: 23),
                     ),
                     icon: const Icon(
                       Icons.wallpaper_rounded,
@@ -456,7 +457,8 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: "Resolution:  ",
+                                    text:
+                                        "${context.tr('wallpaperDetails.resolution')}:  ",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -491,7 +493,8 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: "Size:  ",
+                                    text:
+                                        "${context.tr('wallpaperDetails.size')}:  ",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -531,7 +534,8 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: "Category:  ",
+                                    text:
+                                        "${context.tr('wallpaperDetails.category')}:  ",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -564,8 +568,8 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                             ),
                             TextButton.icon(
                               onPressed: saveNetworkImage,
-                              label: const Text("Save",
-                                  style: TextStyle(
+                              label: Text(context.tr('wallpaperDetails.save'),
+                                  style: const TextStyle(
                                     fontSize: 15,
                                   )),
                               icon: const Icon(Icons.download_rounded),
@@ -573,9 +577,9 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        const Text(
-                          'Colors Used',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        Text(
+                          context.tr('wallpaperDetails.colorsUsed'),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 10),
                         Row(

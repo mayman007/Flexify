@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/views/about_us_view.dart';
 import 'package:flexify/src/widgets/bottom_nav_bar.dart';
@@ -29,6 +30,11 @@ class _SettingsViewState extends State<SettingsView> {
   bool isAndroid12OrHigherValue = true;
   bool isNotificationPermissionGranted = true;
 
+  String colorSchemeValue = 'Material You';
+  String themeValue = 'System Mode';
+  String languageValue = 'English';
+  bool isPureBlackEnabledValue = false;
+
   Future isAndroid12OrHigher() async {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -42,10 +48,6 @@ class _SettingsViewState extends State<SettingsView> {
       });
     }
   }
-
-  String colorSchemeValue = 'Material You';
-  String themeValue = 'System Mode';
-  bool isPureBlackEnabledValue = false;
 
   getPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -82,7 +84,69 @@ class _SettingsViewState extends State<SettingsView> {
       } else if (isPureBlackEnabled == true) {
         isPureBlackEnabledValue = true;
       }
+
+      // Set language value based on current locale
+      if (context.locale.languageCode == 'en') {
+        languageValue = 'English';
+      } else if (context.locale.languageCode == 'ar') {
+        languageValue = 'Arabic';
+      } else {
+        languageValue = 'English'; // Default fallback
+      }
     });
+  }
+
+  Future<void> showLanguageDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            content: SingleChildScrollView(
+                child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.language_rounded,
+              size: 30,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              context.tr('settings.language'),
+              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            RadioListTile<String>(
+              title: const Text('English'),
+              value: 'English',
+              groupValue: languageValue,
+              onChanged: (value) async {
+                context.setLocale(const Locale('en'));
+                setState(() {
+                  languageValue = 'English';
+                });
+                if (context.mounted) Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('العربية'),
+              value: 'Arabic',
+              groupValue: languageValue,
+              onChanged: (value) async {
+                context.setLocale(const Locale('ar'));
+                setState(() {
+                  languageValue = 'Arabic';
+                });
+                if (context.mounted) Navigator.of(context).pop();
+              },
+            ),
+          ],
+        )));
+      },
+    );
   }
 
   Future<void> showThemeDialog() async {
@@ -101,15 +165,15 @@ class _SettingsViewState extends State<SettingsView> {
             const SizedBox(
               height: 5,
             ),
-            const Text(
-              'Themes',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            Text(
+              context.tr('settings.themes'),
+              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 10,
             ),
             RadioListTile<String>(
-              title: const Text('System'),
+              title: Text(context.tr('settings.system')),
               value: 'System Mode',
               groupValue: themeValue,
               onChanged: (value) async {
@@ -123,7 +187,7 @@ class _SettingsViewState extends State<SettingsView> {
               },
             ),
             RadioListTile<String>(
-              title: const Text('Light'),
+              title: Text(context.tr('settings.light')),
               value: 'Light Mode',
               groupValue: themeValue,
               onChanged: (value) async {
@@ -137,7 +201,7 @@ class _SettingsViewState extends State<SettingsView> {
               },
             ),
             RadioListTile<String>(
-              title: const Text('Dark'),
+              title: Text(context.tr('settings.dark')),
               value: 'Dark Mode',
               groupValue: themeValue,
               onChanged: (value) async {
@@ -172,16 +236,16 @@ class _SettingsViewState extends State<SettingsView> {
             const SizedBox(
               height: 5,
             ),
-            const Text(
-              'Color Schemes',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            Text(
+              context.tr('settings.colorScheme'),
+              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 10,
             ),
             isAndroid12OrHigherValue
                 ? RadioListTile<String>(
-                    title: const Text('Dynamic'),
+                    title: Text(context.tr('settings.dynamic')),
                     value: 'Material You',
                     groupValue: colorSchemeValue,
                     onChanged: (value) async {
@@ -196,7 +260,7 @@ class _SettingsViewState extends State<SettingsView> {
                   )
                 : const SizedBox(),
             RadioListTile<String>(
-              title: const Text('Blue'),
+              title: Text(context.tr('settings.blue')),
               value: 'Blue Scheme',
               groupValue: colorSchemeValue,
               onChanged: (value) async {
@@ -210,7 +274,7 @@ class _SettingsViewState extends State<SettingsView> {
               },
             ),
             RadioListTile<String>(
-              title: const Text('Green'),
+              title: Text(context.tr('settings.green')),
               value: 'Green Scheme',
               groupValue: colorSchemeValue,
               onChanged: (value) async {
@@ -224,7 +288,7 @@ class _SettingsViewState extends State<SettingsView> {
               },
             ),
             RadioListTile<String>(
-              title: const Text('Purble'),
+              title: Text(context.tr('settings.purple')),
               value: 'Purble Scheme',
               groupValue: colorSchemeValue,
               onChanged: (value) async {
@@ -238,7 +302,7 @@ class _SettingsViewState extends State<SettingsView> {
               },
             ),
             RadioListTile<String>(
-              title: const Text('Red'),
+              title: Text(context.tr('settings.red')),
               value: 'Red Scheme',
               groupValue: colorSchemeValue,
               onChanged: (value) async {
@@ -308,8 +372,8 @@ class _SettingsViewState extends State<SettingsView> {
           return AlertDialog(
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(30))),
-            title: const Text("Delete Cache?"),
-            content: const SingleChildScrollView(
+            title: Text(context.tr('settings.deleteCacheTitle')),
+            content: SingleChildScrollView(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
@@ -317,7 +381,7 @@ class _SettingsViewState extends State<SettingsView> {
                       height: 10,
                     ),
                     Text(
-                      "Are you sure that you want to delete all the cache of the app?",
+                      context.tr('settings.deleteCacheConfirm'),
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 18,
@@ -333,14 +397,14 @@ class _SettingsViewState extends State<SettingsView> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: const Text("Cancel"),
+                    child: Text(context.tr('settings.cancel')),
                   ),
                   TextButton(
                     onPressed: () async {
                       Navigator.of(context).pop();
                       await clearAppCache();
                     },
-                    child: const Text("Delete"),
+                    child: Text(context.tr('settings.delete')),
                   ),
                 ],
               ),
@@ -379,21 +443,21 @@ class _SettingsViewState extends State<SettingsView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Permission Required'),
-          content: const Text(
-            'Notification permission is required. Please enable it in app settings.',
+          title: Text(context.tr('settings.permissionRequired')),
+          content: Text(
+            context.tr('settings.notificationPermissionText'),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+              child: Text(context.tr('settings.cancel')),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 openAppSettings();
               },
-              child: const Text('Open Settings'),
+              child: Text(context.tr('settings.openSettings')),
             ),
           ],
         );
@@ -424,9 +488,9 @@ class _SettingsViewState extends State<SettingsView> {
       ),
       child: Scaffold(
           appBar: AppBar(
-            title: const Text(
-              'Settings',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+            title: Text(
+              context.tr('settings.title'),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
             ),
           ),
           body: Padding(
@@ -436,39 +500,56 @@ class _SettingsViewState extends State<SettingsView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'General Theme',
-                      style: TextStyle(fontSize: 18),
+                    Text(
+                      context.tr('settings.language'),
+                      style: const TextStyle(fontSize: 18),
                     ),
                     ElevatedButton(
-                      onPressed: showThemeDialog,
-                      child: Text(themeValue == 'System Mode'
-                          ? 'System'
-                          : themeValue == 'Light Mode'
-                              ? 'Light'
-                              : 'Dark'),
+                      onPressed: showLanguageDialog,
+                      child: Text(languageValue == 'English'
+                          ? 'English'
+                          : languageValue == 'Arabic'
+                              ? 'العربية'
+                              : 'English'),
                     ),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Color Scheme',
-                      style: TextStyle(fontSize: 18),
+                    Text(
+                      context.tr('settings.generalTheme'),
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    ElevatedButton(
+                      onPressed: showThemeDialog,
+                      child: Text(themeValue == 'System Mode'
+                          ? context.tr('settings.system')
+                          : themeValue == 'Light Mode'
+                              ? context.tr('settings.light')
+                              : context.tr('settings.dark')),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      context.tr('settings.colorScheme'),
+                      style: const TextStyle(fontSize: 18),
                     ),
                     ElevatedButton(
                       onPressed: showColorSchemesDialog,
                       child: Text(colorSchemeValue == 'Blue Scheme'
-                          ? 'Blue'
+                          ? context.tr('settings.blue')
                           : colorSchemeValue == 'Green Scheme'
-                              ? 'Green'
+                              ? context.tr('settings.green')
                               : colorSchemeValue == 'Purble Scheme'
-                                  ? 'Purble'
+                                  ? context.tr('settings.purple')
                                   : colorSchemeValue == 'Red Scheme'
-                                      ? 'Red'
+                                      ? context.tr('settings.red')
                                       : colorSchemeValue == 'Material You'
-                                          ? 'Dynamic'
+                                          ? context.tr('settings.dynamic')
                                           : ''),
                     ),
                   ],
@@ -476,9 +557,9 @@ class _SettingsViewState extends State<SettingsView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Pure Black',
-                      style: TextStyle(fontSize: 18),
+                    Text(
+                      context.tr('settings.pureBlack'),
+                      style: const TextStyle(fontSize: 18),
                     ),
                     const SizedBox(
                       width: 10,
@@ -507,7 +588,8 @@ class _SettingsViewState extends State<SettingsView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Delete Cache ($cacheSize MB)',
+                      context.tr('settings.deleteCache',
+                          namedArgs: {'size': cacheSize}),
                       style: const TextStyle(fontSize: 18),
                     ),
                     const SizedBox(
@@ -517,7 +599,7 @@ class _SettingsViewState extends State<SettingsView> {
                       onPressed: () async {
                         await showDeleteCacheDialog(context);
                       },
-                      child: const Text("Delete"),
+                      child: Text(context.tr('settings.delete')),
                     )
                   ],
                 ),
@@ -525,9 +607,9 @@ class _SettingsViewState extends State<SettingsView> {
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Enable Notifications',
-                            style: TextStyle(fontSize: 18),
+                          Text(
+                            context.tr('settings.enableNotifications'),
+                            style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(
                             width: 10,
@@ -536,7 +618,7 @@ class _SettingsViewState extends State<SettingsView> {
                             onPressed: () async {
                               await requestNotificationPermission();
                             },
-                            child: const Text("Enable"),
+                            child: Text(context.tr('settings.enable')),
                           )
                         ],
                       )
@@ -546,7 +628,7 @@ class _SettingsViewState extends State<SettingsView> {
                     await launchUrl(Uri.parse("https://t.me/Flexify_updates"));
                     AnalyticsEngine.joinedTelegramChannal();
                   },
-                  child: const Column(
+                  child: Column(
                     children: [
                       SizedBox(
                         height: 13,
@@ -561,7 +643,7 @@ class _SettingsViewState extends State<SettingsView> {
                             width: 8,
                           ),
                           Text(
-                            "Join Telegram Channal",
+                            context.tr('settings.joinTelegramChannel'),
                             style: TextStyle(fontSize: 22),
                           ),
                         ],
@@ -582,7 +664,7 @@ class _SettingsViewState extends State<SettingsView> {
                       ),
                     );
                   },
-                  child: const Column(
+                  child: Column(
                     children: [
                       SizedBox(
                         height: 13,
@@ -597,7 +679,7 @@ class _SettingsViewState extends State<SettingsView> {
                             width: 8,
                           ),
                           Text(
-                            "About Us",
+                            context.tr('settings.aboutUs'),
                             style: TextStyle(fontSize: 22),
                           ),
                         ],

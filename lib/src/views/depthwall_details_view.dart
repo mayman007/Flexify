@@ -12,6 +12,7 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DepthWallDetailsView extends StatefulWidget {
   final String depthWallUrl;
@@ -54,7 +55,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
         isFaved = false;
       });
       showToast(
-        "Removed from Favorites",
+        context.tr('favorites.removedFromFavorites'),
         duration: const Duration(milliseconds: 1500),
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
@@ -68,7 +69,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
         isFaved = true;
       });
       showToast(
-        "Added to Favorites",
+        context.tr('favorites.addedToFavorites'),
         duration: const Duration(milliseconds: 1500),
         animation: StyledToastAnimation.fade,
         reverseAnimation: StyledToastAnimation.fade,
@@ -86,7 +87,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
           const CircularProgressIndicator(),
           Container(
               margin: const EdgeInsets.fromLTRB(20, 15, 0, 10),
-              child: const Text("Fetching Depth Wallpaper...")),
+              child: Text(context.tr('depthWalls.fetchingDepthWallpaper'))),
         ],
       ),
     );
@@ -106,7 +107,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
           return AlertDialog(
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(30))),
-            content: const SingleChildScrollView(
+            content: SingleChildScrollView(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
@@ -114,7 +115,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
                       height: 10,
                     ),
                     Text(
-                      "To apply depth wallpapers, you need to have KLWP installed. Join our official Telegram group for further support!",
+                      context.tr('depthWalls.needKLWP'),
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 18,
@@ -128,13 +129,13 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
                   await launchUrl(Uri.parse(
                       'https://play.google.com/store/apps/details?id=org.kustom.wallpaper'));
                 },
-                child: const Text("Get KLWP From Play Store"),
+                child: Text(context.tr('depthWalls.getKLWP')),
               ),
               TextButton(
                 onPressed: () async {
                   await launchUrl(Uri.parse('https://t.me/Flexify_discussion'));
                 },
-                child: const Text("Telegram Support Group"),
+                child: Text(context.tr('widgets.telegramSupport')),
               )
             ],
           );
@@ -210,7 +211,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
     Navigator.pop(context);
     openKLWPFile(fullPath);
     showToast(
-      "Opened KLWP To Apply Widget",
+      context.tr('depthWalls.openedKLWP'),
       animation: StyledToastAnimation.fade,
       reverseAnimation: StyledToastAnimation.fade,
       // ignore: use_build_context_synchronously
@@ -282,7 +283,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
                 const SizedBox(width: 2),
                 IconButton(
                   onPressed: insertOrDeleteFaved,
-                  tooltip: 'Favorite',
+                  tooltip: context.tr('favorites.favorite'),
                   iconSize: 35,
                   icon: Icon(
                     isFaved
@@ -303,8 +304,8 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
                   height: 60,
                   child: TextButton.icon(
                     onPressed: applyDepthWall,
-                    label: const Text(
-                      "Apply Depth Wallpaper",
+                    label: Text(
+                      context.tr('depthWalls.applyDepthWallpaper'),
                       style: TextStyle(fontSize: 23),
                     ),
                     icon: const Icon(

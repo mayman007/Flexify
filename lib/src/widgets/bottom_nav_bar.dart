@@ -5,6 +5,7 @@ import 'package:flexify/src/views/widgets_view.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../views/settings_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MaterialNavBar extends StatefulWidget {
   final int selectedIndex;
@@ -119,31 +120,31 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
           icon: Icon(selectedIndex == 0
               ? Icons.wallpaper_rounded
               : Icons.wallpaper_outlined),
-          label: 'Wallpapers',
+          label: context.tr('navigation.wallpapers'),
         ),
         NavigationDestination(
           icon: Icon(selectedIndex == 1
               ? Icons.photo_library_rounded
               : Icons.photo_library_outlined),
-          label: 'Depth Walls',
+          label: context.tr('navigation.depthWalls'),
         ),
         NavigationDestination(
           icon: Icon(selectedIndex == 2
               ? Icons.widgets_rounded
               : Icons.widgets_outlined),
-          label: 'Widgets',
+          label: context.tr('navigation.widgets'),
         ),
         NavigationDestination(
           icon: Icon(selectedIndex == 3
               ? Icons.favorite_rounded
               : Icons.favorite_outline_outlined),
-          label: 'Favorites',
+          label: context.tr('navigation.favorites'),
         ),
         NavigationDestination(
           icon: Icon(selectedIndex == 4
               ? Icons.settings_rounded
               : Icons.settings_outlined),
-          label: 'Settings',
+          label: context.tr('navigation.settings'),
         ),
       ],
       selectedIndex: widget.selectedIndex,

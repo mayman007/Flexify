@@ -5,6 +5,7 @@ import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WallpapersCategoryView extends StatefulWidget {
   final String categoryName;
@@ -45,7 +46,8 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "${widget.categoryName} Wallpapers",
+          context.tr('wallpapers.categoryTitle',
+              namedArgs: {'category': widget.categoryName}),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -69,11 +71,11 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
                     const SizedBox(
                       height: 30,
                     ),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Connection Error',
+                          context.tr('common.connectionError'),
                           style: TextStyle(fontSize: 25),
                         ),
                         SizedBox(
@@ -87,12 +89,12 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
                     ),
                     TextButton(
                         onPressed: fetchWallpapers,
-                        child: const Text("Try Again"))
+                        child: Text(context.tr('common.tryAgain')))
                   ],
                 ),
               );
             } else if (provider.wallpaperNames.isEmpty) {
-              return const Center(child: Text('Fetching Wallpapers...'));
+              return Center(child: Text(context.tr('wallpapers.fetching')));
             } else {
               return GridView.builder(
                 padding: const EdgeInsets.all(10),

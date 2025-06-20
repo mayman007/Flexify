@@ -1,0 +1,145 @@
+{
+    "appTitle": "Flexify",
+    "navigation": {
+        "wallpapers": "Wallpapers",
+        "depthWalls": "Depth Walls",
+        "widgets": "Widgets",
+        "favorites": "Favorites",
+        "settings": "Settings"
+    },
+    
+    "wallpapers": {
+        "title": "Wallpapers",
+        "categoryTitle": "{category} Wallpapers",
+        "fetching": "Fetching Wallpapers...",
+        "setAsWallpaper": "Set as Wallpaper",
+        "homeScreen": "Home Screen",
+        "lockScreen": "Lock Screen",
+        "both": "Both",
+        "setWith": "Set With...",
+        "fetchingWallpaper": "Fetching Wallpaper...",
+        "settingFailed": "Setting Wallpaper Failed",
+        "resolution": "Resolution:",
+        "size": "Size:",
+        "category": "Category:",
+        "colorsUsed": "Colors Used",
+        "save": "Save",
+        "wallpaperSaved": "Wallpaper Saved",
+        "savedRecently": "You have just saved this wallpaper! wait a few seconds."
+    },
+    
+    "wallpaperDetails": {
+        "setAsWallpaper": "Set as Wallpaper",
+        "homeScreen": "Home Screen",
+        "lockScreen": "Lock Screen",
+        "both": "Both",
+        "setWith": "Set With...",
+        "fetchingWallpaper": "Fetching Wallpaper...",
+        "settingWallpaperFailed": "Setting Wallpaper Failed",
+        "resolution": "Resolution",
+        "size": "Size",
+        "category": "Category",
+        "save": "Save",
+        "wallpaperSaved": "Wallpaper Saved",
+        "saveWaitMessage": "You have just saved this wallpaper! wait a few seconds.",
+        "addedToFavorites": "Added to Favorites",
+        "removedFromFavorites": "Removed from Favorites",
+        "colorsUsed": "Colors Used"
+    },
+    
+    "widgetDetails": {
+        "applyWidget": "Apply Widget",
+        "fetchingWidget": "Fetching Widget...",
+        "addedToFavorites": "Added to Favorites",
+        "removedFromFavorites": "Removed from Favorites",
+        "kwgtRequiredMessage": "To apply widgets, you need to have KWGT installed. Join our official Telegram group for further support!",
+        "getKwgtFromPlayStore": "Get KWGT From Play Store",
+        "telegramSupportGroup": "Telegram Support Group",
+        "openedKwgtToApplyWidget": "Opened KWGT To Apply Widget"
+    },
+    
+    "widgets": {
+        "title": "Widgets",
+        "categoryTitle": "{category} Widgets",
+        "fetching": "Fetching Widgets...",
+        "applyWidget": "Apply Widget",
+        "fetchingWidget": "Fetching Widget...",
+        "openedKWGT": "Opened KWGT To Apply Widget",
+        "needKWGT": "To apply widgets, you need to have KWGT installed. Join our official Telegram group for further support!",
+        "getKWGT": "Get KWGT From Play Store",
+        "telegramSupport": "Telegram Support Group"
+    },
+    
+    "depthWalls": {
+        "title": "Depth Wallpapers",
+        "fetching": "Fetching DepthWall...",
+        "applyDepthWallpaper": "Apply Depth Wallpaper",
+        "fetchingDepthWallpaper": "Fetching Depth Wallpaper...",
+        "openedKLWP": "Opened KLWP To Apply Widget",
+        "needKLWP": "To apply depth wallpapers, you need to have KLWP installed. Join our official Telegram group for further support!",
+        "getKLWP": "Get KLWP From Play Store"
+    },
+    
+    "favorites": {
+        "title": "Favorites",
+        "noFavorites": "No Favorites Yet",
+        "noFavoritesEmoji": "(˵•ヘ•˵)",
+        "addedToFavorites": "Added to Favorites",
+        "removedFromFavorites": "Removed from Favorites",
+        "favorite": "Favorite"
+    },
+    
+    "settings": {
+        "title": "Settings",
+        "language": "Language",
+        "english": "English",
+        "arabic": "Arabic",
+        "themes": "Themes",
+        "generalTheme": "General Theme",
+        "system": "System",
+        "light": "Light",
+        "dark": "Dark",
+        "colorScheme": "Color Scheme",
+        "dynamic": "Dynamic",
+        "blue": "Blue",
+        "green": "Green",
+        "purple": "Purple",
+        "red": "Red",
+        "pureBlack": "Pure Black",
+        "deleteCache": "Delete Cache ({size} MB)",
+        "delete": "Delete",
+        "deleteCacheTitle": "Delete Cache?",
+        "deleteCacheConfirm": "Are you sure that you want to delete all the cache of the app?",
+        "cancel": "Cancel",
+        "enableNotifications": "Enable Notifications",
+        "enable": "Enable",
+        "joinTelegramChannel": "Join Telegram Channel",
+        "aboutUs": "About Us",
+        "permissionRequired": "Permission Required",
+        "notificationPermissionText": "Notification permission is required. Please enable it in app settings.",
+        "openSettings": "Open Settings"
+    },
+    
+    "aboutUs": {
+        "title": "About Us",
+        "description": "Polish your phone with Flexify's amazing set of wallpapers and widgets.",
+        "supportUs": "Support Us",
+        "freeAndOpenSource": "Flexify is %100 free and ",
+        "openSource": "Open Source",
+        "donationText": ". However, you can show us that you care by making a ",
+        "donation": "Donation",
+        "credits": "Credits",
+        "developer": "Developer: ",
+        "designer": "Designer: ",
+        "privacyPolicy": "Privacy Policy"
+    },
+    
+    "common": {
+        "close": "Close",
+        "tryAgain": "Try Again",
+        "connectionError": "Connection Error",
+        "connectionErrorEmoji": "( ︶︹︶ )",
+        "connectionErrorEmojiSmall": "( ˃̣̣̥⌓˂̣̣̥)",
+        "copied": "Copied {value}"
+    }
+}

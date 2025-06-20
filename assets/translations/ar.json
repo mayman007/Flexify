@@ -1,0 +1,145 @@
+{
+    "appTitle": "Flexify",
+    "navigation": {
+        "wallpapers": "الخلفيات",
+        "depthWalls": "خلفيات عميقة",
+        "widgets": "الأدوات",
+        "favorites": "المفضلة",
+        "settings": "الإعدادات"
+    },
+    
+    "wallpapers": {
+        "title": "الخلفيات",
+        "categoryTitle": "خلفيات {category}",
+        "fetching": "جاري جلب الخلفيات...",
+        "setAsWallpaper": "تعيين كخلفية",
+        "homeScreen": "الشاشة الرئيسية",
+        "lockScreen": "شاشة القفل",
+        "both": "كلاهما",
+        "setWith": "تعيين باستخدام...",
+        "fetchingWallpaper": "جاري جلب الخلفية...",
+        "settingFailed": "فشل في تعيين الخلفية",
+        "resolution": "الدقة:",
+        "size": "الحجم:",
+        "category": "الفئة:",
+        "colorsUsed": "الألوان المستخدمة",
+        "save": "حفظ",
+        "wallpaperSaved": "تم حفظ الخلفية",
+        "savedRecently": "لقد قمت بحفظ هذه الخلفية للتو! انتظر بضع ثوان."
+    },
+    
+    "wallpaperDetails": {
+        "setAsWallpaper": "تعيين كخلفية",
+        "homeScreen": "الشاشة الرئيسية",
+        "lockScreen": "شاشة القفل",
+        "both": "كلاهما",
+        "setWith": "تعيين باستخدام...",
+        "fetchingWallpaper": "جاري جلب الخلفية...",
+        "settingWallpaperFailed": "فشل في تعيين الخلفية",
+        "resolution": "الدقة",
+        "size": "الحجم",
+        "category": "الفئة",
+        "save": "حفظ",
+        "wallpaperSaved": "تم حفظ الخلفية",
+        "saveWaitMessage": "لقد قمت بحفظ هذه الخلفية للتو! انتظر بضع ثوان.",
+        "addedToFavorites": "أضيف إلى المفضلة",
+        "removedFromFavorites": "أزيل من المفضلة",
+        "colorsUsed": "الألوان المستخدمة"
+    },
+    
+    "widgetDetails": {
+        "applyWidget": "تطبيق الأداة",
+        "fetchingWidget": "جاري جلب الأداة...",
+        "addedToFavorites": "أضيف إلى المفضلة",
+        "removedFromFavorites": "أزيل من المفضلة",
+        "kwgtRequiredMessage": "لتطبيق الأدوات، تحتاج إلى تثبيت KWGT. انضم إلى مجموعة التليجرام الرسمية للحصول على مزيد من الدعم!",
+        "getKwgtFromPlayStore": "احصل على KWGT من متجر التطبيقات",
+        "telegramSupportGroup": "مجموعة دعم التليجرام",
+        "openedKwgtToApplyWidget": "تم فتح KWGT لتطبيق الأداة"
+    },
+    
+    "widgets": {
+        "title": "الأدوات",
+        "categoryTitle": "أدوات {category}",
+        "fetching": "جاري جلب الأدوات...",
+        "applyWidget": "تطبيق الأداة",
+        "fetchingWidget": "جاري جلب الأداة...",
+        "openedKWGT": "تم فتح KWGT لتطبيق الأداة",
+        "needKWGT": "لتطبيق الأدوات، تحتاج إلى تثبيت KWGT. انضم إلى مجموعة التليجرام الرسمية للحصول على مزيد من الدعم!",
+        "getKWGT": "احصل على KWGT من متجر التطبيقات",
+        "telegramSupport": "مجموعة دعم التليجرام"
+    },
+    
+    "depthWalls": {
+        "title": "خلفيات عميقة",
+        "fetching": "جاري جلب الخلفيات العميقة...",
+        "applyDepthWallpaper": "تطبيق الخلفية العميقة",
+        "fetchingDepthWallpaper": "جاري جلب الخلفية العميقة...",
+        "openedKLWP": "تم فتح KLWP لتطبيق الخلفية العميقة",
+        "needKLWP": "لتطبيق خلفيات عميقة، تحتاج إلى تثبيت KLWP. انضم إلى مجموعة التليجرام الرسمية للحصول على مزيد من الدعم!",
+        "getKLWP": "احصل على KLWP من متجر التطبيقات"
+    },
+    
+    "favorites": {
+        "title": "المفضلة",
+        "noFavorites": "لم يتم إضافة مفضلة",
+        "noFavoritesEmoji": "(˵•ヘ•˵)",
+        "addedToFavorites": "أضيف إلى المفضلة",
+        "removedFromFavorites": "أزيل من المفضلة",
+        "favorite": "المفضلة"
+    },
+    
+    "settings": {
+        "title": "الإعدادات",
+        "language": "اللغة",
+        "english": "الإنجليزية",
+        "arabic": "العربية",
+        "themes": "المظاهر",
+        "generalTheme": "المظهر العام",
+        "system": "النظام",
+        "light": "فاتح",
+        "dark": "داكن",
+        "colorScheme": "نظام الألوان",
+        "dynamic": "ديناميكي",
+        "blue": "أزرق",
+        "green": "أخضر",
+        "purple": "بنفسجي",
+        "red": "أحمر",
+        "pureBlack": "أسود خالص",
+        "deleteCache": "حذف التخزين المؤقت ({size} MB)",
+        "delete": "حذف",
+        "deleteCacheTitle": "حذف التخزين المؤقت؟",
+        "deleteCacheConfirm": "هل أنت متأكد أنك تريد حذف التخزين المؤقت بالكامل؟",
+        "cancel": "إلغاء",
+        "enableNotifications": "تفعيل الإشعارات",
+        "enable": "تفعيل",
+        "joinTelegramChannel": "انضم إلى قناة التليجرام",
+        "aboutUs": "معلومات عنا",
+        "permissionRequired": "إذن مطلوب",
+        "notificationPermissionText": "إذن الإشعار مطلوب. يرجى تفعيله في إعدادات التطبيق.",
+        "openSettings": "فتح الإعدادات"
+    },
+    
+    "aboutUs": {
+        "title": "معلومات عنا",
+        "description": "أضف لمسة جمالية لهاتفك مع خلفيات وأدوات Flexify الرائعة.",
+        "supportUs": "ادعمنا",
+        "freeAndOpenSource": "Flexify مجاني %100 و",
+        "openSource": "مفتوح المصدر",
+        "donationText": ". ومع ذلك، يمكنك أن تظهر لنا أنك مهتم من خلال ",
+        "donation": "التبرع",
+        "credits": "فريق العمل",
+        "developer": "المطور: ",
+        "designer": "المصمم: ",
+        "privacyPolicy": "سياسة الخصوصية"
+    },
+    
+    "common": {
+        "close": "إغلاق",
+        "tryAgain": "حاول مرة أخرى",
+        "connectionError": "خطأ في الاتصال",
+        "connectionErrorEmoji": "( ︶︹︶ )",
+        "connectionErrorEmojiSmall": "( ˃̣̣̥⌓˂̣̣̥)",
+        "copied": "تم النسخ {value}"
+    }
+}

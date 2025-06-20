@@ -6,6 +6,7 @@ import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DepthWallView extends StatefulWidget {
   const DepthWallView({super.key});
@@ -42,8 +43,8 @@ class _DepthWallViewState extends State<DepthWallView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Depth Wallpapers",
+        title: Text(
+          context.tr('depthWalls.title'),
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
         ),
       ),
@@ -85,12 +86,12 @@ class _DepthWallViewState extends State<DepthWallView> {
                     ),
                     TextButton(
                         onPressed: fetchDepthWalls,
-                        child: const Text("Try Again"))
+                        child: Text(context.tr('common.tryAgain')))
                   ],
                 ),
               );
             } else if (provider.depthWallNames.isEmpty) {
-              return const Center(child: Text('Fetching DepthWall...'));
+              return Center(child: Text(context.tr('depthWalls.fetching')));
             } else {
               return GridView.builder(
                 padding: const EdgeInsets.all(10),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ColorContainer extends StatefulWidget {
   final Color containerColor;
@@ -24,7 +25,10 @@ class _ColorContainerState extends State<ColorContainer> {
               text:
                   "#${widget.containerColor.value.toRadixString(16).toUpperCase()}"));
           showToast(
-            "Copied #${widget.containerColor.value.toRadixString(16).toUpperCase()}",
+            context.tr('common.copied', namedArgs: {
+              'value':
+                  "#${widget.containerColor.value.toRadixString(16).toUpperCase()}"
+            }),
             duration: const Duration(seconds: 1),
             animation: StyledToastAnimation.fade,
             reverseAnimation: StyledToastAnimation.fade,

@@ -2,6 +2,7 @@ import 'package:flexify/src/analytics_engine.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AboutUsView extends StatefulWidget {
   const AboutUsView({super.key});
@@ -21,8 +22,8 @@ class _AboutUsViewState extends State<AboutUsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'About Us',
+        title: Text(
+          context.tr('aboutUs.title'),
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
         ),
       ),
@@ -38,8 +39,8 @@ class _AboutUsViewState extends State<AboutUsView> {
                 fit: BoxFit.fitWidth,
                 height: 150,
               ),
-              const Text(
-                "Flexify",
+              Text(
+                context.tr('appTitle'),
                 style: TextStyle(
                   fontSize: 45,
                   fontFamily: "Oduda-Bold",
@@ -55,22 +56,22 @@ class _AboutUsViewState extends State<AboutUsView> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: const Padding(
-                  padding: EdgeInsets.all(15),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
                   child: Text(
-                    "Polish your phone with Flexify's amazing set of wallpapers and widgets.",
+                    context.tr('aboutUs.description'),
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
                     width: 30,
                   ),
                   Text(
-                    "Support Us",
+                    context.tr('aboutUs.supportUs'),
                     style: TextStyle(fontSize: 20),
                   ),
                 ],
@@ -87,7 +88,7 @@ class _AboutUsViewState extends State<AboutUsView> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: "Flexify is %100 free and ",
+                            text: context.tr('aboutUs.freeAndOpenSource'),
                             style: TextStyle(
                               fontSize: 18,
                               fontFamily: "Oduda",
@@ -101,7 +102,7 @@ class _AboutUsViewState extends State<AboutUsView> {
                             ),
                           ),
                           TextSpan(
-                            text: "Open Source",
+                            text: context.tr('aboutUs.openSource'),
                             style: TextStyle(
                               fontSize: 18,
                               fontFamily: "Oduda",
@@ -117,8 +118,7 @@ class _AboutUsViewState extends State<AboutUsView> {
                               },
                           ),
                           TextSpan(
-                            text:
-                                ". However, you can show us that you care by making a ",
+                            text: context.tr('aboutUs.donationText'),
                             style: TextStyle(
                               fontSize: 18,
                               fontFamily: "Oduda",
@@ -132,7 +132,7 @@ class _AboutUsViewState extends State<AboutUsView> {
                             ),
                           ),
                           TextSpan(
-                            text: "Donation",
+                            text: context.tr('aboutUs.donation'),
                             style: TextStyle(
                               fontSize: 18,
                               fontFamily: "Oduda",
@@ -162,14 +162,14 @@ class _AboutUsViewState extends State<AboutUsView> {
                       ),
                     )),
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
                     width: 30,
                   ),
                   Text(
-                    "Credits",
+                    context.tr('aboutUs.credits'),
                     style: TextStyle(fontSize: 20),
                   ),
                 ],
@@ -190,7 +190,7 @@ class _AboutUsViewState extends State<AboutUsView> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "Developer: ",
+                                  text: context.tr('aboutUs.developer'),
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontFamily: "Oduda",
@@ -233,7 +233,7 @@ class _AboutUsViewState extends State<AboutUsView> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "Designer: ",
+                                  text: context.tr('aboutUs.designer'),
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontFamily: "Oduda",
@@ -273,7 +273,7 @@ class _AboutUsViewState extends State<AboutUsView> {
               ),
               RichText(
                 text: TextSpan(
-                  text: "Privacy Policy",
+                  text: context.tr('aboutUs.privacyPolicy'),
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: "Oduda",

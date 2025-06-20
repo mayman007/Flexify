@@ -5,6 +5,7 @@ import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WidgetsCategoryView extends StatefulWidget {
   final String categoryName;
@@ -36,7 +37,8 @@ class _WidgetsCategoryViewState extends State<WidgetsCategoryView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "${widget.categoryName} Widgets",
+          context.tr('widgets.categoryTitle',
+              namedArgs: {'category': widget.categoryName}),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -77,12 +79,13 @@ class _WidgetsCategoryViewState extends State<WidgetsCategoryView> {
                       ],
                     ),
                     TextButton(
-                        onPressed: fetchWidgets, child: const Text("Try Again"))
+                        onPressed: fetchWidgets,
+                        child: Text(context.tr('common.tryAgain')))
                   ],
                 ),
               );
             } else if (provider.widgetNames.isEmpty) {
-              return const Center(child: Text('Fetching Widgets...'));
+              return Center(child: Text(context.tr('widgets.fetching')));
             } else {
               return GridView.builder(
                 padding: const EdgeInsets.all(10),
