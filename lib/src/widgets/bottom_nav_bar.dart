@@ -78,36 +78,36 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
     }
   }
 
-  bool isPureBlackEnabledValue = true;
+  bool isPureBlackEnabledValue = false;
   bool materialYouValue = false;
 
-  getPrefs() async {
+  Future<void> getPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isPureBlackEnabledPref = prefs.getBool('isPureBlackEnabled');
-    bool? materialYouPref = prefs.getBool('materialYou');
+    if (!mounted) return;
+    final bool? isPureBlackEnabledPref = prefs.getBool('isPureBlackEnabled');
+    final bool? materialYouPref = prefs.getBool('materialYou');
     setState(() {
-      if (isPureBlackEnabledPref == null || isPureBlackEnabledPref == false) {
-        isPureBlackEnabledValue = false;
-      } else if (isPureBlackEnabledPref == true) {
-        isPureBlackEnabledValue = true;
-      }
-      if (materialYouPref != null) {
-        materialYouValue = materialYouPref;
-      }
+      isPureBlackEnabledValue = isPureBlackEnabledPref == true;
+      materialYouValue = materialYouPref ?? false;
     });
   }
 
   @override
   void initState() {
-    setState(() {
-      selectedIndex = widget.selectedIndex;
-    });
     super.initState();
+    selectedIndex = widget.selectedIndex;
+    getPrefs();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh preferences when the widget comes back into view
+    getPrefs();
   }
 
   @override
   Widget build(BuildContext context) {
-    getPrefs();
     return NavigationBar(
       animationDuration: const Duration(seconds: 1),
       backgroundColor: Theme.of(context).brightness == Brightness.dark

@@ -33,7 +33,7 @@ class WallpaperCardState extends State<WallpaperCard>
       tag: widget.wallpaperUrlHq,
       key: Key(widget.wallpaperUrlHq),
       child: Card(
-        elevation: 5,
+        elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),

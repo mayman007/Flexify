@@ -352,319 +352,359 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
-              height: MediaQuery.sizeOf(context).height / 1.8,
-              child: Stack(
-                children: [
-                  // Ambient background effect
-                  Positioned.fill(
-                    child: Transform.scale(
-                      scale: 1.2,
-                      child: ImageFiltered(
-                        imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Card(
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Hero(
+          tag: 'app-bar',
+          child: Material(
+            color: Colors.transparent,
+            child: SizedBox.shrink(),
+          ),
+        ),
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
+                  height: MediaQuery.sizeOf(context).height / 1.8,
+                  child: Stack(
+                    children: [
+                      // Ambient background effect
+                      Positioned.fill(
+                        child: Transform.scale(
+                          scale: 1.2,
+                          child: ImageFiltered(
+                            imageFilter:
+                                ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                            child: Container(
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              clipBehavior: Clip.antiAlias,
-                              child: InteractiveViewer(
-                                minScale: 0.5,
-                                maxScale: 4.0,
-                                child: CachedNetworkImage(
-                                  imageUrl: widget.wallpaperUrlLow,
-                                  cacheManager: DefaultCacheManager(),
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: double.infinity,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Card(
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: InteractiveViewer(
+                                    minScale: 0.5,
+                                    maxScale: 4.0,
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget.wallpaperUrlLow,
+                                      cacheManager: DefaultCacheManager(),
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                      // Overlay to reduce ambient effect intensity
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Theme.of(context)
+                                .scaffoldBackgroundColor
+                                .withValues()
+                                .withAlpha(0),
+                          ),
+                        ),
+                      ),
+                      // Main wallpaper card
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            CustomPageRoute(
+                              builder: (context) => WallpaperFullscreenView(
+                                wallpaperUrlHq: widget.wallpaperUrlHq,
+                                wallpaperUrlMid: widget.wallpaperUrlMid,
+                                wallpaperUrlLow: widget.wallpaperUrlLow,
+                              ),
+                              duration: const Duration(milliseconds: 600),
+                            ),
+                          );
+                        },
+                        child: WallpaperCard(
+                          wallpaperUrlHq: widget.wallpaperUrlHq,
+                          wallpaperUrlMid: widget.wallpaperUrlMid,
+                          wallpaperUrlLow: widget.wallpaperUrlLow,
+                          isWallpaper: true,
+                          lowQuality: false,
+                        ),
+                      ),
+                    ],
                   ),
-                  // Overlay to reduce ambient effect intensity
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Theme.of(context)
-                            .scaffoldBackgroundColor
-                            .withValues()
-                            .withAlpha(0),
+                ),
+                Row(
+                  children: [
+                    const SizedBox(width: 30),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width - 153,
+                      child: Text(
+                        widget.wallpaperName.replaceAll("_", " "),
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.clip,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      Icons.verified_rounded,
+                      size: 35,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 2),
+                    IconButton(
+                      onPressed: insertOrDeleteFaved,
+                      tooltip: 'Favorite',
+                      iconSize: 35,
+                      icon: Icon(
+                        isFaved
+                            ? Icons.favorite_rounded
+                            : Icons.favorite_outline_rounded,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 20),
+                    SizedBox(
+                      height: 50,
+                      child: TextButton.icon(
+                        onPressed: showSetWallpaperDialog,
+                        label: Text(
+                          context.tr('wallpaperDetails.setAsWallpaper'),
+                          style: const TextStyle(fontSize: 23),
+                        ),
+                        icon: const Icon(
+                          Icons.wallpaper_rounded,
+                          size: 27,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Card(
+                  margin: const EdgeInsets.all(20),
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: SizedBox(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 20),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "${context.tr('wallpaperDetails.resolution')}:  ",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Oduda",
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Theme.of(context)
+                                                  .primaryTextTheme
+                                                  .bodyLarge!
+                                                  .color
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: widget.wallpaperResolution,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: "Oduda",
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Theme.of(context)
+                                                  .primaryTextTheme
+                                                  .bodyLarge!
+                                                  .color
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "${context.tr('wallpaperDetails.size')}:  ",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Oduda",
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Theme.of(context)
+                                                  .primaryTextTheme
+                                                  .bodyLarge!
+                                                  .color
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: calculateSize(),
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: "Oduda",
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Theme.of(context)
+                                                  .primaryTextTheme
+                                                  .bodyLarge!
+                                                  .color
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "${context.tr('wallpaperDetails.category')}:  ",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Oduda",
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Theme.of(context)
+                                                  .primaryTextTheme
+                                                  .bodyLarge!
+                                                  .color
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: widget.wallpaperCategory,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: "Oduda",
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Theme.of(context)
+                                                  .primaryTextTheme
+                                                  .bodyLarge!
+                                                  .color
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                TextButton.icon(
+                                  onPressed: saveNetworkImage,
+                                  label:
+                                      Text(context.tr('wallpaperDetails.save'),
+                                          style: const TextStyle(
+                                            fontSize: 15,
+                                          )),
+                                  icon: const Icon(Icons.download_rounded),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              context.tr('wallpaperDetails.colorsUsed'),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                containerColor1 == null
+                                    ? const SizedBox()
+                                    : ColorContainer(
+                                        containerColor: containerColor1!),
+                                containerColor2 == null
+                                    ? const SizedBox()
+                                    : ColorContainer(
+                                        containerColor: containerColor2!),
+                                containerColor3 == null
+                                    ? const SizedBox()
+                                    : ColorContainer(
+                                        containerColor: containerColor3!),
+                                containerColor4 == null
+                                    ? const SizedBox()
+                                    : ColorContainer(
+                                        containerColor: containerColor4!),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  // Main wallpaper card
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CustomPageRoute(
-                          builder: (context) => WallpaperFullscreenView(
-                            wallpaperUrlHq: widget.wallpaperUrlHq,
-                            wallpaperUrlMid: widget.wallpaperUrlMid,
-                            wallpaperUrlLow: widget.wallpaperUrlLow,
-                          ),
-                          duration: const Duration(milliseconds: 600),
-                        ),
-                      );
-                    },
-                    child: WallpaperCard(
-                      wallpaperUrlHq: widget.wallpaperUrlHq,
-                      wallpaperUrlMid: widget.wallpaperUrlMid,
-                      wallpaperUrlLow: widget.wallpaperUrlLow,
-                      isWallpaper: true,
-                      lowQuality: false,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              children: [
-                const SizedBox(width: 30),
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width - 153,
-                  child: Text(
-                    widget.wallpaperName.replaceAll("_", " "),
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.clip,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Icon(
-                  Icons.verified_rounded,
-                  size: 35,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 2),
-                IconButton(
-                  onPressed: insertOrDeleteFaved,
-                  tooltip: 'Favorite',
-                  iconSize: 35,
-                  icon: Icon(
-                    isFaved
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_outline_rounded,
-                  ),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(width: 20),
-                SizedBox(
-                  height: 50,
-                  child: TextButton.icon(
-                    onPressed: showSetWallpaperDialog,
-                    label: Text(
-                      context.tr('wallpaperDetails.setAsWallpaper'),
-                      style: const TextStyle(fontSize: 23),
-                    ),
-                    icon: const Icon(
-                      Icons.wallpaper_rounded,
-                      size: 27,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Card(
-              margin: const EdgeInsets.all(20),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: SizedBox(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 20),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        "${context.tr('wallpaperDetails.resolution')}:  ",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: "Oduda",
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Theme.of(context)
-                                              .primaryTextTheme
-                                              .bodyLarge!
-                                              .color
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: widget.wallpaperResolution,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "Oduda",
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Theme.of(context)
-                                              .primaryTextTheme
-                                              .bodyLarge!
-                                              .color
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        "${context.tr('wallpaperDetails.size')}:  ",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: "Oduda",
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Theme.of(context)
-                                              .primaryTextTheme
-                                              .bodyLarge!
-                                              .color
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: calculateSize(),
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "Oduda",
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Theme.of(context)
-                                              .primaryTextTheme
-                                              .bodyLarge!
-                                              .color
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        "${context.tr('wallpaperDetails.category')}:  ",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: "Oduda",
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Theme.of(context)
-                                              .primaryTextTheme
-                                              .bodyLarge!
-                                              .color
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: widget.wallpaperCategory,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "Oduda",
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Theme.of(context)
-                                              .primaryTextTheme
-                                              .bodyLarge!
-                                              .color
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            TextButton.icon(
-                              onPressed: saveNetworkImage,
-                              label: Text(context.tr('wallpaperDetails.save'),
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                  )),
-                              icon: const Icon(Icons.download_rounded),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          context.tr('wallpaperDetails.colorsUsed'),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            containerColor1 == null
-                                ? const SizedBox()
-                                : ColorContainer(
-                                    containerColor: containerColor1!),
-                            containerColor2 == null
-                                ? const SizedBox()
-                                : ColorContainer(
-                                    containerColor: containerColor2!),
-                            containerColor3 == null
-                                ? const SizedBox()
-                                : ColorContainer(
-                                    containerColor: containerColor3!),
-                            containerColor4 == null
-                                ? const SizedBox()
-                                : ColorContainer(
-                                    containerColor: containerColor4!),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Hero(
+              tag: 'bottom-nav-bar',
+              child: Material(
+                color: Colors.transparent,
+                child: SizedBox.shrink(),
               ),
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: Hero(
+              tag: 'fab',
+              child: Material(
+                color: Colors.transparent,
+                child: SizedBox.shrink(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

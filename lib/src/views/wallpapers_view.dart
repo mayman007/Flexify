@@ -127,10 +127,17 @@ class _WallpapersViewState extends State<WallpapersView> {
                 : Brightness.light,
       ),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            context.tr('wallpapers.title'),
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Hero(
+            tag: 'app-bar',
+            child: AppBar(
+              title: Text(
+                context.tr('wallpapers.title'),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+              ),
+            ),
           ),
         ),
         body: RefreshIndicator(
@@ -239,12 +246,19 @@ class _WallpapersViewState extends State<WallpapersView> {
             },
           ),
         ),
-        bottomNavigationBar: const MaterialNavBar(
-          selectedIndex: 0,
+        bottomNavigationBar: Hero(
+          tag: 'bottom-nav-bar',
+          child: const MaterialNavBar(
+            selectedIndex: 0,
+          ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _modalBottomSheetMenu,
-          child: const Icon(Icons.menu_rounded),
+        floatingActionButton: Hero(
+          tag: 'fab',
+          child: FloatingActionButton(
+            heroTag: null, // Disable internal Hero widget
+            onPressed: _modalBottomSheetMenu,
+            child: const Icon(Icons.menu_rounded),
+          ),
         ),
       ),
     );

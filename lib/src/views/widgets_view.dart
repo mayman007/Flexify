@@ -108,10 +108,16 @@ class _WidgetsViewState extends State<WidgetsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          context.tr('widgets.title'),
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Hero(
+          tag: 'app-bar',
+          child: AppBar(
+            title: Text(
+              context.tr('widgets.title'),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+            ),
+          ),
         ),
       ),
       body: RefreshIndicator(
@@ -209,12 +215,19 @@ class _WidgetsViewState extends State<WidgetsView> {
           },
         ),
       ),
-      bottomNavigationBar: const MaterialNavBar(
-        selectedIndex: 2,
+      bottomNavigationBar: Hero(
+        tag: 'bottom-nav-bar',
+        child: const MaterialNavBar(
+          selectedIndex: 2,
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _modalBottomSheetMenu,
-        child: const Icon(Icons.menu_rounded),
+      floatingActionButton: Hero(
+        tag: 'fab',
+        child: FloatingActionButton(
+          heroTag: null, // Disable internal Hero widget
+          onPressed: _modalBottomSheetMenu,
+          child: const Icon(Icons.menu_rounded),
+        ),
       ),
     );
   }

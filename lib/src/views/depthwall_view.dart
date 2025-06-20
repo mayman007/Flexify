@@ -42,10 +42,16 @@ class _DepthWallViewState extends State<DepthWallView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          context.tr('depthWalls.title'),
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Hero(
+          tag: 'app-bar',
+          child: AppBar(
+            title: Text(
+              context.tr('depthWalls.title'),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+            ),
+          ),
         ),
       ),
       body: RefreshIndicator(
@@ -140,8 +146,11 @@ class _DepthWallViewState extends State<DepthWallView> {
           },
         ),
       ),
-      bottomNavigationBar: const MaterialNavBar(
-        selectedIndex: 1,
+      bottomNavigationBar: Hero(
+        tag: 'bottom-nav-bar',
+        child: const MaterialNavBar(
+          selectedIndex: 1,
+        ),
       ),
     );
   }

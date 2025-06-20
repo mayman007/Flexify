@@ -232,141 +232,168 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
-              height: MediaQuery.sizeOf(context).height / 1.8,
-              child: Stack(
-                children: [
-                  // Ambient background effect
-                  Positioned.fill(
-                    child: Transform.scale(
-                      scale: 1.2,
-                      child: ImageFiltered(
-                        imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Card(
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Hero(
+          tag: 'app-bar',
+          child: Material(
+            color: Colors.transparent,
+            child: SizedBox.shrink(),
+          ),
+        ),
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
+                  height: MediaQuery.sizeOf(context).height / 1.8,
+                  child: Stack(
+                    children: [
+                      // Ambient background effect
+                      Positioned.fill(
+                        child: Transform.scale(
+                          scale: 1.2,
+                          child: ImageFiltered(
+                            imageFilter:
+                                ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                            child: Container(
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              clipBehavior: Clip.antiAlias,
-                              child: CachedNetworkImage(
-                                imageUrl: widget.depthWallThumbnailUrl,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: double.infinity,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Card(
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: CachedNetworkImage(
+                                    imageUrl: widget.depthWallThumbnailUrl,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                      // Overlay to reduce ambient effect intensity
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Theme.of(context)
+                                .scaffoldBackgroundColor
+                                .withValues()
+                                .withAlpha(0),
+                          ),
+                        ),
+                      ),
+                      // Main wallpaper card
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            CustomPageRoute(
+                              builder: (context) => WallpaperFullscreenView(
+                                wallpaperUrlHq: widget.depthWallThumbnailUrl,
+                                wallpaperUrlMid: widget.depthWallThumbnailUrl,
+                                wallpaperUrlLow: widget.depthWallThumbnailUrl,
+                              ),
+                              duration: const Duration(milliseconds: 600),
+                            ),
+                          );
+                        },
+                        child: WallpaperCard(
+                          wallpaperUrlHq: widget.depthWallThumbnailUrl,
+                          wallpaperUrlMid: widget.depthWallThumbnailUrl,
+                          wallpaperUrlLow: widget.depthWallThumbnailUrl,
+                          isWallpaper: true,
+                          lowQuality: true,
+                        ),
+                      ),
+                    ],
                   ),
-                  // Overlay to reduce ambient effect intensity
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Theme.of(context)
-                            .scaffoldBackgroundColor
-                            .withValues()
-                            .withAlpha(0),
+                ),
+                Row(
+                  children: [
+                    const SizedBox(width: 30),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width - 153,
+                      child: Text(
+                        widget.depthWallName.replaceAll("_", " "),
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.clip,
                       ),
                     ),
-                  ),
-                  // Main wallpaper card
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CustomPageRoute(
-                          builder: (context) => WallpaperFullscreenView(
-                            wallpaperUrlHq: widget.depthWallThumbnailUrl,
-                            wallpaperUrlMid: widget.depthWallThumbnailUrl,
-                            wallpaperUrlLow: widget.depthWallThumbnailUrl,
-                          ),
-                          duration: const Duration(milliseconds: 600),
-                        ),
-                      );
-                    },
-                    child: WallpaperCard(
-                      wallpaperUrlHq: widget.depthWallThumbnailUrl,
-                      wallpaperUrlMid: widget.depthWallThumbnailUrl,
-                      wallpaperUrlLow: widget.depthWallThumbnailUrl,
-                      isWallpaper: true,
-                      lowQuality: true,
+                    const SizedBox(width: 8),
+                    Icon(
+                      Icons.verified_rounded,
+                      size: 35,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 2),
+                    IconButton(
+                      onPressed: insertOrDeleteFaved,
+                      tooltip: context.tr('favorites.favorite'),
+                      iconSize: 35,
+                      icon: Icon(
+                        isFaved
+                            ? Icons.favorite_rounded
+                            : Icons.favorite_outline_rounded,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 20),
+                    SizedBox(
+                      height: 60,
+                      child: TextButton.icon(
+                        onPressed: applyDepthWall,
+                        label: Text(
+                          context.tr('depthWalls.applyDepthWallpaper'),
+                          style: TextStyle(fontSize: 23),
+                        ),
+                        icon: const Icon(
+                          Icons.photo_library_rounded,
+                          size: 27,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Hero(
+              tag: 'bottom-nav-bar',
+              child: Material(
+                color: Colors.transparent,
+                child: SizedBox.shrink(),
               ),
             ),
-            Row(
-              children: [
-                const SizedBox(width: 30),
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width - 153,
-                  child: Text(
-                    widget.depthWallName.replaceAll("_", " "),
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.clip,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Icon(
-                  Icons.verified_rounded,
-                  size: 35,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 2),
-                IconButton(
-                  onPressed: insertOrDeleteFaved,
-                  tooltip: context.tr('favorites.favorite'),
-                  iconSize: 35,
-                  icon: Icon(
-                    isFaved
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_outline_rounded,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(width: 20),
-                SizedBox(
-                  height: 60,
-                  child: TextButton.icon(
-                    onPressed: applyDepthWall,
-                    label: Text(
-                      context.tr('depthWalls.applyDepthWallpaper'),
-                      style: TextStyle(fontSize: 23),
-                    ),
-                    icon: const Icon(
-                      Icons.photo_library_rounded,
-                      size: 27,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

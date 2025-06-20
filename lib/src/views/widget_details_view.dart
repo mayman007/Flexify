@@ -229,79 +229,116 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
-              height: MediaQuery.sizeOf(context).height / 1.8,
-              child: WallpaperCard(
-                wallpaperUrlHq: widget.widgetThumbnailUrl,
-                wallpaperUrlMid: widget.widgetThumbnailUrl,
-                wallpaperUrlLow: widget.widgetThumbnailUrl,
-                isWallpaper: false,
-                lowQuality: true,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Hero(
+          tag: 'app-bar',
+          child: Material(
+            color: Colors.transparent,
+            child: SizedBox.shrink(),
+          ),
+        ),
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
+                  height: MediaQuery.sizeOf(context).height / 1.8,
+                  child: WallpaperCard(
+                    wallpaperUrlHq: widget.widgetThumbnailUrl,
+                    wallpaperUrlMid: widget.widgetThumbnailUrl,
+                    wallpaperUrlLow: widget.widgetThumbnailUrl,
+                    isWallpaper: false,
+                    lowQuality: true,
+                  ),
+                ),
+                Row(
+                  children: [
+                    const SizedBox(width: 30),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width - 153,
+                      child: Text(
+                        widget.widgetName.replaceAll("_", " "),
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.clip,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      Icons.verified_rounded,
+                      size: 35,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 2),
+                    IconButton(
+                      onPressed: insertOrDeleteFaved,
+                      tooltip: 'Favorite',
+                      iconSize: 35,
+                      icon: Icon(
+                        isFaved
+                            ? Icons.favorite_rounded
+                            : Icons.favorite_outline_rounded,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 20),
+                    SizedBox(
+                      height: 60,
+                      child: TextButton.icon(
+                        onPressed: applyWidget,
+                        label: Text(
+                          context.tr('widgetDetails.applyWidget'),
+                          style: const TextStyle(fontSize: 23),
+                        ),
+                        icon: const Icon(
+                          Icons.widgets_rounded,
+                          size: 27,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Hero(
+              tag: 'bottom-nav-bar',
+              child: Material(
+                color: Colors.transparent,
+                child: SizedBox.shrink(),
               ),
             ),
-            Row(
-              children: [
-                const SizedBox(width: 30),
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width - 153,
-                  child: Text(
-                    widget.widgetName.replaceAll("_", " "),
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.clip,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Icon(
-                  Icons.verified_rounded,
-                  size: 35,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 2),
-                IconButton(
-                  onPressed: insertOrDeleteFaved,
-                  tooltip: 'Favorite',
-                  iconSize: 35,
-                  icon: Icon(
-                    isFaved
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_outline_rounded,
-                  ),
-                ),
-              ],
+          ),
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: Hero(
+              tag: 'fab',
+              child: Material(
+                color: Colors.transparent,
+                child: SizedBox.shrink(),
+              ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(width: 20),
-                SizedBox(
-                  height: 60,
-                  child: TextButton.icon(
-                    onPressed: applyWidget,
-                    label: Text(
-                      context.tr('widgetDetails.applyWidget'),
-                      style: const TextStyle(fontSize: 23),
-                    ),
-                    icon: const Icon(
-                      Icons.widgets_rounded,
-                      size: 27,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
