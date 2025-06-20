@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
@@ -236,27 +238,74 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
             Container(
               margin: const EdgeInsets.fromLTRB(20, 50, 20, 15),
               height: MediaQuery.sizeOf(context).height / 1.8,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CustomPageRoute(
-                      builder: (context) => WallpaperFullscreenView(
-                        wallpaperUrlHq: widget.depthWallThumbnailUrl,
-                        wallpaperUrlMid: widget.depthWallThumbnailUrl,
-                        wallpaperUrlLow: widget.depthWallThumbnailUrl,
+              child: Stack(
+                children: [
+                  // Ambient background effect
+                  Positioned.fill(
+                    child: Transform.scale(
+                      scale: 1.2,
+                      child: ImageFiltered(
+                        imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Card(
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: CachedNetworkImage(
+                                imageUrl: widget.depthWallThumbnailUrl,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      duration: const Duration(milliseconds: 600),
                     ),
-                  );
-                },
-                child: WallpaperCard(
-                  wallpaperUrlHq: widget.depthWallThumbnailUrl,
-                  wallpaperUrlMid: widget.depthWallThumbnailUrl,
-                  wallpaperUrlLow: widget.depthWallThumbnailUrl,
-                  isWallpaper: true,
-                  lowQuality: true,
-                ),
+                  ),
+                  // Overlay to reduce ambient effect intensity
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Theme.of(context)
+                            .scaffoldBackgroundColor
+                            .withValues()
+                            .withAlpha(0),
+                      ),
+                    ),
+                  ),
+                  // Main wallpaper card
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CustomPageRoute(
+                          builder: (context) => WallpaperFullscreenView(
+                            wallpaperUrlHq: widget.depthWallThumbnailUrl,
+                            wallpaperUrlMid: widget.depthWallThumbnailUrl,
+                            wallpaperUrlLow: widget.depthWallThumbnailUrl,
+                          ),
+                          duration: const Duration(milliseconds: 600),
+                        ),
+                      );
+                    },
+                    child: WallpaperCard(
+                      wallpaperUrlHq: widget.depthWallThumbnailUrl,
+                      wallpaperUrlMid: widget.depthWallThumbnailUrl,
+                      wallpaperUrlLow: widget.depthWallThumbnailUrl,
+                      isWallpaper: true,
+                      lowQuality: true,
+                    ),
+                  ),
+                ],
               ),
             ),
             Row(
