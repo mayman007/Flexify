@@ -35,11 +35,17 @@ class _WidgetsCategoryViewState extends State<WidgetsCategoryView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          context.tr('widgets.categoryTitle',
-              namedArgs: {'category': widget.categoryName}),
-          style: const TextStyle(fontWeight: FontWeight.bold),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Hero(
+          tag: 'app-bar',
+          child: AppBar(
+            title: Text(
+              context.tr('widgets.categoryTitle',
+                  namedArgs: {'category': widget.categoryName}),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
         ),
       ),
       body: RefreshIndicator(
