@@ -43,6 +43,56 @@ Join our growing community on Telegram to share your setups, get inspiration, an
 |----------------------------------------------|----------------------------------------------|----------------------------------------------|
 | ![Image 4](https://i.imgur.com/qvc0og8.jpeg) | ![Image 5](https://i.imgur.com/7K5Ok3U.jpeg) | ![Image 6](https://i.imgur.com/tdXNoad.jpeg) |
 
+## Running from Source Code
+
+### Prerequisites
+
+- Flutter SDK (3.32 recommended)
+- Android Studio or VS Code with Flutter extensions
+- Firebase account
+- Git
+
+### Setup Instructions
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/mayman007/flexify.git
+   cd flexify
+   ```
+
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Firebase Setup**
+   - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/)
+   - Enable Firebase Analytics and Crashlytics
+   - Download `google-services.json` and place it in `android/app/`
+   - Add your app's package name: `com.maymanxineffable.flexify`
+
+4. **API Configuration**
+   - Setup [Flexify API](https://github.com/mayman007/flexify-api) to fetch content
+   - Add the API endpoints to Firebase remote configs
+   - The API provides wallpapers, widgets, and depth wallpapers data
+
+5. **Build and Run**
+   ```bash
+   # For debug build
+   flutter run
+   
+   # For release build
+   flutter build apk --release
+   ```
+
+### Project Structure
+
+- `lib/src/provider/` - API integration and data providers
+- `lib/src/views/` - App screens and UI
+- `lib/src/widgets/` - Custom widgets and components
+- `assets/translations/` - Localization files
+- `android/` - Android-specific configuration
+
 ## Contributing
 
 We welcome contributions to make Flexify even better! Here are the ways you can help:
