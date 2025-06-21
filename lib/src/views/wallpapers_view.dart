@@ -72,7 +72,8 @@ class _WallpapersViewState extends State<WallpapersView> {
                         "${provider.baseUrlMid}/$categoryName";
                     final String categoryUrlLow =
                         "${provider.baseUrlLow}/$categoryName";
-
+                    final String? previewImageUrl =
+                        provider.getCategoryPreviewImage(categoryName);
                     return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -94,15 +95,42 @@ class _WallpapersViewState extends State<WallpapersView> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            color: Theme.of(context).colorScheme.onPrimary,
                             clipBehavior: Clip.antiAlias,
-                            child: SizedBox(
-                              child: Center(
-                                child: Text(
-                                  categoryName,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 22,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                image: previewImageUrl != null
+                                    ? DecorationImage(
+                                        image: NetworkImage(previewImageUrl),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : null,
+                                color: previewImageUrl != null
+                                    ? null
+                                    : Theme.of(context).colorScheme.onPrimary,
+                              ),
+                              child: Container(
+                                decoration: previewImageUrl != null
+                                    ? BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            Colors.black.withOpacity(0.3),
+                                            Colors.black.withOpacity(0.7),
+                                          ],
+                                        ),
+                                      )
+                                    : null,
+                                child: Center(
+                                  child: Text(
+                                    categoryName,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22,
+                                      color: previewImageUrl != null
+                                          ? Colors.white
+                                          : null,
+                                    ),
                                   ),
                                 ),
                               ),

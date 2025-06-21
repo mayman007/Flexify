@@ -100,4 +100,26 @@ class WallpaperProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  String? getCategoryPreviewImage(String categoryName) {
+    try {
+      log('Looking for category: $categoryName');
+      log('Available categories: $_categoriesList');
+      log('Total wallpapers: ${_wallpaperNames.length}');
+
+      // Find the first wallpaper in this category from already loaded data
+      for (int i = 0; i < _wallpaperCategories.length; i++) {
+        if (_wallpaperCategories[i] == categoryName) {
+          final wallpaperName = _wallpaperNames[i];
+          final imageUrl = '$_baseUrlLow/$categoryName/$wallpaperName';
+          log('Found preview image for $categoryName: $imageUrl');
+          return imageUrl;
+        }
+      }
+      log('No wallpaper found for category: $categoryName');
+    } catch (e) {
+      log('Error getting category preview: $e');
+    }
+    return null;
+  }
 }
