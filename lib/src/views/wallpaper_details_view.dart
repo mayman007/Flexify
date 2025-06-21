@@ -431,10 +431,13 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                             ),
                           ),
                         ),
-                      ],
-                      // Main wallpaper card
+                      ], // Main wallpaper card
                       GestureDetector(
                         onTap: () {
+                          // Hide system UI before starting navigation for smooth transition
+                          SystemChrome.setEnabledSystemUIMode(
+                              SystemUiMode.immersiveSticky);
+
                           Navigator.push(
                             context,
                             CustomPageRoute(
@@ -445,7 +448,15 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
                               ),
                               duration: const Duration(milliseconds: 600),
                             ),
-                          );
+                          ).then((_) {
+                            // Restore system UI when returning from fullscreen
+                            SystemChrome.setEnabledSystemUIMode(
+                                SystemUiMode.manual,
+                                overlays: [
+                                  SystemUiOverlay.top,
+                                  SystemUiOverlay.bottom,
+                                ]);
+                          });
                         },
                         child: WallpaperCard(
                           wallpaperUrlHq: widget.wallpaperUrlHq,

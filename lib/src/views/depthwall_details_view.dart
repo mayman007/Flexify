@@ -6,10 +6,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
-import 'package:flexify/src/views/wallpaper_fullscreen_view.dart';
+import 'package:flexify/src/views/depthwall_fullscreen_view.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:path_provider/path_provider.dart';
@@ -307,21 +308,30 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
                             ),
                           ),
                         ),
-                      ],
-                      // Main wallpaper card
+                      ], // Main wallpaper card
                       GestureDetector(
                         onTap: () {
+                          // Hide system UI before starting navigation for smooth transition
+                          SystemChrome.setEnabledSystemUIMode(
+                              SystemUiMode.immersiveSticky);
+
                           Navigator.push(
                             context,
                             CustomPageRoute(
-                              builder: (context) => WallpaperFullscreenView(
-                                wallpaperUrlHq: widget.depthWallThumbnailUrl,
-                                wallpaperUrlMid: widget.depthWallThumbnailUrl,
-                                wallpaperUrlLow: widget.depthWallThumbnailUrl,
-                              ),
+                              builder: (context) => DepthWallFullscreenView(
+                                  depthWallThumbnailUrl:
+                                      widget.depthWallThumbnailUrl),
                               duration: const Duration(milliseconds: 600),
                             ),
-                          );
+                          ).then((_) {
+                            // Restore system UI when returning from fullscreen
+                            SystemChrome.setEnabledSystemUIMode(
+                                SystemUiMode.manual,
+                                overlays: [
+                                  SystemUiOverlay.top,
+                                  SystemUiOverlay.bottom,
+                                ]);
+                          });
                         },
                         child: WallpaperCard(
                           wallpaperUrlHq: widget.depthWallThumbnailUrl,
