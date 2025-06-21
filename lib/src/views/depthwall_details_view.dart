@@ -15,6 +15,7 @@ import 'package:installed_apps/installed_apps.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DepthWallDetailsView extends StatefulWidget {
   final String depthWallUrl;
@@ -36,6 +37,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
   DatabaseHelper sqlDb = DatabaseHelper();
 
   bool isFaved = false;
+  bool isAmbientEffectEnabled = true;
 
   checkIfFaved() async {
     var table = await sqlDb.selectData("SELECT * FROM 'lockscreenfavs'");
@@ -80,6 +82,14 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
       );
       AnalyticsEngine.depthWallFaved(widget.depthWallName);
     }
+  }
+
+  getAmbientEffectPref() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? ambientEffectEnabled = prefs.getBool('isAmbientEffectEnabled');
+    setState(() {
+      isAmbientEffectEnabled = ambientEffectEnabled ?? true;
+    });
   }
 
   showLoaderDialog(BuildContext context) {
@@ -226,6 +236,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
   void initState() {
     AnalyticsEngine.pageOpened("Depth Wall Details View");
     checkIfFaved();
+    getAmbientEffectPref();
     super.initState();
   }
 
@@ -253,48 +264,50 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
                   child: Stack(
                     children: [
                       // Ambient background effect
-                      Positioned.fill(
-                        child: Transform.scale(
-                          scale: 1.2,
-                          child: ImageFiltered(
-                            imageFilter:
-                                ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: Card(
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  clipBehavior: Clip.antiAlias,
-                                  child: CachedNetworkImage(
-                                    imageUrl: widget.depthWallThumbnailUrl,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
+                      if (isAmbientEffectEnabled) ...[
+                        Positioned.fill(
+                          child: Transform.scale(
+                            scale: 1.2,
+                            child: ImageFiltered(
+                              imageFilter:
+                                  ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Card(
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget.depthWallThumbnailUrl,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      // Overlay to reduce ambient effect intensity
-                      Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Theme.of(context)
-                                .scaffoldBackgroundColor
-                                .withValues()
-                                .withAlpha(0),
+                        // Overlay to reduce ambient effect intensity
+                        Positioned.fill(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Theme.of(context)
+                                  .scaffoldBackgroundColor
+                                  .withValues()
+                                  .withAlpha(0),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                       // Main wallpaper card
                       GestureDetector(
                         onTap: () {

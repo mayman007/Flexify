@@ -29,11 +29,11 @@ class SettingsView extends StatefulWidget {
 class _SettingsViewState extends State<SettingsView> {
   bool isAndroid12OrHigherValue = true;
   bool isNotificationPermissionGranted = true;
-
   String colorSchemeValue = 'Material You';
   String themeValue = 'System Mode';
   String languageValue = 'English';
   bool isPureBlackEnabledValue = false;
+  bool isAmbientEffectEnabledValue = true;
 
   Future isAndroid12OrHigher() async {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -54,6 +54,7 @@ class _SettingsViewState extends State<SettingsView> {
     String? scheme = prefs.getString('schemeMode');
     String? theme = prefs.getString('themeMode');
     bool? isPureBlackEnabled = prefs.getBool('isPureBlackEnabled');
+    bool? isAmbientEffectEnabled = prefs.getBool('isAmbientEffectEnabled');
 
     setState(() {
       if (scheme == null || scheme == 'material_you') {
@@ -83,6 +84,12 @@ class _SettingsViewState extends State<SettingsView> {
         isPureBlackEnabledValue = false;
       } else if (isPureBlackEnabled == true) {
         isPureBlackEnabledValue = true;
+      }
+
+      if (isAmbientEffectEnabled == null || isAmbientEffectEnabled == true) {
+        isAmbientEffectEnabledValue = true;
+      } else {
+        isAmbientEffectEnabledValue = false;
       }
 
       // Set language value based on current locale
@@ -579,6 +586,36 @@ class _SettingsViewState extends State<SettingsView> {
                             'isPureBlackEnabled', isPureBlackEnabled);
                         setState(() {
                           isPureBlackEnabledValue = isPureBlackEnabled;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      context.tr('settings.ambientEffect'),
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Switch(
+                      value: isAmbientEffectEnabledValue == true,
+                      onChanged: (newValue) async {
+                        final SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        bool isAmbientEffectEnabled;
+                        if (newValue) {
+                          isAmbientEffectEnabled = true;
+                        } else {
+                          isAmbientEffectEnabled = false;
+                        }
+                        await prefs.setBool(
+                            'isAmbientEffectEnabled', isAmbientEffectEnabled);
+                        setState(() {
+                          isAmbientEffectEnabledValue = isAmbientEffectEnabled;
                         });
                       },
                     ),

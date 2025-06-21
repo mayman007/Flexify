@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'dart:ui';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WallpaperFullscreenView extends StatefulWidget {
   final String wallpaperUrlHq;
@@ -23,13 +24,22 @@ class WallpaperFullscreenView extends StatefulWidget {
 
 class _WallpaperFullscreenViewState extends State<WallpaperFullscreenView> {
   late TransformationController _controller;
-
+  bool isAmbientEffectEnabled = true;
   @override
   void initState() {
     AnalyticsEngine.pageOpened("Image Fullscreen View");
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     _controller = TransformationController();
+    getAmbientEffectPref();
     super.initState();
+  }
+
+  getAmbientEffectPref() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? ambientEffectEnabled = prefs.getBool('isAmbientEffectEnabled');
+    setState(() {
+      isAmbientEffectEnabled = ambientEffectEnabled ?? true;
+    });
   }
 
   @override
@@ -49,26 +59,28 @@ class _WallpaperFullscreenViewState extends State<WallpaperFullscreenView> {
       body: Stack(
         children: [
           // Ambient background effect
-          Positioned.fill(
-            child: Transform.scale(
-              scale: 1.2,
-              child: ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-                child: CachedNetworkImage(
-                  imageUrl: widget.wallpaperUrlLow,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
+          if (isAmbientEffectEnabled) ...[
+            Positioned.fill(
+              child: Transform.scale(
+                scale: 1.2,
+                child: ImageFiltered(
+                  imageFilter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.wallpaperUrlLow,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                  ),
                 ),
               ),
             ),
-          ),
-          // Overlay to reduce ambient effect intensity
-          Positioned.fill(
-            child: Container(
-              color: Colors.black.withValues(alpha: 0.3),
+            // Overlay to reduce ambient effect intensity
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withValues(alpha: 0.3),
+              ),
             ),
-          ),
+          ],
           // Main interactive wallpaper
           GestureDetector(
             onTap: () {

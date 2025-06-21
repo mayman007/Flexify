@@ -106,6 +106,7 @@
         "purple": "بنفسجي",
         "red": "أحمر",
         "pureBlack": "أسود خالص",
+        "ambientEffect": "التأثير المحيطي",
         "deleteCache": "حذف التخزين المؤقت ({size} MB)",
         "delete": "حذف",
         "deleteCacheTitle": "حذف التخزين المؤقت؟",

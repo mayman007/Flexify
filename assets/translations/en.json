@@ -106,6 +106,7 @@
         "purple": "Purple",
         "red": "Red",
         "pureBlack": "Pure Black",
+        "ambientEffect": "Ambient Effect",
         "deleteCache": "Delete Cache ({size} MB)",
         "delete": "Delete",
         "deleteCacheTitle": "Delete Cache?",
