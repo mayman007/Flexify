@@ -1,7 +1,6 @@
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/views/widget_details_view.dart';
 import 'package:flexify/src/views/widgets_category_view.dart';
-import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
@@ -213,12 +212,6 @@ class _WidgetsViewState extends State<WidgetsView> {
               );
             }
           },
-        ),
-      ),
-      bottomNavigationBar: Hero(
-        tag: 'bottom-nav-bar',
-        child: const MaterialNavBar(
-          selectedIndex: 2,
         ),
       ),
       floatingActionButton: Hero(

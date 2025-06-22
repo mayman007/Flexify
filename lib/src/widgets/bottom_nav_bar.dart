@@ -9,10 +9,12 @@ import 'package:easy_localization/easy_localization.dart';
 
 class MaterialNavBar extends StatefulWidget {
   final int selectedIndex;
+  final PageController? pageController;
 
   const MaterialNavBar({
     super.key,
     required this.selectedIndex,
+    this.pageController,
   });
 
   @override
@@ -25,56 +27,66 @@ class _MaterialNavBarState extends State<MaterialNavBar> {
     setState(() {
       selectedIndex = index;
     });
-    if (index == 0) {
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const WallpapersView(),
-          transitionDuration: const Duration(milliseconds: 200),
-          transitionsBuilder: (_, a, __, c) =>
-              FadeTransition(opacity: a, child: c),
-        ),
+
+    if (widget.pageController != null) {
+      widget.pageController!.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
       );
-    } else if (index == 1) {
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const DepthWallView(),
-          transitionDuration: const Duration(milliseconds: 200),
-          transitionsBuilder: (_, a, __, c) =>
-              FadeTransition(opacity: a, child: c),
-        ),
-      );
-    } else if (index == 2) {
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const WidgetsView(),
-          transitionDuration: const Duration(milliseconds: 200),
-          transitionsBuilder: (_, a, __, c) =>
-              FadeTransition(opacity: a, child: c),
-        ),
-      );
-    } else if (index == 3) {
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const FavoritesView(),
-          transitionDuration: const Duration(milliseconds: 200),
-          transitionsBuilder: (_, a, __, c) =>
-              FadeTransition(opacity: a, child: c),
-        ),
-      );
-    } else if (index == 4) {
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const SettingsView(),
-          transitionDuration: const Duration(milliseconds: 200),
-          transitionsBuilder: (_, a, __, c) =>
-              FadeTransition(opacity: a, child: c),
-        ),
-      );
+    } else {
+      // Fallback to old navigation method for settings and other views
+      if (index == 0) {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => const WallpapersView(),
+            transitionDuration: const Duration(milliseconds: 200),
+            transitionsBuilder: (_, a, __, c) =>
+                FadeTransition(opacity: a, child: c),
+          ),
+        );
+      } else if (index == 1) {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => const DepthWallView(),
+            transitionDuration: const Duration(milliseconds: 200),
+            transitionsBuilder: (_, a, __, c) =>
+                FadeTransition(opacity: a, child: c),
+          ),
+        );
+      } else if (index == 2) {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => const WidgetsView(),
+            transitionDuration: const Duration(milliseconds: 200),
+            transitionsBuilder: (_, a, __, c) =>
+                FadeTransition(opacity: a, child: c),
+          ),
+        );
+      } else if (index == 3) {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => const FavoritesView(),
+            transitionDuration: const Duration(milliseconds: 200),
+            transitionsBuilder: (_, a, __, c) =>
+                FadeTransition(opacity: a, child: c),
+          ),
+        );
+      } else if (index == 4) {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => const SettingsView(),
+            transitionDuration: const Duration(milliseconds: 200),
+            transitionsBuilder: (_, a, __, c) =>
+                FadeTransition(opacity: a, child: c),
+          ),
+        );
+      }
     }
   }
 

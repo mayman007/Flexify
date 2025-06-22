@@ -4,7 +4,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/views/about_us_view.dart';
-import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -484,255 +483,243 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        systemNavigationBarColor: Theme.of(context).colorScheme.surface,
-        systemNavigationBarDividerColor: Theme.of(context).colorScheme.surface,
-        systemNavigationBarIconBrightness:
-            Theme.of(context).brightness == Brightness.light
-                ? Brightness.dark
-                : Brightness.light,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          context.tr('settings.title'),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        ),
       ),
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              context.tr('settings.title'),
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-            ),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.tr('settings.language'),
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    ElevatedButton(
-                      onPressed: showLanguageDialog,
-                      child: Text(languageValue == 'English'
-                          ? 'English'
-                          : languageValue == 'Arabic'
-                              ? 'العربية'
-                              : 'English'),
-                    ),
-                  ],
+                Text(
+                  context.tr('settings.language'),
+                  style: const TextStyle(fontSize: 18),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.tr('settings.generalTheme'),
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    ElevatedButton(
-                      onPressed: showThemeDialog,
-                      child: Text(themeValue == 'System Mode'
-                          ? context.tr('settings.system')
-                          : themeValue == 'Light Mode'
-                              ? context.tr('settings.light')
-                              : context.tr('settings.dark')),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.tr('settings.colorScheme'),
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    ElevatedButton(
-                      onPressed: showColorSchemesDialog,
-                      child: Text(colorSchemeValue == 'Blue Scheme'
-                          ? context.tr('settings.blue')
-                          : colorSchemeValue == 'Green Scheme'
-                              ? context.tr('settings.green')
-                              : colorSchemeValue == 'Purble Scheme'
-                                  ? context.tr('settings.purple')
-                                  : colorSchemeValue == 'Red Scheme'
-                                      ? context.tr('settings.red')
-                                      : colorSchemeValue == 'Material You'
-                                          ? context.tr('settings.dynamic')
-                                          : ''),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.tr('settings.pureBlack'),
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Switch(
-                      value: isPureBlackEnabledValue == true,
-                      onChanged: (newValue) async {
-                        final SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        bool isPureBlackEnabled;
-                        if (newValue) {
-                          isPureBlackEnabled = true;
-                        } else {
-                          isPureBlackEnabled = false;
-                        }
-                        await prefs.setBool(
-                            'isPureBlackEnabled', isPureBlackEnabled);
-                        setState(() {
-                          isPureBlackEnabledValue = isPureBlackEnabled;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.tr('settings.ambientEffect'),
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Switch(
-                      value: isAmbientEffectEnabledValue == true,
-                      onChanged: (newValue) async {
-                        final SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        bool isAmbientEffectEnabled;
-                        if (newValue) {
-                          isAmbientEffectEnabled = true;
-                        } else {
-                          isAmbientEffectEnabled = false;
-                        }
-                        await prefs.setBool(
-                            'isAmbientEffectEnabled', isAmbientEffectEnabled);
-                        setState(() {
-                          isAmbientEffectEnabledValue = isAmbientEffectEnabled;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.tr('settings.deleteCache',
-                          namedArgs: {'size': cacheSize}),
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        await showDeleteCacheDialog(context);
-                      },
-                      child: Text(context.tr('settings.delete')),
-                    )
-                  ],
-                ),
-                !isNotificationPermissionGranted
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            context.tr('settings.enableNotifications'),
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              await requestNotificationPermission();
-                            },
-                            child: Text(context.tr('settings.enable')),
-                          )
-                        ],
-                      )
-                    : const SizedBox(),
-                InkWell(
-                  onTap: () async {
-                    await launchUrl(Uri.parse("https://t.me/Flexify_updates"));
-                    AnalyticsEngine.joinedTelegramChannal();
-                  },
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 13,
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.telegram_rounded,
-                            size: 28,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            context.tr('settings.joinTelegramChannel'),
-                            style: TextStyle(fontSize: 22),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 13,
-                      ),
-                    ],
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      CustomPageRoute(
-                        builder: (context) => const AboutUsView(),
-                        duration: const Duration(milliseconds: 600),
-                      ),
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 13,
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline_rounded,
-                            size: 28,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            context.tr('settings.aboutUs'),
-                            style: TextStyle(fontSize: 22),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 13,
-                      ),
-                    ],
-                  ),
+                ElevatedButton(
+                  onPressed: showLanguageDialog,
+                  child: Text(languageValue == 'English'
+                      ? 'English'
+                      : languageValue == 'Arabic'
+                          ? 'العربية'
+                          : 'English'),
                 ),
               ],
             ),
-          ),
-          bottomNavigationBar: const MaterialNavBar(
-            selectedIndex: 4,
-          )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.tr('settings.generalTheme'),
+                  style: const TextStyle(fontSize: 18),
+                ),
+                ElevatedButton(
+                  onPressed: showThemeDialog,
+                  child: Text(themeValue == 'System Mode'
+                      ? context.tr('settings.system')
+                      : themeValue == 'Light Mode'
+                          ? context.tr('settings.light')
+                          : context.tr('settings.dark')),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.tr('settings.colorScheme'),
+                  style: const TextStyle(fontSize: 18),
+                ),
+                ElevatedButton(
+                  onPressed: showColorSchemesDialog,
+                  child: Text(colorSchemeValue == 'Blue Scheme'
+                      ? context.tr('settings.blue')
+                      : colorSchemeValue == 'Green Scheme'
+                          ? context.tr('settings.green')
+                          : colorSchemeValue == 'Purble Scheme'
+                              ? context.tr('settings.purple')
+                              : colorSchemeValue == 'Red Scheme'
+                                  ? context.tr('settings.red')
+                                  : colorSchemeValue == 'Material You'
+                                      ? context.tr('settings.dynamic')
+                                      : ''),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.tr('settings.pureBlack'),
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Switch(
+                  value: isPureBlackEnabledValue == true,
+                  onChanged: (newValue) async {
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    bool isPureBlackEnabled;
+                    if (newValue) {
+                      isPureBlackEnabled = true;
+                    } else {
+                      isPureBlackEnabled = false;
+                    }
+                    await prefs.setBool(
+                        'isPureBlackEnabled', isPureBlackEnabled);
+                    setState(() {
+                      isPureBlackEnabledValue = isPureBlackEnabled;
+                    });
+                  },
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.tr('settings.ambientEffect'),
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Switch(
+                  value: isAmbientEffectEnabledValue == true,
+                  onChanged: (newValue) async {
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    bool isAmbientEffectEnabled;
+                    if (newValue) {
+                      isAmbientEffectEnabled = true;
+                    } else {
+                      isAmbientEffectEnabled = false;
+                    }
+                    await prefs.setBool(
+                        'isAmbientEffectEnabled', isAmbientEffectEnabled);
+                    setState(() {
+                      isAmbientEffectEnabledValue = isAmbientEffectEnabled;
+                    });
+                  },
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.tr('settings.deleteCache',
+                      namedArgs: {'size': cacheSize}),
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await showDeleteCacheDialog(context);
+                  },
+                  child: Text(context.tr('settings.delete')),
+                )
+              ],
+            ),
+            !isNotificationPermissionGranted
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        context.tr('settings.enableNotifications'),
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await requestNotificationPermission();
+                        },
+                        child: Text(context.tr('settings.enable')),
+                      )
+                    ],
+                  )
+                : const SizedBox(),
+            InkWell(
+              onTap: () async {
+                await launchUrl(Uri.parse("https://t.me/Flexify_updates"));
+                AnalyticsEngine.joinedTelegramChannal();
+              },
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 13,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.telegram_rounded,
+                        size: 28,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        context.tr('settings.joinTelegramChannel'),
+                        style: TextStyle(fontSize: 22),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 13,
+                  ),
+                ],
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CustomPageRoute(
+                    builder: (context) => const AboutUsView(),
+                    duration: const Duration(milliseconds: 600),
+                  ),
+                );
+              },
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 13,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline_rounded,
+                        size: 28,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        context.tr('settings.aboutUs'),
+                        style: TextStyle(fontSize: 22),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 13,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -3,11 +3,11 @@ import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/views/depthwall_details_view.dart';
 import 'package:flexify/src/views/wallpaper_details_view.dart';
 import 'package:flexify/src/views/widget_details_view.dart';
-import 'package:flexify/src/widgets/bottom_nav_bar.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flexify/src/app.dart';
 
 class FavoritesView extends StatefulWidget {
   const FavoritesView({super.key});
@@ -18,11 +18,33 @@ class FavoritesView extends StatefulWidget {
   State<FavoritesView> createState() => _FavoritesViewState();
 }
 
-class _FavoritesViewState extends State<FavoritesView> {
+class _FavoritesViewState extends State<FavoritesView> with RouteAware {
   DatabaseHelper sqlDb = DatabaseHelper();
   List favedWalls = [];
   List favedWidgets = [];
   List favedDepthWall = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    fetchFavedWallpapers();
+    fetchFavedWidgets();
+    fetchFavedDepthWalls();
+  }
 
   Future fetchFavedWallpapers() async {
     setState(() {
@@ -348,9 +370,6 @@ class _FavoritesViewState extends State<FavoritesView> {
                     ),
             ),
           ],
-        ),
-        bottomNavigationBar: const MaterialNavBar(
-          selectedIndex: 3,
         ),
       ),
     );

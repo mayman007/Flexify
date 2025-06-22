@@ -1,10 +1,13 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flexify/src/views/main_navigation_view.dart';
 import 'package:flexify/src/views/wallpapers_view.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'views/settings_view.dart';
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 /// The Widget that configures your application.
 class MyApp extends StatefulWidget {
@@ -114,6 +117,7 @@ class _MyAppState extends State<MyApp> {
           locale: context.locale,
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
+          navigatorObservers: [routeObserver],
           // Providing a restorationScopeId allows the Navigator built by the
           // MaterialApp to restore the navigation stack when a user leaves and
           // returns to the app after it has been killed while running in the
@@ -151,10 +155,10 @@ class _MyAppState extends State<MyApp> {
               builder: (BuildContext context) {
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
-                    return const SettingsView();
+                    return const MainNavigationView(initialIndex: 4);
                   case WallpapersView.routeName:
                   default:
-                    return const WallpapersView();
+                    return const MainNavigationView();
                 }
               },
             );
