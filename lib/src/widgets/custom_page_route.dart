@@ -8,4 +8,7 @@ class CustomPageRoute<T> extends MaterialPageRoute<T> {
 
   @override
   Duration get transitionDuration => duration;
+
+  @override
+  Duration get reverseTransitionDuration => duration;
 }
