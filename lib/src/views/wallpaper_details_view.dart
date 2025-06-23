@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
+import 'package:flexify/src/database/favorites_notifier.dart';
 import 'package:flexify/src/views/wallpaper_fullscreen_view.dart';
 import 'package:flexify/src/widgets/color_container.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
@@ -56,6 +57,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
   DatabaseHelper sqlDb = DatabaseHelper();
   bool saveImageCoolDown = false;
   bool isAmbientEffectEnabled = true;
+  final FavoritesNotifier _favoritesNotifier = FavoritesNotifier();
 
   /// Saves the network image to the device's gallery.
   saveNetworkImage() async {
@@ -326,6 +328,9 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       );
       AnalyticsEngine.wallpaperFaved(widget.wallpaperName);
     }
+
+    // Notify that favorites have changed
+    _favoritesNotifier.notifyFavoritesChanged();
   }
 
   Color? containerColor1 = const Color.fromARGB(255, 0, 0, 0);

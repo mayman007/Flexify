@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
+import 'package:flexify/src/database/favorites_notifier.dart';
 import 'package:flexify/src/views/depthwall_fullscreen_view.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
@@ -41,6 +42,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
 
   bool isFaved = false;
   bool isAmbientEffectEnabled = true;
+  final FavoritesNotifier _favoritesNotifier = FavoritesNotifier();
 
   /// Checks if the depth wallpaper is already in the favorites database.
   checkIfFaved() async {
@@ -55,7 +57,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
     }
   }
 
-  /// Inserts or deletes the depth wallpaper from the favorites database.
+  /// Inserts or deletes the depth wall from the favorites database.
   insertOrDeleteFaved() async {
     if (isFaved) {
       await sqlDb.deleteData(
@@ -87,6 +89,9 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
       );
       AnalyticsEngine.depthWallFaved(widget.depthWallName);
     }
+
+    // Notify that favorites have changed
+    _favoritesNotifier.notifyFavoritesChanged();
   }
 
   /// Retrieves the user's preference for the ambient background effect.

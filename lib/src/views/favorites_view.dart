@@ -1,5 +1,6 @@
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
+import 'package:flexify/src/database/favorites_notifier.dart';
 import 'package:flexify/src/views/depthwall_details_view.dart';
 import 'package:flexify/src/views/wallpaper_details_view.dart';
 import 'package:flexify/src/views/widget_details_view.dart';
@@ -23,6 +24,7 @@ class _FavoritesViewState extends State<FavoritesView> with RouteAware {
   List favedWalls = [];
   List favedWidgets = [];
   List favedDepthWall = [];
+  final FavoritesNotifier _favoritesNotifier = FavoritesNotifier();
 
   @override
   void didChangeDependencies() {
@@ -36,11 +38,18 @@ class _FavoritesViewState extends State<FavoritesView> with RouteAware {
   @override
   void dispose() {
     routeObserver.unsubscribe(this);
+    _favoritesNotifier.removeListener(_onFavoritesChanged);
     super.dispose();
   }
 
   @override
   void didPopNext() {
+    fetchFavedWallpapers();
+    fetchFavedWidgets();
+    fetchFavedDepthWalls();
+  }
+
+  void _onFavoritesChanged() {
     fetchFavedWallpapers();
     fetchFavedWidgets();
     fetchFavedDepthWalls();
@@ -85,6 +94,7 @@ class _FavoritesViewState extends State<FavoritesView> with RouteAware {
   @override
   void initState() {
     AnalyticsEngine.pageOpened("Favorites View");
+    _favoritesNotifier.addListener(_onFavoritesChanged);
     fetchFavedWallpapers();
     fetchFavedWidgets();
     fetchFavedDepthWalls();

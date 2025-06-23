@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
+import 'package:flexify/src/database/favorites_notifier.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -34,6 +35,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
   DatabaseHelper sqlDb = DatabaseHelper();
 
   bool isFaved = false;
+  final FavoritesNotifier _favoritesNotifier = FavoritesNotifier();
 
   /// Checks if the widget is already in the favorites database.
   checkIfFaved() async {
@@ -80,6 +82,9 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
       );
       AnalyticsEngine.widgetFaved(widget.widgetName);
     }
+
+    // Notify that favorites have changed
+    _favoritesNotifier.notifyFavoritesChanged();
   }
 
   /// Shows a loading dialog.
