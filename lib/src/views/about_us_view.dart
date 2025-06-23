@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// A view that displays information about the app, its creators, and relevant links.
 class AboutUsView extends StatefulWidget {
@@ -17,6 +18,16 @@ class _AboutUsViewState extends State<AboutUsView> {
   void initState() {
     AnalyticsEngine.pageOpened("About Us View");
     super.initState();
+  }
+
+  Future<void> _shareApp() async {
+    const String playStoreUrl =
+        "https://play.google.com/store/apps/details?id=com.maymanxineffable.flexify";
+    const String shareText =
+        "Polish your phone with Flexify's amazing set of wallpapers and widgets.";
+
+    await Share.share('$shareText\n\nPlay Store: $playStoreUrl');
+    AnalyticsEngine.sharedApp();
   }
 
   @override
@@ -176,7 +187,7 @@ class _AboutUsViewState extends State<AboutUsView> {
                 ],
               ),
               Card(
-                margin: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -272,20 +283,35 @@ class _AboutUsViewState extends State<AboutUsView> {
                   ),
                 ),
               ),
-              RichText(
-                text: TextSpan(
-                  text: context.tr('aboutUs.privacyPolicy'),
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: "Oduda",
-                    color: Theme.of(context).colorScheme.inversePrimary,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: _shareApp,
+                    child: Text(
+                      context.tr('aboutUs.shareApp'),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: "Oduda",
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                    ),
                   ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () async {
+                  TextButton(
+                    onPressed: () async {
                       await launchUrl(Uri.parse(
                           "https://flexify-privacy-policy.pages.dev"));
                     },
-                ),
+                    child: Text(
+                      context.tr('aboutUs.privacyPolicy'),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: "Oduda",
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 10,

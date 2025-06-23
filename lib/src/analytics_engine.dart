@@ -112,4 +112,11 @@ class AnalyticsEngine {
       name: "clickedOnDonationLink",
     );
   }
+
+  /// Logs an event when the user clicks the donation link.
+  static void sharedApp() async {
+    return _instance.logEvent(
+      name: "sharedApp",
+    );
+  }
 }
