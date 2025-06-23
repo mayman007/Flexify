@@ -113,7 +113,7 @@ class AnalyticsEngine {
     );
   }
 
-  /// Logs an event when the user clicks the donation link.
+  /// Logs an event when the user clicks the share app link.
   static void sharedApp() async {
     return _instance.logEvent(
       name: "sharedApp",
