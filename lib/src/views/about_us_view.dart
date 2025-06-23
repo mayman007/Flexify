@@ -26,7 +26,9 @@ class _AboutUsViewState extends State<AboutUsView> {
     const String shareText =
         "Polish your phone with Flexify's amazing set of wallpapers and widgets.";
 
-    await Share.share('$shareText\n\nPlay Store: $playStoreUrl');
+    await SharePlus.instance.share(ShareParams(
+        title: shareText,
+        text: '$shareText\n\nDownload Flexify From Play Store: $playStoreUrl'));
     AnalyticsEngine.sharedApp();
   }
 
