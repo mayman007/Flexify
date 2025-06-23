@@ -73,6 +73,18 @@ class _SettingsViewState extends State<SettingsView> {
         colorSchemeValue = 'Purble Scheme';
       } else if (scheme == 'red') {
         colorSchemeValue = 'Red Scheme';
+      } else if (scheme == 'orange') {
+        colorSchemeValue = 'Orange Scheme';
+      } else if (scheme == 'yellow') {
+        colorSchemeValue = 'Yellow Scheme';
+      } else if (scheme == 'pink') {
+        colorSchemeValue = 'Pink Scheme';
+      } else if (scheme == 'teal') {
+        colorSchemeValue = 'Teal Scheme';
+      } else if (scheme == 'indigo') {
+        colorSchemeValue = 'Indigo Scheme';
+      } else if (scheme == 'brown') {
+        colorSchemeValue = 'Brown Scheme';
       }
       if (theme == null || theme == 'system') {
         themeValue = 'System Mode';
@@ -327,6 +339,90 @@ class _SettingsViewState extends State<SettingsView> {
                 if (context.mounted) Navigator.of(context).pop();
               },
             ),
+            RadioListTile<String>(
+              title: Text(context.tr('settings.orange')),
+              value: 'Orange Scheme',
+              groupValue: colorSchemeValue,
+              onChanged: (value) async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                await prefs.setString('schemeMode', 'orange');
+                setState(() {
+                  colorSchemeValue = 'Orange Scheme';
+                });
+                if (context.mounted) Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<String>(
+              title: Text(context.tr('settings.yellow')),
+              value: 'Yellow Scheme',
+              groupValue: colorSchemeValue,
+              onChanged: (value) async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                await prefs.setString('schemeMode', 'yellow');
+                setState(() {
+                  colorSchemeValue = 'Yellow Scheme';
+                });
+                if (context.mounted) Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<String>(
+              title: Text(context.tr('settings.pink')),
+              value: 'Pink Scheme',
+              groupValue: colorSchemeValue,
+              onChanged: (value) async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                await prefs.setString('schemeMode', 'pink');
+                setState(() {
+                  colorSchemeValue = 'Pink Scheme';
+                });
+                if (context.mounted) Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<String>(
+              title: Text(context.tr('settings.teal')),
+              value: 'Teal Scheme',
+              groupValue: colorSchemeValue,
+              onChanged: (value) async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                await prefs.setString('schemeMode', 'teal');
+                setState(() {
+                  colorSchemeValue = 'Teal Scheme';
+                });
+                if (context.mounted) Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<String>(
+              title: Text(context.tr('settings.indigo')),
+              value: 'Indigo Scheme',
+              groupValue: colorSchemeValue,
+              onChanged: (value) async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                await prefs.setString('schemeMode', 'indigo');
+                setState(() {
+                  colorSchemeValue = 'Indigo Scheme';
+                });
+                if (context.mounted) Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<String>(
+              title: Text(context.tr('settings.brown')),
+              value: 'Brown Scheme',
+              groupValue: colorSchemeValue,
+              onChanged: (value) async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                await prefs.setString('schemeMode', 'brown');
+                setState(() {
+                  colorSchemeValue = 'Brown Scheme';
+                });
+                if (context.mounted) Navigator.of(context).pop();
+              },
+            ),
           ],
         )));
       },
@@ -558,9 +654,28 @@ class _SettingsViewState extends State<SettingsView> {
                               ? context.tr('settings.purple')
                               : colorSchemeValue == 'Red Scheme'
                                   ? context.tr('settings.red')
-                                  : colorSchemeValue == 'Material You'
-                                      ? context.tr('settings.dynamic')
-                                      : ''),
+                                  : colorSchemeValue == 'Orange Scheme'
+                                      ? context.tr('settings.orange')
+                                      : colorSchemeValue == 'Yellow Scheme'
+                                          ? context.tr('settings.yellow')
+                                          : colorSchemeValue == 'Pink Scheme'
+                                              ? context.tr('settings.pink')
+                                              : colorSchemeValue ==
+                                                      'Teal Scheme'
+                                                  ? context.tr('settings.teal')
+                                                  : colorSchemeValue ==
+                                                          'Indigo Scheme'
+                                                      ? context
+                                                          .tr('settings.indigo')
+                                                      : colorSchemeValue ==
+                                                              'Brown Scheme'
+                                                          ? context.tr(
+                                                              'settings.brown')
+                                                          : colorSchemeValue ==
+                                                                  'Material You'
+                                                              ? context.tr(
+                                                                  'settings.dynamic')
+                                                              : ''),
                 ),
               ],
             ),

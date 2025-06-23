@@ -78,6 +78,30 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         appColorSchemeSeed = Colors.red;
       });
+    } else if (schemeModePref == 'orange') {
+      setState(() {
+        appColorSchemeSeed = Colors.orange;
+      });
+    } else if (schemeModePref == 'yellow') {
+      setState(() {
+        appColorSchemeSeed = Colors.yellow;
+      });
+    } else if (schemeModePref == 'pink') {
+      setState(() {
+        appColorSchemeSeed = Colors.pink;
+      });
+    } else if (schemeModePref == 'teal') {
+      setState(() {
+        appColorSchemeSeed = Colors.teal;
+      });
+    } else if (schemeModePref == 'indigo') {
+      setState(() {
+        appColorSchemeSeed = Colors.indigo;
+      });
+    } else if (schemeModePref == 'brown') {
+      setState(() {
+        appColorSchemeSeed = Colors.brown;
+      });
     }
 
     if (themeModePref == 'system') {
