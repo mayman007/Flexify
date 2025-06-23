@@ -24,6 +24,8 @@ class WallpaperFullscreenView extends StatefulWidget {
 class _WallpaperFullscreenViewState extends State<WallpaperFullscreenView> {
   late TransformationController _controller;
   bool isAmbientEffectEnabled = true;
+  bool _isLoaded = false;
+
   @override
   void initState() {
     AnalyticsEngine.pageOpened("Image Fullscreen View");
@@ -37,6 +39,7 @@ class _WallpaperFullscreenViewState extends State<WallpaperFullscreenView> {
     bool? ambientEffectEnabled = prefs.getBool('isAmbientEffectEnabled');
     setState(() {
       isAmbientEffectEnabled = ambientEffectEnabled ?? true;
+      _isLoaded = true;
     });
   }
 
@@ -48,6 +51,13 @@ class _WallpaperFullscreenViewState extends State<WallpaperFullscreenView> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_isLoaded) {
+      return const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
