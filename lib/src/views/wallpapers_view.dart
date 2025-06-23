@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../provider/wallpaper_provider.dart';
 
+/// A view that displays a grid of wallpapers.
 class WallpapersView extends StatefulWidget {
   const WallpapersView({super.key});
 
@@ -18,7 +19,9 @@ class WallpapersView extends StatefulWidget {
   State<WallpapersView> createState() => _WallpapersViewState();
 }
 
+/// State for [WallpapersView].
 class _WallpapersViewState extends State<WallpapersView> {
+  /// Caches preview image URLs for each category.
   final Map<String, String?> _categoryPreviewUrls = {};
 
   @override
@@ -36,12 +39,14 @@ class _WallpapersViewState extends State<WallpapersView> {
     super.initState();
   }
 
+  /// Fetches wallpaper data from the [WallpaperProvider].
   Future fetchWallpapers() async {
     final wallpaperProvider =
         Provider.of<WallpaperProvider>(context, listen: false);
     wallpaperProvider.fetchWallpaperData();
   }
 
+  /// Displays a modal bottom sheet with a list of wallpaper categories.
   _modalBottomSheetMenu() {
     showModalBottomSheet(
         context: context,

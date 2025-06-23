@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+/// A view that displays wallpapers from a specific category.
 class WallpapersCategoryView extends StatefulWidget {
   final String categoryName;
   final String categoryUrlHq;
@@ -27,7 +28,9 @@ class WallpapersCategoryView extends StatefulWidget {
   State<WallpapersCategoryView> createState() => _WallpapersCategoryViewState();
 }
 
+/// State for [WallpapersCategoryView].
 class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
+  /// Fetches wallpaper data for the current category from the [WallpaperCategoryProvider].
   Future fetchWallpapers() async {
     final wallpaperProvider =
         Provider.of<WallpaperCategoryProvider>(context, listen: false);

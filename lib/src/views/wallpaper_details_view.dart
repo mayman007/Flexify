@@ -22,6 +22,7 @@ import 'package:wallpaper_manager_plus/wallpaper_manager_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// A view that displays the details of a selected wallpaper.
 class WallpaperDetailsView extends StatefulWidget {
   final String wallpaperUrlHq;
   final String wallpaperUrlMid;
@@ -50,11 +51,13 @@ class WallpaperDetailsView extends StatefulWidget {
   State<WallpaperDetailsView> createState() => _WallpaperDetailsViewState();
 }
 
+/// State for [WallpaperDetailsView].
 class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
   DatabaseHelper sqlDb = DatabaseHelper();
   bool saveImageCoolDown = false;
   bool isAmbientEffectEnabled = true;
 
+  /// Saves the network image to the device's gallery.
   saveNetworkImage() async {
     if (saveImageCoolDown) {
       showToast(
@@ -95,6 +98,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
     }
   }
 
+  /// Shows a loading dialog.
   showLoaderDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
       content: Row(
@@ -115,6 +119,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
     );
   }
 
+  /// Sets the wallpaper on the device's home screen, lock screen, or both.
   Future<void> setAsWallpaper() async {
     showLoaderDialog(context); // Show loading dialog
 
@@ -187,6 +192,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
 
   int wallLocation = 0;
 
+  /// Shows a dialog to let the user choose where to set the wallpaper.
   Future<void> showSetWallpaperDialog() async {
     return showDialog<void>(
       context: context,
@@ -265,6 +271,8 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
   }
 
   bool isFaved = false;
+
+  /// Checks if the wallpaper is already in the favorites database.
   checkIfFaved() async {
     var table = await sqlDb.selectData("SELECT * FROM 'wallfavs'");
     for (var row in table) {
@@ -277,6 +285,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
     }
   }
 
+  /// Retrieves the user's preference for the ambient background effect.
   getAmbientEffectPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? ambientEffectEnabled = prefs.getBool('isAmbientEffectEnabled');
@@ -285,6 +294,7 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
     });
   }
 
+  /// Inserts or deletes the wallpaper from the favorites database.
   insertOrDeleteFaved() async {
     if (isFaved) {
       await sqlDb.deleteData(
@@ -323,11 +333,13 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
   Color? containerColor3 = const Color.fromARGB(255, 0, 0, 0);
   Color? containerColor4 = const Color.fromARGB(255, 0, 0, 0);
 
+  /// Calculates the wallpaper size in megabytes.
   String calculateSize() {
     double size = (widget.wallpaperSize / 1024 / 1024);
     return "${size.toStringAsFixed(2)} MB";
   }
 
+  /// Parses the wallpaper's color palette from a string and updates the state.
   getColors() {
     String fixedColors = widget.wallpaperColors
         .replaceAll('[', '["')

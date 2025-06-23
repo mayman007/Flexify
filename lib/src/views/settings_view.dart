@@ -25,6 +25,7 @@ class SettingsView extends StatefulWidget {
   State<SettingsView> createState() => _SettingsViewState();
 }
 
+/// State for [SettingsView].
 class _SettingsViewState extends State<SettingsView> {
   bool isAndroid12OrHigherValue = true;
   bool isNotificationPermissionGranted = true;
@@ -34,6 +35,7 @@ class _SettingsViewState extends State<SettingsView> {
   bool isPureBlackEnabledValue = false;
   bool isAmbientEffectEnabledValue = true;
 
+  /// Checks if the device is running Android 12 or higher.
   Future isAndroid12OrHigher() async {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -48,6 +50,7 @@ class _SettingsViewState extends State<SettingsView> {
     }
   }
 
+  /// Loads user preferences from [SharedPreferences].
   getPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? scheme = prefs.getString('schemeMode');
@@ -102,6 +105,7 @@ class _SettingsViewState extends State<SettingsView> {
     });
   }
 
+  /// Shows a dialog for changing the application language.
   Future<void> showLanguageDialog() async {
     return showDialog<void>(
       context: context,
@@ -155,6 +159,7 @@ class _SettingsViewState extends State<SettingsView> {
     );
   }
 
+  /// Shows a dialog for changing the application theme.
   Future<void> showThemeDialog() async {
     return showDialog<void>(
       context: context,
@@ -226,6 +231,7 @@ class _SettingsViewState extends State<SettingsView> {
     );
   }
 
+  /// Shows a dialog for changing the application color scheme.
   Future<void> showColorSchemesDialog() async {
     return showDialog<void>(
       context: context,
@@ -329,6 +335,7 @@ class _SettingsViewState extends State<SettingsView> {
 
   String cacheSize = '';
 
+  /// Calculates and updates the size of the application cache.
   Future getCacheSize() async {
     Directory tempDir = await getTemporaryDirectory();
     int tempDirSize = _getSize(tempDir);
@@ -338,6 +345,7 @@ class _SettingsViewState extends State<SettingsView> {
     });
   }
 
+  /// Recursively calculates the size of a file or directory.
   int _getSize(FileSystemEntity file) {
     if (file is File) {
       return file.lengthSync();
@@ -352,6 +360,7 @@ class _SettingsViewState extends State<SettingsView> {
     return 0;
   }
 
+  /// Clears the application's cache directory.
   Future<void> clearAppCache() async {
     try {
       // Get the temporary directory (cache directory)
@@ -371,6 +380,7 @@ class _SettingsViewState extends State<SettingsView> {
     await getCacheSize();
   }
 
+  /// Shows a confirmation dialog before clearing the cache.
   showDeleteCacheDialog(BuildContext context) {
     showDialog(
         context: context,
@@ -419,6 +429,7 @@ class _SettingsViewState extends State<SettingsView> {
         });
   }
 
+  /// Checks the current status of the notification permission.
   Future<void> checkNotificationPermission() async {
     if (Platform.isAndroid) {
       final status = await Permission.notification.status;
@@ -428,6 +439,7 @@ class _SettingsViewState extends State<SettingsView> {
     }
   }
 
+  /// Requests notification permission from the user.
   Future<void> requestNotificationPermission() async {
     if (Platform.isAndroid) {
       final status = await Permission.notification.request();
@@ -444,6 +456,7 @@ class _SettingsViewState extends State<SettingsView> {
     }
   }
 
+  /// Shows a dialog to guide the user to the app settings to grant permission.
   void _showPermissionDialog() {
     showDialog(
       context: context,

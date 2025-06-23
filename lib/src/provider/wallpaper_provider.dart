@@ -4,6 +4,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
+/// A provider class that manages fetching and storing wallpaper data.
 class WallpaperProvider extends ChangeNotifier {
   final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
   final Dio _dio = Dio();
@@ -32,6 +33,9 @@ class WallpaperProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isError => _isError;
 
+  /// Fetches the list of all wallpapers and their metadata from the remote API.
+  ///
+  /// It uses Firebase Remote Config to get API endpoints and headers.
   Future<void> fetchWallpaperData() async {
     // Remote Config
     await _remoteConfig.setConfigSettings(
@@ -101,6 +105,10 @@ class WallpaperProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Gets a preview image URL for a given category.
+  ///
+  /// It searches through the loaded wallpapers to find the first one
+  /// belonging to the specified category.
   String? getCategoryPreviewImage(String categoryName) {
     try {
       log('Looking for category: $categoryName');

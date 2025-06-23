@@ -4,6 +4,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
+/// A provider class that manages fetching and storing depth wallpaper data.
 class DepthWallProvider extends ChangeNotifier {
   final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
   final Dio _dio = Dio();
@@ -18,6 +19,9 @@ class DepthWallProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isError => _isError;
 
+  /// Fetches the list of depth wallpapers from the remote API.
+  ///
+  /// It uses Firebase Remote Config to get API endpoints and headers.
   Future<void> fetchDepthWallData() async {
     // Remote Config
     await _remoteConfig.setConfigSettings(
@@ -57,7 +61,7 @@ class DepthWallProvider extends ChangeNotifier {
       }
     } catch (e) {
       log('Error fetching depthWall names: $e');
-
+      _depthWallNames = [];
       _isError = true;
     } finally {
       log("DepthWall fetching done.");

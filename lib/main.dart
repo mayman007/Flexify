@@ -12,16 +12,19 @@ import 'src/notifications/notifications.dart';
 import 'src/provider/wallpaper_provider.dart';
 import 'src/provider/wallpaper_category_provider.dart';
 
+/// Handles background messages from Firebase Cloud Messaging.
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) =>
     _firebaseMessagingBackgroundHandler(message);
 
+/// The main entry point of the application.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Init analytics
   await AnalyticsEngine.init();
   AnalyticsEngine.appOpened;
 
+  // Init localization
   await EasyLocalization.ensureInitialized();
 
   // Register background handler early
@@ -35,9 +38,9 @@ Future<void> main() async {
   await sqlDb.initialDb();
 
   runApp(
-    // Init provider
+    // Init providers and localization
     EasyLocalization(
-      supportedLocales: [Locale('en'), Locale('ar')],
+      supportedLocales: const [Locale('en'), Locale('ar')],
       path: 'assets/translations',
       fallbackLocale: Locale('en'),
       child: MultiProvider(

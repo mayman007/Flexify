@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+/// A view that displays a grid of depth-effect wallpapers.
 class DepthWallView extends StatefulWidget {
   const DepthWallView({super.key});
 
@@ -16,7 +17,9 @@ class DepthWallView extends StatefulWidget {
   State<DepthWallView> createState() => _DepthWallViewState();
 }
 
+/// State for [DepthWallView].
 class _DepthWallViewState extends State<DepthWallView> {
+  /// Fetches depth wallpaper data from the [DepthWallProvider].
   Future fetchDepthWalls() async {
     final depthWallProvider =
         Provider.of<DepthWallProvider>(context, listen: false);

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
+/// A provider class that manages fetching and storing wallpaper data for a specific category.
 class WallpaperCategoryProvider extends ChangeNotifier {
   final Dio _dio = Dio();
 
@@ -22,6 +23,7 @@ class WallpaperCategoryProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isError => _isError;
 
+  /// Fetches the list of wallpapers and their metadata for a specific category URL.
   Future<void> fetchWallpaperCategoryData(String url) async {
     _wallpaperNames = [];
     _wallpaperResolutions = [];

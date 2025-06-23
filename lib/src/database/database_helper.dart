@@ -1,8 +1,11 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+/// A helper class for managing the local SQLite database.
 class DatabaseHelper {
   static Database? _db;
+
+  /// Provides a singleton instance of the database.
   Future<Database?> get db async {
     if (_db == null) {
       _db = await initialDb();
@@ -12,6 +15,7 @@ class DatabaseHelper {
     }
   }
 
+  /// Initializes the database, creating it if it doesn't exist.
   initialDb() async {
     String databasePath = await getDatabasesPath();
     String path = join(databasePath, 'flexify.db');
@@ -22,6 +26,7 @@ class DatabaseHelper {
 
   _onUpgrade(Database db, int oldVersion, int newVersion) {}
 
+  /// Creates the database tables when the database is first created.
   _onCreate(Database db, int version) async {
     await db.execute('''
     CREATE TABLE 'wallfavs' (
@@ -57,24 +62,28 @@ class DatabaseHelper {
 ''');
   }
 
+  /// Executes a raw SELECT query.
   selectData(String sql) async {
     Database? myDb = await db;
     List<Map<String, Object?>>? response = await myDb?.rawQuery(sql);
     return response;
   }
 
+  /// Executes a raw INSERT query.
   insertData(String sql) async {
     Database? myDb = await db;
     int? response = await myDb?.rawInsert(sql);
     return response;
   }
 
+  /// Executes a raw UPDATE query.
   updateData(String sql) async {
     Database? myDb = await db;
     int? response = await myDb?.rawUpdate(sql);
     return response;
   }
 
+  /// Executes a raw DELETE query.
   deleteData(String sql) async {
     Database? myDb = await db;
     int? response = await myDb?.rawDelete(sql);

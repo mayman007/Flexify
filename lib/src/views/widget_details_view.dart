@@ -29,11 +29,13 @@ class WidgetDetailsView extends StatefulWidget {
   State<WidgetDetailsView> createState() => _WidgetDetailsViewState();
 }
 
+/// State for [WidgetDetailsView].
 class _WidgetDetailsViewState extends State<WidgetDetailsView> {
   DatabaseHelper sqlDb = DatabaseHelper();
 
   bool isFaved = false;
 
+  /// Checks if the widget is already in the favorites database.
   checkIfFaved() async {
     var table = await sqlDb.selectData("SELECT * FROM 'widgetfavs'");
     for (var row in table) {
@@ -46,6 +48,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
     }
   }
 
+  /// Inserts or deletes the widget from the favorites database.
   insertOrDeleteFaved() async {
     if (isFaved) {
       await sqlDb.deleteData(
@@ -79,6 +82,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
     }
   }
 
+  /// Shows a loading dialog.
   showLoaderDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
       content: Row(
@@ -99,6 +103,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
     );
   }
 
+  /// Shows a dialog indicating that KWGT is not installed.
   showAppNotFoundDialog(BuildContext context) {
     showDialog(
         context: context,
@@ -141,6 +146,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
         });
   }
 
+  /// Opens the specified .kwgt file using an Android Intent with the KWGT package.
   Future<void> openKWGTFile(String fullPath) async {
     const packageName = 'org.kustom.widget';
     if (Platform.isAndroid) {
@@ -177,6 +183,7 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
     return 'content://$authority/cache_files/${Uri.encodeComponent(file.uri.pathSegments.last)}';
   }
 
+  /// Downloads the widget, saves it to a temporary file, and opens it with KWGT.
   applyWidget() async {
     // Check if KWGT is installed
     bool? appIsInstalled =

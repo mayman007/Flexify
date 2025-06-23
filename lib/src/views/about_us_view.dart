@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+/// A view that displays information about the app, its creators, and relevant links.
 class AboutUsView extends StatefulWidget {
   const AboutUsView({super.key});
 

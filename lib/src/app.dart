@@ -9,7 +9,7 @@ import 'views/settings_view.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
-/// The Widget that configures your application.
+/// The root widget of the Flexify application.
 class MyApp extends StatefulWidget {
   const MyApp({
     super.key,
@@ -25,6 +25,8 @@ class _MyAppState extends State<MyApp> {
   bool isAndroid12OrHigherValue = true;
   bool isPureBlackEnabled = false;
 
+  /// Checks if the device is running Android 12 or higher to determine
+  /// if Material You dynamic theming is available.
   Future isAndroid12OrHigher() async {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -39,6 +41,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  /// Loads user preferences for theme and color scheme from [SharedPreferences].
   Future getPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? schemeModePref = prefs.getString('schemeMode');

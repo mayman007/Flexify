@@ -18,6 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// A view that displays the details of a selected depth wallpaper.
 class DepthWallDetailsView extends StatefulWidget {
   final String depthWallUrl;
   final String depthWallThumbnailUrl;
@@ -34,12 +35,14 @@ class DepthWallDetailsView extends StatefulWidget {
   State<DepthWallDetailsView> createState() => _DepthWallDetailsViewState();
 }
 
+/// State for [DepthWallDetailsView].
 class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
   DatabaseHelper sqlDb = DatabaseHelper();
 
   bool isFaved = false;
   bool isAmbientEffectEnabled = true;
 
+  /// Checks if the depth wallpaper is already in the favorites database.
   checkIfFaved() async {
     var table = await sqlDb.selectData("SELECT * FROM 'lockscreenfavs'");
     for (var row in table) {
@@ -52,6 +55,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
     }
   }
 
+  /// Inserts or deletes the depth wallpaper from the favorites database.
   insertOrDeleteFaved() async {
     if (isFaved) {
       await sqlDb.deleteData(
@@ -85,6 +89,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
     }
   }
 
+  /// Retrieves the user's preference for the ambient background effect.
   getAmbientEffectPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? ambientEffectEnabled = prefs.getBool('isAmbientEffectEnabled');
@@ -93,6 +98,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
     });
   }
 
+  /// Shows a loading dialog.
   showLoaderDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
       content: Row(
@@ -113,6 +119,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
     );
   }
 
+  /// Shows a dialog indicating that KLWP is not installed.
   showAppNotFoundDialog(BuildContext context) {
     showDialog(
         context: context,
@@ -155,6 +162,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
         });
   }
 
+  /// Opens the specified .klwp file using an Android Intent with the KLWP package.
   Future<void> openKLWPFile(String fullPath) async {
     const packageName = 'org.kustom.wallpaper';
     if (Platform.isAndroid) {
@@ -191,6 +199,7 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
     return 'content://$authority/cache_files/${Uri.encodeComponent(file.uri.pathSegments.last)}';
   }
 
+  /// Downloads the depth wallpaper, saves it to a temporary file, and opens it with KLWP.
   applyDepthWall() async {
     // Check if KLWP is installed
     bool? appIsInstalled =
