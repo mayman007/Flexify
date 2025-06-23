@@ -26,7 +26,7 @@ class SettingsView extends StatefulWidget {
 }
 
 /// State for [SettingsView].
-class _SettingsViewState extends State<SettingsView> {
+class _SettingsViewState extends State<SettingsView> with RouteAware {
   bool isAndroid12OrHigherValue = true;
   bool isNotificationPermissionGranted = true;
   String colorSchemeValue = 'Material You';
@@ -433,12 +433,48 @@ class _SettingsViewState extends State<SettingsView> {
 
   /// Calculates and updates the size of the application cache.
   Future getCacheSize() async {
-    Directory tempDir = await getTemporaryDirectory();
-    int tempDirSize = _getSize(tempDir);
-    double tempDirSizeInMb = tempDirSize / 1024 / 1024;
-    setState(() {
-      cacheSize = tempDirSizeInMb.toStringAsFixed(2);
-    });
+    try {
+      int totalSize = 0;
+
+      // Get temporary directory (standard cache)
+      Directory tempDir = await getTemporaryDirectory();
+      if (tempDir.existsSync()) {
+        totalSize += _getSize(tempDir);
+      }
+
+      // Get application cache directory
+      Directory appCacheDir = await getApplicationCacheDirectory();
+      if (appCacheDir.existsSync()) {
+        totalSize += _getSize(appCacheDir);
+      }
+
+      // Get external storage directories (if available on Android)
+      if (Platform.isAndroid) {
+        try {
+          List<Directory>? externalDirs = await getExternalStorageDirectories();
+          if (externalDirs != null) {
+            for (Directory dir in externalDirs) {
+              if (dir.existsSync()) {
+                totalSize += _getSize(dir);
+              }
+            }
+          }
+        } catch (e) {
+          // External storage directories might not be available
+          log("External storage directories not available: $e");
+        }
+      }
+
+      double totalSizeInMb = totalSize / 1024 / 1024;
+      setState(() {
+        cacheSize = totalSizeInMb.toStringAsFixed(2);
+      });
+    } catch (e) {
+      log("Error calculating cache size: $e");
+      setState(() {
+        cacheSize = '0.00';
+      });
+    }
   }
 
   /// Recursively calculates the size of a file or directory.
@@ -459,17 +495,35 @@ class _SettingsViewState extends State<SettingsView> {
   /// Clears the application's cache directory.
   Future<void> clearAppCache() async {
     try {
-      // Get the temporary directory (cache directory)
+      // Clear temporary directory
       final Directory tempDir = await getTemporaryDirectory();
-
-      // Check if the directory exists
       if (tempDir.existsSync()) {
-        // Delete the directory and its contents
         tempDir.deleteSync(recursive: true);
-        log("Cache cleared successfully!");
-      } else {
-        log("No cache found to clear.");
       }
+
+      // Clear application cache directory
+      final Directory appCacheDir = await getApplicationCacheDirectory();
+      if (appCacheDir.existsSync()) {
+        appCacheDir.deleteSync(recursive: true);
+      }
+
+      // Clear external storage directories (if available on Android)
+      if (Platform.isAndroid) {
+        try {
+          List<Directory>? externalDirs = await getExternalStorageDirectories();
+          if (externalDirs != null) {
+            for (Directory dir in externalDirs) {
+              if (dir.existsSync()) {
+                dir.deleteSync(recursive: true);
+              }
+            }
+          }
+        } catch (e) {
+          log("External storage directories not available for clearing: $e");
+        }
+      }
+
+      log("Cache cleared successfully!");
     } catch (e) {
       log("Failed to clear cache: $e");
     }
@@ -477,7 +531,10 @@ class _SettingsViewState extends State<SettingsView> {
   }
 
   /// Shows a confirmation dialog before clearing the cache.
-  showDeleteCacheDialog(BuildContext context) {
+  showDeleteCacheDialog(BuildContext context) async {
+    // Calculate cache size when dialog is shown
+    await getCacheSize();
+
     showDialog(
         context: context,
         builder: (context) {
@@ -497,6 +554,17 @@ class _SettingsViewState extends State<SettingsView> {
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 18,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      context.tr('settings.deleteCache',
+                          namedArgs: {'size': cacheSize}),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
                       ),
                     )
                   ]),
@@ -585,7 +653,6 @@ class _SettingsViewState extends State<SettingsView> {
     AnalyticsEngine.pageOpened("Settings View");
     getPrefs();
     isAndroid12OrHigher();
-    getCacheSize();
     checkNotificationPermission();
     super.initState();
   }
@@ -743,8 +810,7 @@ class _SettingsViewState extends State<SettingsView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  context.tr('settings.deleteCache',
-                      namedArgs: {'size': cacheSize}),
+                  context.tr('settings.clearCache'),
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(
