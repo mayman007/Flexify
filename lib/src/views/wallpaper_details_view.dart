@@ -9,6 +9,7 @@ import 'package:dio/dio.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/database/favorites_notifier.dart';
+import 'package:flexify/src/provider/wallpaper_provider.dart';
 import 'package:flexify/src/views/wallpaper_fullscreen_view.dart';
 import 'package:flexify/src/widgets/color_container.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:wallpaper_manager_plus/wallpaper_manager_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -75,8 +77,17 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
       setState(() {
         saveImageCoolDown = true;
       });
+
+      // Get headers from provider
+      final wallpaperProvider =
+          Provider.of<WallpaperProvider>(context, listen: false);
+      Map<String, String> headers = wallpaperProvider.headers;
+
       var response = await Dio().get(widget.wallpaperUrlHq,
-          options: Options(responseType: ResponseType.bytes));
+          options: Options(
+            responseType: ResponseType.bytes,
+            headers: headers,
+          ));
       final result = await ImageGallerySaverPlus.saveImage(
         Uint8List.fromList(response.data),
         quality: 100,
@@ -136,12 +147,18 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
         var tempDir = await getTemporaryDirectory();
         String fullPath = "${tempDir.path}/${widget.wallpaperName}.png";
 
+        // Get headers from provider
+        final wallpaperProvider =
+            Provider.of<WallpaperProvider>(context, listen: false);
+        Map<String, String> headers = wallpaperProvider.headers;
+
         // Download file
         Response response = await Dio().get(
           widget.wallpaperUrlHq,
           options: Options(
             responseType: ResponseType.bytes,
             followRedirects: false,
+            headers: headers,
           ),
         );
         Navigator.pop(context);

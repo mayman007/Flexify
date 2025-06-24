@@ -9,6 +9,7 @@ class WidgetProvider extends ChangeNotifier {
   final Dio _dio = Dio();
 
   String _baseUrl = '';
+  Map<String, String> _headers = {};
   List<String> _widgetNames = [];
   List<String> _widgetCategories = [];
   List<String> _categoriesList = [];
@@ -16,6 +17,7 @@ class WidgetProvider extends ChangeNotifier {
   bool _isError = false;
 
   String get baseUrl => _baseUrl;
+  Map<String, String> get headers => _headers;
   List<String> get widgetNames => _widgetNames;
   List<String> get widgetCategories => _widgetCategories;
   List<String> get categoriesList => _categoriesList;
@@ -34,8 +36,7 @@ class WidgetProvider extends ChangeNotifier {
 
     // Use Remote Config values
     String headersJson = _remoteConfig.getString('api_headers');
-    Map<String, String> headers =
-        Map<String, String>.from(json.decode(headersJson));
+    _headers = Map<String, String>.from(json.decode(headersJson));
     _baseUrl = _remoteConfig.getString('widgets');
 
     _widgetNames = [];
@@ -49,7 +50,7 @@ class WidgetProvider extends ChangeNotifier {
       final response = await _dio.get(
         _baseUrl,
         options: Options(
-          headers: headers,
+          headers: _headers,
         ),
       );
       if (response.statusCode == 200 && response.data is List) {

@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/database/favorites_notifier.dart';
+import 'package:flexify/src/provider/depthwall_provider.dart';
 import 'package:flexify/src/views/depthwall_fullscreen_view.dart';
 import 'package:flexify/src/widgets/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -219,12 +221,18 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
     var tempDir = await getTemporaryDirectory();
     String fullPath = "${tempDir.path}/${widget.depthWallName}.klwp";
 
+    // Get headers from provider
+    final depthWallProvider =
+        Provider.of<DepthWallProvider>(context, listen: false);
+    Map<String, String> headers = depthWallProvider.headers;
+
     // Download file
     Response response = await Dio().get(
       widget.depthWallUrl,
       options: Options(
         responseType: ResponseType.bytes,
         followRedirects: false,
+        headers: headers,
       ),
     );
 

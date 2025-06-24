@@ -12,6 +12,7 @@ class WallpaperProvider extends ChangeNotifier {
   String _baseUrlHq = '';
   String _baseUrlMid = '';
   String _baseUrlLow = '';
+  Map<String, String> _headers = {};
   List<String> _wallpaperNames = [];
   List<String> _wallpaperResolutions = [];
   List<int> _wallpaperSizes = [];
@@ -24,6 +25,7 @@ class WallpaperProvider extends ChangeNotifier {
   String get baseUrlHq => _baseUrlHq;
   String get baseUrlMid => _baseUrlMid;
   String get baseUrlLow => _baseUrlLow;
+  Map<String, String> get headers => _headers;
   List<String> get wallpaperNames => _wallpaperNames;
   List<String> get wallpaperResolutions => _wallpaperResolutions;
   List<int> get wallpaperSizes => _wallpaperSizes;
@@ -48,8 +50,7 @@ class WallpaperProvider extends ChangeNotifier {
 
     // Use Remote Config values
     String headersJson = _remoteConfig.getString('api_headers');
-    Map<String, String> headers =
-        Map<String, String>.from(json.decode(headersJson));
+    _headers = Map<String, String>.from(json.decode(headersJson));
     _baseUrlHq = _remoteConfig.getString('walls_hq');
     _baseUrlMid = _remoteConfig.getString('walls_mid');
     _baseUrlLow = _remoteConfig.getString('walls_low');
@@ -67,7 +68,7 @@ class WallpaperProvider extends ChangeNotifier {
       final response = await _dio.get(
         _baseUrlHq,
         options: Options(
-          headers: headers,
+          headers: _headers,
         ),
       );
       if (response.statusCode == 200 && response.data is List) {

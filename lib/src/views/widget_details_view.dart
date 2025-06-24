@@ -4,12 +4,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
 import 'package:flexify/src/database/favorites_notifier.dart';
+import 'package:flexify/src/provider/widget_provider.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WidgetDetailsView extends StatefulWidget {
@@ -203,12 +205,17 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
     var tempDir = await getTemporaryDirectory();
     String fullPath = "${tempDir.path}/${widget.widgetName}.kwgt";
 
+    // Get headers from provider
+    final widgetProvider = Provider.of<WidgetProvider>(context, listen: false);
+    Map<String, String> headers = widgetProvider.headers;
+
     // Download file
     Response response = await Dio().get(
       widget.widgetUrl,
       options: Options(
         responseType: ResponseType.bytes,
         followRedirects: false,
+        headers: headers,
       ),
     );
 

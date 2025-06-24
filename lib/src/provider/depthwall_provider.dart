@@ -10,11 +10,13 @@ class DepthWallProvider extends ChangeNotifier {
   final Dio _dio = Dio();
 
   String _baseUrl = '';
+  Map<String, String> _headers = {};
   List<String> _depthWallNames = [];
   bool _isLoading = false;
   bool _isError = false;
 
   String get baseUrl => _baseUrl;
+  Map<String, String> get headers => _headers;
   List<String> get depthWallNames => _depthWallNames;
   bool get isLoading => _isLoading;
   bool get isError => _isError;
@@ -34,8 +36,7 @@ class DepthWallProvider extends ChangeNotifier {
 
     // Use Remote Config values
     String headersJson = _remoteConfig.getString('api_headers');
-    Map<String, String> headers =
-        Map<String, String>.from(json.decode(headersJson));
+    _headers = Map<String, String>.from(json.decode(headersJson));
     _baseUrl = _remoteConfig.getString('depth_walls');
 
     _depthWallNames = [];
@@ -47,7 +48,7 @@ class DepthWallProvider extends ChangeNotifier {
       final response = await _dio.get(
         _baseUrl,
         options: Options(
-          headers: headers,
+          headers: _headers,
         ),
       );
       if (response.statusCode == 200 && response.data is List) {
