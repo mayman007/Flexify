@@ -24,6 +24,12 @@ class _WallpapersViewState extends State<WallpapersView> {
   /// Caches preview image URLs for each category.
   final Map<String, String?> _categoryPreviewUrls = {};
 
+  /// Set to track which images have been preloaded
+  final Set<String> _preloadedImages = {};
+
+  /// Number of images to preload ahead of viewport
+  static const int _preloadBuffer = 15;
+
   @override
   void initState() {
     AnalyticsEngine.pageOpened("Wallpapers View");
@@ -158,6 +164,34 @@ class _WallpapersViewState extends State<WallpapersView> {
         });
   }
 
+  /// Preloads images for better user experience
+  void _preloadImages(WallpaperProvider provider, int currentIndex) async {
+    final startIndex = currentIndex;
+    final endIndex = (currentIndex + _preloadBuffer)
+        .clamp(0, provider.wallpaperNames.length - 1);
+
+    for (int i = startIndex; i <= endIndex; i++) {
+      if (i >= provider.wallpaperNames.length) break;
+
+      final String wallpaperName = provider.wallpaperNames[i].split(".")[0];
+      final String wallpaperExtension =
+          provider.wallpaperNames[i].split(".")[1];
+      final String wallpaperCategory = provider.wallpaperCategories[i];
+      final String wallpaperUrlLow =
+          '${provider.baseUrlLow}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
+
+      if (!_preloadedImages.contains(wallpaperUrlLow)) {
+        _preloadedImages.add(wallpaperUrlLow);
+        try {
+          await precacheImage(NetworkImage(wallpaperUrlLow), context);
+        } catch (e) {
+          // Silently handle preload errors
+          debugPrint('Failed to preload image: $wallpaperUrlLow');
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -218,61 +252,78 @@ class _WallpapersViewState extends State<WallpapersView> {
             } else if (provider.wallpaperNames.isEmpty) {
               return Center(child: Text(context.tr('wallpapers.fetching')));
             } else {
-              return GridView.builder(
-                padding: const EdgeInsets.all(10),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 3 / 4,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: provider.wallpaperNames.length,
-                itemBuilder: (context, index) {
-                  final String wallpaperName =
-                      provider.wallpaperNames[index].split(".")[0];
-                  final String wallpaperExtension =
-                      provider.wallpaperNames[index].split(".")[1];
-                  final String wallpaperResolution =
-                      provider.wallpaperResolutions[index];
-                  final int wallpaperSize = provider.wallpaperSizes[index];
-                  final String wallpaperCategory =
-                      provider.wallpaperCategories[index];
-                  final List wallpaperColors = provider.wallpaperColors[index];
-                  final String wallpaperUrlHq =
-                      '${provider.baseUrlHq}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
-                  final String wallpaperUrlMid =
-                      '${provider.baseUrlMid}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
-                  final String wallpaperUrlLow =
-                      '${provider.baseUrlLow}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
+              // Start preloading images
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _preloadImages(provider, 0);
+              });
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CustomPageRoute(
-                          builder: (context) => WallpaperDetailsView(
-                            wallpaperUrlHq: wallpaperUrlHq,
-                            wallpaperUrlMid: wallpaperUrlMid,
-                            wallpaperUrlLow: wallpaperUrlLow,
-                            wallpaperName: wallpaperName,
-                            wallpaperResolution: wallpaperResolution,
-                            wallpaperSize: wallpaperSize,
-                            wallpaperCategory: wallpaperCategory,
-                            wallpaperColors: wallpaperColors.toString(),
-                          ),
-                          duration: const Duration(milliseconds: 600),
-                        ),
-                      );
-                    },
-                    child: WallpaperCard(
-                      wallpaperUrlHq: wallpaperUrlHq,
-                      wallpaperUrlMid: wallpaperUrlMid,
-                      wallpaperUrlLow: wallpaperUrlLow,
-                      isWallpaper: true,
-                      lowQuality: true,
-                    ),
-                  );
+              return NotificationListener<ScrollNotification>(
+                onNotification: (scrollInfo) {
+                  if (scrollInfo is ScrollUpdateNotification) {
+                    // Calculate current visible item index and preload ahead
+                    final currentIndex =
+                        (scrollInfo.metrics.pixels / 200).floor();
+                    _preloadImages(provider, currentIndex);
+                  }
+                  return false;
                 },
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(10),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 3 / 4,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: provider.wallpaperNames.length,
+                  itemBuilder: (context, index) {
+                    final String wallpaperName =
+                        provider.wallpaperNames[index].split(".")[0];
+                    final String wallpaperExtension =
+                        provider.wallpaperNames[index].split(".")[1];
+                    final String wallpaperResolution =
+                        provider.wallpaperResolutions[index];
+                    final int wallpaperSize = provider.wallpaperSizes[index];
+                    final String wallpaperCategory =
+                        provider.wallpaperCategories[index];
+                    final List wallpaperColors =
+                        provider.wallpaperColors[index];
+                    final String wallpaperUrlHq =
+                        '${provider.baseUrlHq}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
+                    final String wallpaperUrlMid =
+                        '${provider.baseUrlMid}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
+                    final String wallpaperUrlLow =
+                        '${provider.baseUrlLow}/$wallpaperCategory/$wallpaperName.$wallpaperExtension';
+
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CustomPageRoute(
+                            builder: (context) => WallpaperDetailsView(
+                              wallpaperUrlHq: wallpaperUrlHq,
+                              wallpaperUrlMid: wallpaperUrlMid,
+                              wallpaperUrlLow: wallpaperUrlLow,
+                              wallpaperName: wallpaperName,
+                              wallpaperResolution: wallpaperResolution,
+                              wallpaperSize: wallpaperSize,
+                              wallpaperCategory: wallpaperCategory,
+                              wallpaperColors: wallpaperColors.toString(),
+                            ),
+                            duration: const Duration(milliseconds: 600),
+                          ),
+                        );
+                      },
+                      child: WallpaperCard(
+                        wallpaperUrlHq: wallpaperUrlHq,
+                        wallpaperUrlMid: wallpaperUrlMid,
+                        wallpaperUrlLow: wallpaperUrlLow,
+                        isWallpaper: true,
+                        lowQuality: true,
+                      ),
+                    );
+                  },
+                ),
               );
             }
           },

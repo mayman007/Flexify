@@ -19,11 +19,43 @@ class DepthWallView extends StatefulWidget {
 
 /// State for [DepthWallView].
 class _DepthWallViewState extends State<DepthWallView> {
+  /// Set to track which images have been preloaded
+  final Set<String> _preloadedImages = {};
+
+  /// Number of images to preload ahead of viewport
+  static const int _preloadBuffer = 15;
+
   /// Fetches depth wallpaper data from the [DepthWallProvider].
   Future fetchDepthWalls() async {
     final depthWallProvider =
         Provider.of<DepthWallProvider>(context, listen: false);
     depthWallProvider.fetchDepthWallData();
+  }
+
+  /// Preloads depth wallpaper thumbnail images for better user experience
+  void _preloadImages(DepthWallProvider provider, int currentIndex) async {
+    final startIndex = currentIndex;
+    final endIndex = (currentIndex + _preloadBuffer)
+        .clamp(0, provider.depthWallNames.length - 1);
+
+    for (int i = startIndex; i <= endIndex; i++) {
+      if (i >= provider.depthWallNames.length) break;
+
+      final String depthWallName = provider.depthWallNames[i].split(".")[0];
+      final String depthWallThumbnailUrl =
+          '${provider.baseUrl}/$depthWallName.png';
+
+      if (!_preloadedImages.contains(depthWallThumbnailUrl)) {
+        _preloadedImages.add(depthWallThumbnailUrl);
+        try {
+          await precacheImage(NetworkImage(depthWallThumbnailUrl), context);
+        } catch (e) {
+          // Silently handle preload errors
+          debugPrint(
+              'Failed to preload depth wallpaper image: $depthWallThumbnailUrl');
+        }
+      }
+    }
   }
 
   @override
@@ -101,48 +133,64 @@ class _DepthWallViewState extends State<DepthWallView> {
             } else if (provider.depthWallNames.isEmpty) {
               return Center(child: Text(context.tr('depthWalls.fetching')));
             } else {
-              return GridView.builder(
-                padding: const EdgeInsets.all(10),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 2 / 4,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: provider.depthWallNames.length,
-                itemBuilder: (context, index) {
-                  final String depthWallName =
-                      provider.depthWallNames[index].split(".")[0];
-                  final String depthWallExtension =
-                      provider.depthWallNames[index].split(".")[1];
-                  final String depthWallUrl =
-                      '${provider.baseUrl}/$depthWallName.$depthWallExtension';
-                  final String depthWallThumbnailUrl =
-                      '${provider.baseUrl}/$depthWallName.png';
+              // Start preloading images
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _preloadImages(provider, 0);
+              });
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CustomPageRoute(
-                          builder: (context) => DepthWallDetailsView(
-                            depthWallUrl: depthWallUrl,
-                            depthWallThumbnailUrl: depthWallThumbnailUrl,
-                            depthWallName: depthWallName,
-                          ),
-                          duration: const Duration(milliseconds: 600),
-                        ),
-                      );
-                    },
-                    child: WallpaperCard(
-                      wallpaperUrlHq: depthWallThumbnailUrl,
-                      wallpaperUrlMid: depthWallThumbnailUrl,
-                      wallpaperUrlLow: depthWallThumbnailUrl,
-                      isWallpaper: true,
-                      lowQuality: true,
-                    ),
-                  );
+              return NotificationListener<ScrollNotification>(
+                onNotification: (scrollInfo) {
+                  if (scrollInfo is ScrollUpdateNotification) {
+                    // Calculate current visible item index and preload ahead
+                    final currentIndex =
+                        (scrollInfo.metrics.pixels / 240).floor();
+                    _preloadImages(provider, currentIndex);
+                  }
+                  return false;
                 },
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(10),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 2 / 4,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: provider.depthWallNames.length,
+                  itemBuilder: (context, index) {
+                    final String depthWallName =
+                        provider.depthWallNames[index].split(".")[0];
+                    final String depthWallExtension =
+                        provider.depthWallNames[index].split(".")[1];
+                    final String depthWallUrl =
+                        '${provider.baseUrl}/$depthWallName.$depthWallExtension';
+                    final String depthWallThumbnailUrl =
+                        '${provider.baseUrl}/$depthWallName.png';
+
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CustomPageRoute(
+                            builder: (context) => DepthWallDetailsView(
+                              depthWallUrl: depthWallUrl,
+                              depthWallThumbnailUrl: depthWallThumbnailUrl,
+                              depthWallName: depthWallName,
+                            ),
+                            duration: const Duration(milliseconds: 600),
+                          ),
+                        );
+                      },
+                      child: WallpaperCard(
+                        wallpaperUrlHq: depthWallThumbnailUrl,
+                        wallpaperUrlMid: depthWallThumbnailUrl,
+                        wallpaperUrlLow: depthWallThumbnailUrl,
+                        isWallpaper: true,
+                        lowQuality: true,
+                      ),
+                    );
+                  },
+                ),
               );
             }
           },
