@@ -47,10 +47,10 @@ Join our growing community on Telegram to share your setups, get inspiration, an
 
 ### Prerequisites
 
-- Flutter SDK (3.32 recommended)
-- Android Studio or VS Code with Flutter extensions
-- Firebase account
-- Git
+- [Flutter](https://docs.flutter.dev/get-started/install) SDK (3.32 recommended)
+- [Android Studio](https://developer.android.com/codelabs/basic-android-kotlin-compose-install-android-studio#2) or [VS Code](https://code.visualstudio.com/download) with Flutter extensions
+- [Firebase](https://firebase.google.com/) account
+- [Git](https://git-scm.com/downloads)
 
 ### Setup Instructions
 
@@ -72,8 +72,14 @@ Join our growing community on Telegram to share your setups, get inspiration, an
    - Add your app's package name: `com.maymanxineffable.flexify`
 
 4. **API Configuration**
-   - Setup [Flexify API](https://github.com/mayman007/flexify-api) to fetch content
-   - Add the API endpoints to Firebase remote configs
+   - Setup [Flexify API](https://github.com/mayman007/flexify-api) to fetch content as shown in [its instructions](https://github.com/mayman007/flexify-api?tab=readme-ov-file#installation)
+   - Add the following API endpoints to [Firebase remote configs](https://firebase.google.com/docs/remote-config/get-started?platform=flutter#set-parameter)
+      - hq wallpapers endpoint as `walls_hq`
+      - mid wallpapers endpoint as `walls_mid`
+      - low wallpapers endpoint as `walls_low`
+      - depth walls endpoint as `depth_walls`
+      - widgets endpoint as `widgets`
+      - `{"X-Custom-Header": ""}` as `api_headers` (currently empty header)
    - The API provides wallpapers, widgets, and depth wallpapers data
 
 5. **Build and Run**
@@ -107,12 +113,8 @@ Help us make Flexify accessible to more people by adding your language or improv
 2. **Navigate to the translations folder**: `assets/translations/`
 3. **Create a new JSON file** for your language using the ISO 639-1 language code (e.g., `fr.json` for French, `es.json` for Spanish)
 4. **Copy the structure** from `en.json` and translate all the values to your language
-5. **Update the main.dart file** to include your language:
-   ```dart
-   supportedLocales: [Locale('en'), Locale('ar'), Locale('your_language_code')],
-   ```
-6. **Test your translation** by running the app and switching to your language
-7. **Submit a pull request** with your translation
+5. **Test your translation** by [setting up](https://github.com/mayman007/Flexify?tab=readme-ov-file#setup-nstructions) and running the app, then switching to your language (optional)
+6. **Submit a pull request** with your translation
 
 #### Improving Existing Translations
 
@@ -120,14 +122,14 @@ Help us make Flexify accessible to more people by adding your language or improv
 2. **Navigate to the translations folder**: `assets/translations/`
 3. **Edit the appropriate JSON file** (e.g., `ar.json` for Arabic improvements)
 4. **Make your improvements** while keeping the JSON structure intact
-5. **Test your changes** by running the app
+5. **Test your changes** by running the app (optional)
 6. **Submit a pull request** with your improvements
 
 #### Translation Guidelines
 
 - Keep translations **concise and natural** in your language
 - Maintain the **same tone** as the English version (friendly and professional)
-- Test translations in the app to ensure they **fit the UI properly**
+- Test translations in the app to ensure they **fit the UI properly** (optional, but recommended)
 - For technical terms (like "KWGT", "KLWP"), keep them as-is unless there's a widely accepted translation
 - Use **gender-neutral language** where possible
 - Follow your language's **capitalization conventions**
