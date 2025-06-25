@@ -1,15 +1,16 @@
+import 'dart:developer' show log;
 import 'dart:io';
 import 'dart:ui';
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
-import 'package:flexify/src/database/favorites_notifier.dart';
+import 'package:flexify/src/utils/favorites_notifier.dart';
 import 'package:flexify/src/provider/depthwall_provider.dart';
 import 'package:flexify/src/views/depthwall_fullscreen_view.dart';
-import 'package:flexify/src/widgets/custom_page_route.dart';
+import 'package:flexify/src/utils/custom_page_route.dart';
+import 'package:flexify/src/utils/http_service.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,6 +41,7 @@ class DepthWallDetailsView extends StatefulWidget {
 
 /// State for [DepthWallDetailsView].
 class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
+  final HttpService _httpService = HttpService();
   DatabaseHelper sqlDb = DatabaseHelper();
 
   bool isFaved = false;
@@ -217,42 +219,46 @@ class _DepthWallDetailsViewState extends State<DepthWallDetailsView> {
     }
     showLoaderDialog(context); // Show loading dialog
 
-    // Make file path
-    var tempDir = await getTemporaryDirectory();
-    String fullPath = "${tempDir.path}/${widget.depthWallName}.klwp";
+    try {
+      // Make file path
+      var tempDir = await getTemporaryDirectory();
+      String fullPath = "${tempDir.path}/${widget.depthWallName}.klwp";
 
-    // Get headers from provider
-    final depthWallProvider =
-        Provider.of<DepthWallProvider>(context, listen: false);
-    Map<String, String> headers = depthWallProvider.headers;
+      // Get headers from provider
+      final depthWallProvider =
+          Provider.of<DepthWallProvider>(context, listen: false);
+      Map<String, String> headers = depthWallProvider.headers;
 
-    // Download file
-    Response response = await Dio().get(
-      widget.depthWallUrl,
-      options: Options(
-        responseType: ResponseType.bytes,
-        followRedirects: false,
-        headers: headers,
-      ),
-    );
+      // Download file using HTTP service
+      final fileBytes = await _httpService.downloadFile(widget.depthWallUrl,
+          customHeaders: headers);
 
-    // Write file
-    File file = File(fullPath);
-    var raf = file.openSync(mode: FileMode.write);
-    raf.writeFromSync(response.data);
-    await raf.close();
+      // Write file
+      File file = File(fullPath);
+      await file.writeAsBytes(fileBytes);
 
-    // Open file
-    Navigator.pop(context);
-    openKLWPFile(fullPath);
-    showToast(
-      context.tr('depthWalls.openedKLWP'),
-      animation: StyledToastAnimation.fade,
-      reverseAnimation: StyledToastAnimation.fade,
-      // ignore: use_build_context_synchronously
-      context: context,
-    );
-    AnalyticsEngine.depthWallApplied(widget.depthWallName);
+      // Open file
+      Navigator.pop(context);
+      openKLWPFile(fullPath);
+      showToast(
+        context.tr('depthWalls.openedKLWP'),
+        animation: StyledToastAnimation.fade,
+        reverseAnimation: StyledToastAnimation.fade,
+        // ignore: use_build_context_synchronously
+        context: context,
+      );
+      AnalyticsEngine.depthWallApplied(widget.depthWallName);
+    } catch (e) {
+      Navigator.pop(context);
+      showToast(
+        context.tr('depthWalls.downloadError'),
+        animation: StyledToastAnimation.fade,
+        reverseAnimation: StyledToastAnimation.fade,
+        // ignore: use_build_context_synchronously
+        context: context,
+      );
+      log('Error downloading depth wall: $e');
+    }
   }
 
   @override

@@ -1,14 +1,11 @@
-import 'dart:convert';
 import 'dart:developer';
-
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'package:flexify/src/utils/isolate_helpers.dart';
+import 'package:flexify/src/utils/http_service.dart';
 
 /// A provider class that manages fetching and storing wallpaper data for a specific category.
 class WallpaperCategoryProvider extends ChangeNotifier {
-  final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
-  final Dio _dio = Dio();
+  final HttpService _httpService = HttpService();
 
   Map<String, String> _headers = {};
   List<String> _wallpaperNames = [];
@@ -30,19 +27,6 @@ class WallpaperCategoryProvider extends ChangeNotifier {
 
   /// Fetches the list of wallpapers and their metadata for a specific category URL.
   Future<void> fetchWallpaperCategoryData(String url) async {
-    // Remote Config
-    await _remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(hours: 1),
-      ),
-    );
-    await _remoteConfig.fetchAndActivate();
-
-    // Use Remote Config values
-    String headersJson = _remoteConfig.getString('api_headers');
-    _headers = Map<String, String>.from(json.decode(headersJson));
-
     _wallpaperNames = [];
     _wallpaperResolutions = [];
     _wallpaperSizes = [];
@@ -53,27 +37,21 @@ class WallpaperCategoryProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _dio.get(
-        url,
-        options: Options(
-          headers: _headers,
-        ),
-      );
-      if (response.statusCode == 200 && response.data is List) {
-        for (Map wallpaper in response.data) {
-          _wallpaperNames.add(wallpaper["name"]);
-          _wallpaperResolutions.add(wallpaper["resolution"]);
-          _wallpaperSizes.add(wallpaper["size"]);
-          _wallpaperCategories.add(wallpaper["category"]);
-          _wallpaperColors.add(wallpaper["colors"]);
-        }
-      } else {
-        _wallpaperNames = [];
-        _wallpaperResolutions = [];
-        _wallpaperSizes = [];
-        _wallpaperCategories = [];
-        _wallpaperColors = [];
-      }
+      // Get headers from HTTP service
+      _headers = await _httpService.getHeaders();
+
+      // Fetch JSON data using HTTP service
+      final jsonString = await _httpService.fetchJsonData(url);
+
+      // Parse data in background isolate to avoid blocking UI
+      final parseResult =
+          await IsolateHelpers.parseWallpaperDataInIsolate(jsonString);
+
+      _wallpaperNames = parseResult.wallpaperNames;
+      _wallpaperResolutions = parseResult.wallpaperResolutions;
+      _wallpaperSizes = parseResult.wallpaperSizes;
+      _wallpaperCategories = parseResult.wallpaperCategories;
+      _wallpaperColors = parseResult.wallpaperColors;
     } catch (e) {
       log('Error fetching wallpaper names: $e');
       _wallpaperNames = [];

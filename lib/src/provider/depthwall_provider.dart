@@ -1,13 +1,11 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'package:flexify/src/utils/isolate_helpers.dart';
+import 'package:flexify/src/utils/http_service.dart';
 
 /// A provider class that manages fetching and storing depth wallpaper data.
 class DepthWallProvider extends ChangeNotifier {
-  final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
-  final Dio _dio = Dio();
+  final HttpService _httpService = HttpService();
 
   String _baseUrl = '';
   Map<String, String> _headers = {};
@@ -25,41 +23,25 @@ class DepthWallProvider extends ChangeNotifier {
   ///
   /// It uses Firebase Remote Config to get API endpoints and headers.
   Future<void> fetchDepthWallData() async {
-    // Remote Config
-    await _remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(hours: 1),
-      ),
-    );
-    await _remoteConfig.fetchAndActivate();
-
-    // Use Remote Config values
-    String headersJson = _remoteConfig.getString('api_headers');
-    _headers = Map<String, String>.from(json.decode(headersJson));
-    _baseUrl = _remoteConfig.getString('depth_walls');
-
     _depthWallNames = [];
     _isLoading = true;
     _isError = false;
     notifyListeners();
 
     try {
-      final response = await _dio.get(
-        _baseUrl,
-        options: Options(
-          headers: _headers,
-        ),
-      );
-      if (response.statusCode == 200 && response.data is List) {
-        for (Map depthWall in response.data) {
-          if (depthWall["type"] == "klwp") {
-            _depthWallNames.add(depthWall["name"]);
-          }
-        }
-      } else {
-        _depthWallNames = [];
-      }
+      // Get API URLs and headers from HTTP service
+      final apiUrls = await _httpService.getApiUrls();
+      _baseUrl = apiUrls['depth_walls'] ?? '';
+      _headers = await _httpService.getHeaders();
+
+      // Fetch JSON data using HTTP service
+      final jsonString = await _httpService.fetchJsonData(_baseUrl);
+
+      // Parse data in background isolate to avoid blocking UI
+      final parseResult =
+          await IsolateHelpers.parseDepthWallDataInIsolate(jsonString);
+
+      _depthWallNames = parseResult.depthWallNames;
     } catch (e) {
       log('Error fetching depthWall names: $e');
       _depthWallNames = [];

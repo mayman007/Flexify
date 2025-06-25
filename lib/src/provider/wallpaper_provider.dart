@@ -1,13 +1,11 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'package:flexify/src/utils/isolate_helpers.dart';
+import 'package:flexify/src/utils/http_service.dart';
 
 /// A provider class that manages fetching and storing wallpaper data.
 class WallpaperProvider extends ChangeNotifier {
-  final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
-  final Dio _dio = Dio();
+  final HttpService _httpService = HttpService();
 
   String _baseUrlHq = '';
   String _baseUrlMid = '';
@@ -39,22 +37,6 @@ class WallpaperProvider extends ChangeNotifier {
   ///
   /// It uses Firebase Remote Config to get API endpoints and headers.
   Future<void> fetchWallpaperData() async {
-    // Remote Config
-    await _remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(hours: 1),
-      ),
-    );
-    await _remoteConfig.fetchAndActivate();
-
-    // Use Remote Config values
-    String headersJson = _remoteConfig.getString('api_headers');
-    _headers = Map<String, String>.from(json.decode(headersJson));
-    _baseUrlHq = _remoteConfig.getString('walls_hq');
-    _baseUrlMid = _remoteConfig.getString('walls_mid');
-    _baseUrlLow = _remoteConfig.getString('walls_low');
-
     _wallpaperNames = [];
     _wallpaperResolutions = [];
     _wallpaperSizes = [];
@@ -65,31 +47,26 @@ class WallpaperProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _dio.get(
-        _baseUrlHq,
-        options: Options(
-          headers: _headers,
-        ),
-      );
-      if (response.statusCode == 200 && response.data is List) {
-        for (Map wallpaper in response.data) {
-          _wallpaperNames.add(wallpaper["name"]);
-          _wallpaperResolutions.add(wallpaper["resolution"]);
-          _wallpaperSizes.add(wallpaper["size"]);
-          _wallpaperCategories.add(wallpaper["category"]);
-          _wallpaperColors.add(wallpaper["colors"]);
-          if (!_categoriesList.contains(wallpaper["category"])) {
-            _categoriesList.add(wallpaper["category"]);
-          }
-        }
-      } else {
-        _wallpaperNames = [];
-        _wallpaperResolutions = [];
-        _wallpaperSizes = [];
-        _wallpaperCategories = [];
-        _wallpaperColors = [];
-        _categoriesList = [];
-      }
+      // Get API URLs and headers from HTTP service
+      final apiUrls = await _httpService.getApiUrls();
+      _baseUrlHq = apiUrls['walls_hq'] ?? '';
+      _baseUrlMid = apiUrls['walls_mid'] ?? '';
+      _baseUrlLow = apiUrls['walls_low'] ?? '';
+      _headers = await _httpService.getHeaders();
+
+      // Fetch JSON data using HTTP service
+      final jsonString = await _httpService.fetchJsonData(_baseUrlHq);
+
+      // Parse data in background isolate to avoid blocking UI
+      final parseResult =
+          await IsolateHelpers.parseWallpaperDataInIsolate(jsonString);
+
+      _wallpaperNames = parseResult.wallpaperNames;
+      _wallpaperResolutions = parseResult.wallpaperResolutions;
+      _wallpaperSizes = parseResult.wallpaperSizes;
+      _wallpaperCategories = parseResult.wallpaperCategories;
+      _wallpaperColors = parseResult.wallpaperColors;
+      _categoriesList = parseResult.categoriesList;
     } catch (e) {
       log('Error fetching wallpaper names: $e');
       _wallpaperNames = [];

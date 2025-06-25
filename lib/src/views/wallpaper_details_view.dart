@@ -5,14 +5,13 @@ import 'dart:ui';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
-import 'package:flexify/src/database/favorites_notifier.dart';
+import 'package:flexify/src/utils/favorites_notifier.dart';
 import 'package:flexify/src/provider/wallpaper_provider.dart';
 import 'package:flexify/src/views/wallpaper_fullscreen_view.dart';
 import 'package:flexify/src/widgets/color_container.dart';
-import 'package:flexify/src/widgets/custom_page_route.dart';
+import 'package:flexify/src/utils/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +23,8 @@ import 'package:provider/provider.dart';
 import 'package:wallpaper_manager_plus/wallpaper_manager_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flexify/src/utils/isolate_helpers.dart';
+import 'package:flexify/src/utils/http_service.dart';
 
 /// A view that displays the details of a selected wallpaper.
 class WallpaperDetailsView extends StatefulWidget {
@@ -56,6 +57,7 @@ class WallpaperDetailsView extends StatefulWidget {
 
 /// State for [WallpaperDetailsView].
 class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
+  final HttpService _httpService = HttpService();
   DatabaseHelper sqlDb = DatabaseHelper();
   bool saveImageCoolDown = false;
   bool isAmbientEffectEnabled = true;
@@ -78,36 +80,53 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
         saveImageCoolDown = true;
       });
 
-      // Get headers from provider
-      final wallpaperProvider =
-          Provider.of<WallpaperProvider>(context, listen: false);
-      Map<String, String> headers = wallpaperProvider.headers;
+      try {
+        // Get headers from provider
+        final wallpaperProvider =
+            Provider.of<WallpaperProvider>(context, listen: false);
+        Map<String, String> headers = wallpaperProvider.headers;
 
-      var response = await Dio().get(widget.wallpaperUrlHq,
-          options: Options(
-            responseType: ResponseType.bytes,
+        // Download image in background isolate to avoid blocking UI
+        final imageBytes = await IsolateHelpers.downloadImageInIsolate(
+          ImageDownloadParams(
+            url: widget.wallpaperUrlHq,
             headers: headers,
-          ));
-      final result = await ImageGallerySaverPlus.saveImage(
-        Uint8List.fromList(response.data),
-        quality: 100,
-        name: "Flexify_${widget.wallpaperName}",
-      );
-      Navigator.pop(context);
-      showToast(
-        context.tr('wallpaperDetails.wallpaperSaved'),
-        animation: StyledToastAnimation.fade,
-        reverseAnimation: StyledToastAnimation.fade,
-        animDuration: const Duration(milliseconds: 500),
-        // ignore: use_build_context_synchronously
-        context: context,
-      );
-      log(result.toString());
-      await Future.delayed(const Duration(seconds: 10));
-      setState(() {
-        saveImageCoolDown = false;
-      });
-      AnalyticsEngine.wallpaperSaved(widget.wallpaperName);
+          ),
+        );
+
+        final result = await ImageGallerySaverPlus.saveImage(
+          imageBytes,
+          quality: 100,
+          name: "Flexify_${widget.wallpaperName}",
+        );
+
+        Navigator.pop(context);
+        showToast(
+          context.tr('wallpaperDetails.wallpaperSaved'),
+          animation: StyledToastAnimation.fade,
+          reverseAnimation: StyledToastAnimation.fade,
+          animDuration: const Duration(milliseconds: 500),
+          // ignore: use_build_context_synchronously
+          context: context,
+        );
+        log(result.toString());
+        AnalyticsEngine.wallpaperSaved(widget.wallpaperName);
+      } catch (e) {
+        Navigator.pop(context);
+        showToast(
+          context.tr('wallpaperDetails.saveError'),
+          animation: StyledToastAnimation.fade,
+          reverseAnimation: StyledToastAnimation.fade,
+          // ignore: use_build_context_synchronously
+          context: context,
+        );
+        log('Error saving image: $e');
+      } finally {
+        await Future.delayed(const Duration(seconds: 10));
+        setState(() {
+          saveImageCoolDown = false;
+        });
+      }
     }
   }
 
@@ -152,29 +171,20 @@ class _WallpaperDetailsViewState extends State<WallpaperDetailsView> {
             Provider.of<WallpaperProvider>(context, listen: false);
         Map<String, String> headers = wallpaperProvider.headers;
 
-        // Download file
-        Response response = await Dio().get(
-          widget.wallpaperUrlHq,
-          options: Options(
-            responseType: ResponseType.bytes,
-            followRedirects: false,
-            headers: headers,
-          ),
-        );
+        // Download file using HTTP service
+        final fileBytes = await _httpService.downloadFile(widget.wallpaperUrlHq,
+            customHeaders: headers);
         Navigator.pop(context);
 
         // Write file
         File file = File(fullPath);
-        var raf = file.openSync(mode: FileMode.write);
-        raf.writeFromSync(response.data);
-        await raf.close();
+        await file.writeAsBytes(fileBytes);
 
         log('File path: ${file.path}');
         log('File size: ${await file.length()} bytes');
 
         // Create a content URI using FileProvider
         const String authority = "com.maymanxineffable.flexify.fileprovider";
-        // final String filePath = file.path;
         final Uri contentUri = Uri.parse(
             "content://$authority/cache_files/${Uri.encodeComponent(file.uri.pathSegments.last)}");
 

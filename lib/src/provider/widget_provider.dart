@@ -1,12 +1,10 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'package:flexify/src/utils/isolate_helpers.dart';
+import 'package:flexify/src/utils/http_service.dart';
 
 class WidgetProvider extends ChangeNotifier {
-  final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
-  final Dio _dio = Dio();
+  final HttpService _httpService = HttpService();
 
   String _baseUrl = '';
   Map<String, String> _headers = {};
@@ -25,20 +23,6 @@ class WidgetProvider extends ChangeNotifier {
   bool get isError => _isError;
 
   Future<void> fetchWidgetData() async {
-    // Remote Config
-    await _remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(hours: 1),
-      ),
-    );
-    await _remoteConfig.fetchAndActivate();
-
-    // Use Remote Config values
-    String headersJson = _remoteConfig.getString('api_headers');
-    _headers = Map<String, String>.from(json.decode(headersJson));
-    _baseUrl = _remoteConfig.getString('widgets');
-
     _widgetNames = [];
     _widgetCategories = [];
     _categoriesList = [];
@@ -47,30 +31,23 @@ class WidgetProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _dio.get(
-        _baseUrl,
-        options: Options(
-          headers: _headers,
-        ),
-      );
-      if (response.statusCode == 200 && response.data is List) {
-        for (Map widget in response.data) {
-          if (widget["type"] == "kwgt") {
-            _widgetNames.add(widget["name"]);
-            _widgetCategories.add(widget["category"]);
-            if (!_categoriesList.contains(widget["category"])) {
-              _categoriesList.add(widget["category"]);
-            }
-          }
-        }
-      } else {
-        _widgetNames = [];
-        _widgetCategories = [];
-        _categoriesList = [];
-      }
+      // Get API URLs and headers from HTTP service
+      final apiUrls = await _httpService.getApiUrls();
+      _baseUrl = apiUrls['widgets'] ?? '';
+      _headers = await _httpService.getHeaders();
+
+      // Fetch JSON data using HTTP service
+      final jsonString = await _httpService.fetchJsonData(_baseUrl);
+
+      // Parse data in background isolate to avoid blocking UI
+      final parseResult =
+          await IsolateHelpers.parseWidgetDataInIsolate(jsonString);
+
+      _widgetNames = parseResult.widgetNames;
+      _widgetCategories = parseResult.widgetCategories;
+      _categoriesList = parseResult.categoriesList;
     } catch (e) {
       log('Error fetching widget names: $e');
-
       _isError = true;
     } finally {
       log("Widget fetching done.");

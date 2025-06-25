@@ -1,10 +1,11 @@
+import 'dart:developer' show log;
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
-import 'package:flexify/src/database/favorites_notifier.dart';
+import 'package:flexify/src/utils/favorites_notifier.dart';
 import 'package:flexify/src/provider/widget_provider.dart';
+import 'package:flexify/src/utils/http_service.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -35,6 +36,7 @@ class WidgetDetailsView extends StatefulWidget {
 /// State for [WidgetDetailsView].
 class _WidgetDetailsViewState extends State<WidgetDetailsView> {
   DatabaseHelper sqlDb = DatabaseHelper();
+  final HttpService _httpService = HttpService();
 
   bool isFaved = false;
   final FavoritesNotifier _favoritesNotifier = FavoritesNotifier();
@@ -201,41 +203,46 @@ class _WidgetDetailsViewState extends State<WidgetDetailsView> {
     }
     showLoaderDialog(context); // Show loading dialog
 
-    // Make file path
-    var tempDir = await getTemporaryDirectory();
-    String fullPath = "${tempDir.path}/${widget.widgetName}.kwgt";
+    try {
+      // Make file path
+      var tempDir = await getTemporaryDirectory();
+      String fullPath = "${tempDir.path}/${widget.widgetName}.kwgt";
 
-    // Get headers from provider
-    final widgetProvider = Provider.of<WidgetProvider>(context, listen: false);
-    Map<String, String> headers = widgetProvider.headers;
+      // Get headers from provider
+      final widgetProvider =
+          Provider.of<WidgetProvider>(context, listen: false);
+      Map<String, String> headers = widgetProvider.headers;
 
-    // Download file
-    Response response = await Dio().get(
-      widget.widgetUrl,
-      options: Options(
-        responseType: ResponseType.bytes,
-        followRedirects: false,
-        headers: headers,
-      ),
-    );
+      // Download file using HTTP service
+      final fileBytes = await _httpService.downloadFile(widget.widgetUrl,
+          customHeaders: headers);
 
-    // Write file
-    File file = File(fullPath);
-    var raf = file.openSync(mode: FileMode.write);
-    raf.writeFromSync(response.data);
-    await raf.close();
+      // Write file
+      File file = File(fullPath);
+      await file.writeAsBytes(fileBytes);
 
-    // Open file
-    Navigator.pop(context);
-    openKWGTFile(fullPath);
-    showToast(
-      context.tr('widgetDetails.openedKwgtToApplyWidget'),
-      animation: StyledToastAnimation.fade,
-      reverseAnimation: StyledToastAnimation.fade,
-      // ignore: use_build_context_synchronously
-      context: context,
-    );
-    AnalyticsEngine.widgetApplied(widget.widgetName);
+      // Open file
+      Navigator.pop(context);
+      openKWGTFile(fullPath);
+      showToast(
+        context.tr('widgetDetails.openedKwgtToApplyWidget'),
+        animation: StyledToastAnimation.fade,
+        reverseAnimation: StyledToastAnimation.fade,
+        // ignore: use_build_context_synchronously
+        context: context,
+      );
+      AnalyticsEngine.widgetApplied(widget.widgetName);
+    } catch (e) {
+      Navigator.pop(context);
+      showToast(
+        context.tr('widgetDetails.downloadError'),
+        animation: StyledToastAnimation.fade,
+        reverseAnimation: StyledToastAnimation.fade,
+        // ignore: use_build_context_synchronously
+        context: context,
+      );
+      log('Error downloading widget: $e');
+    }
   }
 
   @override

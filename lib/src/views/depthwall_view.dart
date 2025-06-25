@@ -1,7 +1,7 @@
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/provider/depthwall_provider.dart';
 import 'package:flexify/src/views/depthwall_details_view.dart';
-import 'package:flexify/src/widgets/custom_page_route.dart';
+import 'package:flexify/src/utils/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

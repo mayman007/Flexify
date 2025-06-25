@@ -1,7 +1,7 @@
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/provider/wallpaper_category_provider.dart';
 import 'package:flexify/src/views/wallpaper_details_view.dart';
-import 'package:flexify/src/widgets/custom_page_route.dart';
+import 'package:flexify/src/utils/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,8 +33,14 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
   /// Set to track which images have been preloaded
   final Set<String> _preloadedImages = {};
 
-  /// Number of images to preload ahead of viewport
-  static const int _preloadBuffer = 15;
+  /// Set to track currently visible images
+  final Set<String> _visibleImages = {};
+
+  /// Number of images to preload ahead of viewport (reduced for memory optimization)
+  static const int _preloadBuffer = 6;
+
+  /// Maximum number of images to keep in cache
+  static const int _maxCacheSize = 20;
 
   /// Fetches wallpaper data for the current category from the [WallpaperCategoryProvider].
   Future fetchWallpapers() async {
@@ -43,12 +49,55 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
     wallpaperProvider.fetchWallpaperCategoryData(widget.categoryUrlHq);
   }
 
-  /// Preloads images for better user experience
+  /// Cleans up images that are no longer visible to free memory
+  void _cleanupInvisibleImages(int firstVisibleIndex, int lastVisibleIndex) {
+    final imagesToRemove = <String>[];
+
+    for (final imageUrl in _preloadedImages) {
+      bool isInVisibleRange = _visibleImages.contains(imageUrl);
+
+      if (!isInVisibleRange) {
+        imagesToRemove.add(imageUrl);
+      }
+    }
+
+    // Only remove if cache is getting too large
+    if (_preloadedImages.length > _maxCacheSize) {
+      for (final imageUrl
+          in imagesToRemove.take(_preloadedImages.length - _maxCacheSize)) {
+        _preloadedImages.remove(imageUrl);
+        NetworkImage(imageUrl).evict();
+      }
+    }
+  }
+
+  /// Updates visible images set for cache management
+  void _updateVisibleImages(WallpaperCategoryProvider provider,
+      int firstVisibleIndex, int lastVisibleIndex) {
+    _visibleImages.clear();
+
+    for (int i = firstVisibleIndex;
+        i <= lastVisibleIndex && i < provider.wallpaperNames.length;
+        i++) {
+      final String wallpaperName = provider.wallpaperNames[i].split(".")[0];
+      final String wallpaperExtension =
+          provider.wallpaperNames[i].split(".")[1];
+      final String wallpaperUrlLow =
+          '${widget.categoryUrlLow}/$wallpaperName.$wallpaperExtension';
+      _visibleImages.add(wallpaperUrlLow);
+    }
+  }
+
+  /// Preloads images for better user experience with memory optimization
   void _preloadImages(
       WallpaperCategoryProvider provider, int currentIndex) async {
-    final startIndex = currentIndex;
+    final startIndex = (currentIndex - _preloadBuffer ~/ 2)
+        .clamp(0, provider.wallpaperNames.length - 1);
     final endIndex = (currentIndex + _preloadBuffer)
         .clamp(0, provider.wallpaperNames.length - 1);
+
+    // Update visible images for cache management
+    _updateVisibleImages(provider, startIndex, endIndex);
 
     for (int i = startIndex; i <= endIndex; i++) {
       if (i >= provider.wallpaperNames.length) break;
@@ -64,11 +113,14 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
         try {
           await precacheImage(NetworkImage(wallpaperUrlLow), context);
         } catch (e) {
-          // Silently handle preload errors
           debugPrint('Failed to preload image: $wallpaperUrlLow');
+          _preloadedImages.remove(wallpaperUrlLow);
         }
       }
     }
+
+    // Clean up cache periodically
+    _cleanupInvisibleImages(startIndex, endIndex);
   }
 
   @override
@@ -76,6 +128,17 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
     AnalyticsEngine.pageOpened("Wallpapers Category View");
     fetchWallpapers();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // Clear all cached images on dispose
+    for (final imageUrl in _preloadedImages) {
+      NetworkImage(imageUrl).evict();
+    }
+    _preloadedImages.clear();
+    _visibleImages.clear();
+    super.dispose();
   }
 
   @override
@@ -148,9 +211,18 @@ class _WallpapersCategoryViewState extends State<WallpapersCategoryView> {
                 onNotification: (scrollInfo) {
                   if (scrollInfo is ScrollUpdateNotification) {
                     // Calculate current visible item index and preload ahead
+                    final itemHeight = 200.0; // Approximate item height
                     final currentIndex =
-                        (scrollInfo.metrics.pixels / 200).floor();
-                    _preloadImages(provider, currentIndex);
+                        (scrollInfo.metrics.pixels / itemHeight).floor();
+
+                    // Only preload when scrolling stops or slows down to reduce memory pressure
+                    if (scrollInfo.metrics.pixels ==
+                            scrollInfo.metrics.maxScrollExtent ||
+                        scrollInfo.metrics.pixels ==
+                            scrollInfo.metrics.minScrollExtent ||
+                        (scrollInfo.scrollDelta?.abs() ?? 0) < 5.0) {
+                      _preloadImages(provider, currentIndex);
+                    }
                   }
                   return false;
                 },

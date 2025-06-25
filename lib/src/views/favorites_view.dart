@@ -1,10 +1,10 @@
 import 'package:flexify/src/analytics_engine.dart';
 import 'package:flexify/src/database/database_helper.dart';
-import 'package:flexify/src/database/favorites_notifier.dart';
+import 'package:flexify/src/utils/favorites_notifier.dart';
 import 'package:flexify/src/views/depthwall_details_view.dart';
 import 'package:flexify/src/views/wallpaper_details_view.dart';
 import 'package:flexify/src/views/widget_details_view.dart';
-import 'package:flexify/src/widgets/custom_page_route.dart';
+import 'package:flexify/src/utils/custom_page_route.dart';
 import 'package:flexify/src/widgets/wallpaper_card.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
