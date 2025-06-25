@@ -111,6 +111,8 @@ class _SettingsViewState extends State<SettingsView> with RouteAware {
         languageValue = 'English';
       } else if (context.locale.languageCode == 'ar') {
         languageValue = 'Arabic';
+      } else if (context.locale.languageCode == 'hi') {
+        languageValue = 'Hindi';
       } else {
         languageValue = 'English'; // Default fallback
       }
@@ -161,6 +163,18 @@ class _SettingsViewState extends State<SettingsView> with RouteAware {
                 context.setLocale(const Locale('ar'));
                 setState(() {
                   languageValue = 'Arabic';
+                });
+                if (context.mounted) Navigator.of(context).pop();
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('हिन्दी'),
+              value: 'Hindi',
+              groupValue: languageValue,
+              onChanged: (value) async {
+                context.setLocale(const Locale('hi'));
+                setState(() {
+                  languageValue = 'Hindi';
                 });
                 if (context.mounted) Navigator.of(context).pop();
               },
@@ -683,7 +697,9 @@ class _SettingsViewState extends State<SettingsView> with RouteAware {
                       ? 'English'
                       : languageValue == 'Arabic'
                           ? 'العربية'
-                          : 'English'),
+                          : languageValue == 'Hindi'
+                              ? 'हिन्दी'
+                              : 'English'),
                 ),
               ],
             ),

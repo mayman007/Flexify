@@ -1,0 +1,153 @@
+{
+    "appTitle": "Flexify",
+    "navigation": {
+        "wallpapers": "वॉलपेपर",
+        "depthWalls": "डीप्थ वॉल्स",
+        "widgets": "विजेट्स",
+        "favorites": "पसंदीदा",
+        "settings": "सेटिंग्स"
+    },
+
+    "wallpapers": {
+        "title": "वॉलपेपर",
+        "categoryTitle": "{category} वॉलपेपर",
+        "fetching": "वॉलपेपर लोड हो रहे हैं...",
+        "setAsWallpaper": "वॉलपेपर सेट करें",
+        "homeScreen": "होम स्क्रीन",
+        "lockScreen": "लॉक स्क्रीन",
+        "both": "दोनों",
+        "setWith": "सेट करें...",
+        "fetchingWallpaper": "वॉलपेपर प्राप्त किया जा रहा है...",
+        "settingFailed": "वॉलपेपर सेट करने में विफल",
+        "resolution": "रिज़ॉल्यूशन:",
+        "size": "आकार:",
+        "category": "श्रेणी:",
+        "colorsUsed": "प्रयुक्त रंग",
+        "save": "सेव करें",
+        "wallpaperSaved": "वॉलपेपर सेव किया गया",
+        "savedRecently": "आपने अभी-अभी यह वॉलपेपर सेव किया है! कुछ सेकंड प्रतीक्षा करें।"
+    },
+
+    "wallpaperDetails": {
+        "setAsWallpaper": "वॉलपेपर सेट करें",
+        "homeScreen": "होम स्क्रीन",
+        "lockScreen": "लॉक स्क्रीन",
+        "both": "दोनों",
+        "setWith": "सेट करें...",
+        "fetchingWallpaper": "वॉलपेपर प्राप्त किया जा रहा है...",
+        "settingWallpaperFailed": "वॉलपेपर सेट करने में विफल",
+        "resolution": "रिज़ॉल्यूशन",
+        "size": "आकार",
+        "category": "श्रेणी",
+        "save": "सेव करें",
+        "wallpaperSaved": "वॉलपेपर सेव किया गया",
+        "saveWaitMessage": "आपने अभी-अभी यह वॉलपेपर सेव किया है! कुछ सेकंड प्रतीक्षा करें।",
+        "addedToFavorites": "पसंदीदा में जोड़ा गया",
+        "removedFromFavorites": "पसंदीदा से हटाया गया",
+        "colorsUsed": "प्रयुक्त रंग"
+    },
+
+    "widgetDetails": {
+        "applyWidget": "विजेट लागू करें",
+        "fetchingWidget": "विजेट लोड हो रहा है...",
+        "addedToFavorites": "पसंदीदा में जोड़ा गया",
+        "removedFromFavorites": "पसंदीदा से हटाया गया",
+        "kwgtRequiredMessage": "विजेट लागू करने के लिए KWGT आवश्यक है। सहायता के लिए हमारे टेलीग्राम समूह से जुड़ें!",
+        "getKwgtFromPlayStore": "प्ले स्टोर से KWGT प्राप्त करें",
+        "telegramSupportGroup": "टेलीग्राम सहायता समूह",
+        "openedKwgtToApplyWidget": "विजेट लागू करने के लिए KWGT खोला गया"
+    },
+
+    "widgets": {
+        "title": "विजेट्स",
+        "categoryTitle": "{category} विजेट्स",
+        "fetching": "विजेट्स लोड हो रहे हैं...",
+        "applyWidget": "विजेट लागू करें",
+        "fetchingWidget": "विजेट लोड हो रहा है...",
+        "openedKWGT": "विजेट लागू करने के लिए KWGT खोला गया",
+        "needKWGT": "विजेट लागू करने के लिए KWGT आवश्यक है। सहायता के लिए हमारे टेलीग्राम समूह से जुड़ें!",
+        "getKWGT": "प्ले स्टोर से KWGT प्राप्त करें",
+        "telegramSupport": "टेलीग्राम सहायता समूह"
+    },
+
+    "depthWalls": {
+        "title": "डीप्थ वॉलपेपर",
+        "fetching": "डीप्थ वॉल लोड हो रहा है...",
+        "applyDepthWallpaper": "डीप्थ वॉलपेपर लागू करें",
+        "fetchingDepthWallpaper": "डीप्थ वॉलपेपर प्राप्त किया जा रहा है...",
+        "openedKLWP": "KLWP खोला गया विजेट लागू करने के लिए",
+        "needKLWP": "डीप्थ वॉलपेपर लागू करने के लिए KLWP आवश्यक है। सहायता के लिए हमारे टेलीग्राम समूह से जुड़ें!",
+        "getKLWP": "प्ले स्टोर से KLWP प्राप्त करें"
+    },
+
+    "favorites": {
+        "title": "पसंदीदा",
+        "noFavorites": "अभी तक कोई पसंदीदा नहीं",
+        "noFavoritesEmoji": "(˵•ヘ•˵)",
+        "addedToFavorites": "पसंदीदा में जोड़ा गया",
+        "removedFromFavorites": "पसंदीदा से हटाया गया",
+        "favorite": "पसंदीदा"
+    },
+    "settings": {
+        "title": "सेटिंग्स",
+        "language": "भाषा",
+        "english": "अंग्रेज़ी",
+        "arabic": "अरबी",
+        "themes": "थीम्स",
+        "generalTheme": "जनरल थीम",
+        "system": "सिस्टम",
+        "light": "हल्का",
+        "dark": "गहरा",
+        "colorScheme": "रंग योजना",
+        "dynamic": "डायनामिक",
+        "blue": "नीला",
+        "green": "हरा",
+        "purple": "बैंगनी",
+        "red": "लाल",
+        "orange": "संतरी",
+        "yellow": "पीला",
+        "pink": "गुलाबी",
+        "teal": "टील",
+        "indigo": "जामुनी",
+        "brown": "भूरा",
+        "pureBlack": "शुद्ध काला",
+        "ambientEffect": "एम्बिएंट प्रभाव",
+        "clearCache": "अस्थायी कैश हटाएं",
+        "deleteCache": "कैश ({size} MB)",
+        "delete": "हटाएं",
+        "deleteCacheTitle": "कैश हटाएं?",
+        "deleteCacheConfirm": "क्या आप वाकई ऐसा करना चाहते हैं? कैश हटाने से ऐप का प्रदर्शन अस्थायी रूप से प्रभावित हो सकता है।",
+        "cancel": "रद्द करें",
+        "enableNotifications": "सूचनाएं सक्षम करें",
+        "enable": "सक्षम करें",
+        "joinTelegramChannel": "टेलीग्राम चैनल से जुड़ें",
+        "aboutUs": "हमारे बारे में",
+        "permissionRequired": "अनुमति आवश्यक",
+        "notificationPermissionText": "सूचना अनुमति की आवश्यकता है। कृपया ऐप सेटिंग्स में इसे सक्षम करें।",
+        "openSettings": "सेटिंग्स खोलें"
+    },
+
+    "aboutUs": {
+        "title": "हमारे बारे में",
+        "description": "Flexify के शानदार वॉलपेपर और विजेट्स से अपने फोन को सजाएं।",
+        "supportUs": "हमें समर्थन दें",
+        "freeAndOpenSource": "Flexify पूरी तरह मुफ़्त और ",
+        "openSource": "ओपन सोर्स है",
+        "donationText": "। हालांकि, आप दान देकर अपना समर्थन दिखा सकते हैं",
+        "donation": "दान",
+        "credits": "श्रेय",
+        "developer": "डेवलपर: ",
+        "designer": "डिज़ाइनर: ",
+        "shareApp": "ऐप साझा करें",
+        "privacyPolicy": "गोपनीयता नीति"
+    },
+
+    "common": {
+        "close": "बंद करें",
+        "tryAgain": "फिर से प्रयास करें",
+        "connectionError": "कनेक्शन त्रुटि",
+        "connectionErrorEmoji": "( ︶︹︶ )",
+        "connectionErrorEmojiSmall": "( ˃̣̣̥⌓˂̣̣̥)",
+        "copied": "{value} कॉपी किया गया"
+    }
+}

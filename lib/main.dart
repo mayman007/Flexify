@@ -40,7 +40,7 @@ Future<void> main() async {
   runApp(
     // Init providers and localization
     EasyLocalization(
-      supportedLocales: const [Locale('en'), Locale('ar')],
+      supportedLocales: const [Locale('en'), Locale('ar'), Locale('hi')],
       path: 'assets/translations',
       fallbackLocale: Locale('en'),
       child: MultiProvider(
